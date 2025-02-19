@@ -100,11 +100,6 @@
                     </div>
                     @endif
                     @endforeach
-                </div>
-                {{-- table close --}}
-                {{-- table --}}
-                
-                <div class="my-5">
                     <div>
                         <h2 class="mb-3 text-xl font-bold leading-9 tracking-tight text-gray-900">Disponibilités</h2>
                     </div>
@@ -174,10 +169,6 @@
                 <div class="flex justify-between items-center my-6">
                     <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des Rendez-vous (Indisponibilités)</h2>
                 </div>
-                <div class="my-5">
-                {{-- table --}}
-                
-                {{-- second --}}
                 <div class="my-5">
                     <div>
                         <h2 class="mb-3 text-xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilités</h2>

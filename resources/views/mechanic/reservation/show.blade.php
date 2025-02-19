@@ -77,11 +77,23 @@
             </div>
             <div class="flex flex-col py-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">Email</dt>
-                <dd class="text-lg font-semibold">{{ $appointment->user_email }}</dd>
+                <dd class="text-lg font-semibold">{{ $appointment->user_email ?? 'N/A'}}</dd>
             </div>
             <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">Phone number</dt>
                 <dd class="text-lg font-semibold">{{ $appointment->user_phone }}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">categorie de service</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">numero immatriculation</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->numero_immatriculation ?? 'N/A'}}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">modele</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
             </div>
             <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">appointment day</dt>
@@ -94,6 +106,10 @@
             <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">status</dt>
                 <dd class="text-lg font-semibold">{{ $appointment->status }}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">objet du RDV</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->objet_du_RDV ?? 'N/A'}}</dd>
             </div>
           </dl>
         </div>

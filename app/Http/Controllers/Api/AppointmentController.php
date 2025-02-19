@@ -105,10 +105,15 @@ class AppointmentController extends Controller
         $request->validate([
             'full_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255', // Make email required for verification
+            'email' => 'nullable|email|max:255',
             'garage_ref' => 'required|string|max:255',
+            'categorie_de_service' => 'required|string|max:255',
             'appointment_day' => 'required|date',
             'appointment_time' => 'required|date_format:H:i:s',
+            'categorie_de_service' => 'required|string|max:255',
+            'modele' => 'nullable|string|max:255',
+            'numero_immatriculation' => 'nullable|string|max:255',
+            'objet_du_RDV' => 'nullable|string|max:255',
         ]);
 
         // Check if the selected slot is still available
@@ -144,13 +149,17 @@ class AppointmentController extends Controller
     {
         // Validate the request
         $request->validate([
-            'email' => 'required|email|max:255',
+            'email' => 'nullable|email|max:255',
             'verification_code' => 'required|string|max:6',
             'full_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'garage_ref' => 'required|string|max:255',
             'appointment_day' => 'required|date',
             'appointment_time' => 'required|date_format:H:i:s',
+            'categorie_de_service' => 'required|string|max:255',
+            'modele' => 'nullable|string|max:255',
+            'numero_immatriculation' => 'nullable|string|max:255',
+            'objet_du_RDV' => 'nullable|string|max:255',
         ]);
 
         $email = $request->email;
@@ -169,6 +178,10 @@ class AppointmentController extends Controller
                 'appointment_day' => $request->appointment_day,
                 'appointment_time' => $request->appointment_time,
                 'status' => 'en_cour',
+                'categorie_de_service' => $request->categorie_de_service,
+                'modele' => $request->modele,
+                'numero_immatriculation' => $request->numero_immatriculation,
+                'objet_du_RDV' => $request->objet_du_RDV,
             ]);
 
             // Clear the verification code from cache

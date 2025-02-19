@@ -143,10 +143,10 @@ class MechanicCalendrierController extends Controller
 
         $request->validate([
             'available_day' => ['required', 'integer', 'between:0,6'],
-            'available_from' => ['required', 'date_format:H:i:s'],
-            'available_to' => ['required', 'date_format:H:i:s', 'after:available_from'],
-            'unavailable_from.*' => ['nullable', 'date_format:H:i:s'],
-            'unavailable_to.*' => ['nullable', 'date_format:H:i:s', 'after:unavailable_from.*'],
+            'available_from' => ['required', 'date_format:H:i'],
+            'available_to' => ['required', 'date_format:H:i', 'after:available_from'],
+            'unavailable_from.*' => ['nullable', 'date_format:H:i'],
+            'unavailable_to.*' => ['nullable', 'date_format:H:i', 'after:unavailable_from.*'],
         ]);
 
         // Store available time
@@ -312,8 +312,8 @@ class MechanicCalendrierController extends Controller
         // Validate form input
         $request->validate([
             'available_day' => 'required|integer|between:0,6',
-            'available_from' => 'required|date_format:H:i:s',
-            'available_to' => 'required|date_format:H:i:s|after:available_from',
+            'available_from' => 'required',
+            'available_to' => 'required|after:available_from',
             'unavailable_from.*' => 'nullable',
             'unavailable_to.*' => 'nullable|after:unavailable_from.*',
         ]);
