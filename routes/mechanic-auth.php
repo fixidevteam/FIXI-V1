@@ -14,6 +14,8 @@ use App\Http\Controllers\Mechanic\ProfileController;
 use App\Http\Controllers\Mechanic\mechanicDashboardController;
 use App\Http\Controllers\Mechanic\MechanicPromotionController;
 use App\Http\Controllers\Mechanic\MechanicReservationController;
+use App\Http\Controllers\TEST\RendezVousController;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:mechanic')->prefix('fixi-pro')->name('mechanic.')->group(function () {
@@ -49,4 +51,8 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+    Route::get('/test', function () {
+        return view('mechanic.test1');
+    });
+    Route::get('/api/reservations/{year}/{month}', [RendezVousController::class, 'index']);
 });
