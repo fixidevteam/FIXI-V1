@@ -68,7 +68,36 @@
         <div class="flex justify-between items-center my-6">
           <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Détails du rendez-vous</h2>
         </div>
-        {{ $appointment->user_full_name }}
+        
+        <div>
+          <dl class="w-full text-gray-900 divide-y divide-gray-200">
+            <div class="flex flex-col pb-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">Client Name</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->user_full_name }}</dd>
+            </div>
+            <div class="flex flex-col py-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">Email</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->user_email }}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">Phone number</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->user_phone }}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">appointment day</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->appointment_day }}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">appointment time</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->appointment_time }}</dd>
+            </div>
+            <div class="flex flex-col pt-3">
+                <dt class="mb-1 text-gray-500 md:text-lg">status</dt>
+                <dd class="text-lg font-semibold">{{ $appointment->status }}</dd>
+            </div>
+          </dl>
+        </div>
+
       </div>
     </div>
     
