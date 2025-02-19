@@ -91,10 +91,6 @@
                     </div>
                     @endif
                     @endforeach
-                </div>
-                {{-- table close --}}
-                {{-- table --}}
-                <div class="my-5">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($appointments->isEmpty())
                         <p class="p-4 text-gray-500 text-center">Aucun rendez-vous disponible.</p>
@@ -111,6 +107,9 @@
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Phone
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        categorie de service
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         appointment day
@@ -133,10 +132,13 @@
                                         {{ $appointment->user_full_name }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $appointment->user_email }}
+                                        {{ $appointment->user_email ?? "N/A"}}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $appointment->user_phone }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $appointment->categorie_de_service }}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $appointment->appointment_day }}
