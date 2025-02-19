@@ -44,7 +44,7 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des Rendez-vous</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des Rendez-vous (Disponibilités)</h2>
                     <a href="{{route('mechanic.calendrier.create')}}">
                         <x-primary-button class="hidden md:block">Ajouter Calendrier</x-primary-button>
                         <x-primary-button class="sm:hidden">
@@ -165,6 +165,18 @@
                     </div>
                     @endif
                 </div>
+                {{-- table close --}}
+            </div>
+        </div>
+        <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
+            {{-- content (slot on layouts/app.blade.php)--}}
+            <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="flex justify-between items-center my-6">
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des Rendez-vous (Indisponibilités)</h2>
+                </div>
+                <div class="my-5">
+                {{-- table --}}
+                
                 {{-- second --}}
                 <div class="my-5">
                     <div>
