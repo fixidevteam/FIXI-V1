@@ -314,8 +314,8 @@ class MechanicCalendrierController extends Controller
             'available_day' => 'required|integer|between:0,6',
             'available_from' => 'required|date_format:H:i:s',
             'available_to' => 'required|date_format:H:i:s|after:available_from',
-            'unavailable_from.*' => 'nullable|date_format:H:i:s',
-            'unavailable_to.*' => 'nullable|date_format:H:i:s|after:unavailable_from.*',
+            'unavailable_from.*' => 'nullable',
+            'unavailable_to.*' => 'nullable|after:unavailable_from.*',
         ]);
 
 
