@@ -14,35 +14,6 @@ class MechanicCalendrierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     // Get the authenticated user
-    //     $user = Auth::user();
-
-    //     // Fetch the garage associated with the mechanic
-    //     $garage = garage::where('id', $user->garage_id)->first();
-
-    //     // Check if the garage exists
-    //     if (!$garage) {
-    //         return redirect()->back()->with('error', 'Garage not found.');
-    //     }
-
-    //     // Fetch schedules for the garage
-    //     $schedules = GarageSchedule::where('garage_ref', $garage->ref)->get();
-
-    //     // Days of the week
-    //     $daysOfWeek = [
-    //         '0' => 'Dimanche',
-    //         '1' => 'Lundi',
-    //         '2' => 'Mardi',
-    //         '3' => 'Mercredi',
-    //         '4' => 'Jeudi',
-    //         '5' => 'Vendredi',
-    //         '6' => 'Samedi',
-    //     ];
-
-    //     return view('mechanic.calendrier.index', compact('schedules', 'daysOfWeek'));
-    // }
     public function index()
     {
         $user = Auth::user();

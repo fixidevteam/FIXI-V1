@@ -27,7 +27,25 @@ class MechanicReservationController extends Controller
         }
 
         // Fetch appointments for the garage
-        $appointments = Appointment::where('garage_ref', $garage->ref)->get();
+        $appointments = Appointment::where('garage_ref', $garage->ref)
+            ->get(['id', 'user_full_name', 'appointment_day', 'appointment_time', 'status'])
+            ->map(function ($appointment) {
+                $color = match ($appointment->status) {
+                    'en_cour' => 'orange',
+                    'confirmed' => 'green',
+                    'cancelled' => 'red',
+                    default => 'blue'
+                };
+
+                return [
+                    'title' => 'Reservation: ' . $appointment->user_full_name,
+                    'start' => $appointment->appointment_day . 'T' . $appointment->appointment_time,
+                    'url' => route('mechanic.reservation.show', $appointment->id),
+                    'time' => $appointment->appointment_time,
+                    'color' => $color
+                ];
+            })
+            ->toArray();
 
         return view('mechanic.reservation.index', compact('appointments'));
     }
