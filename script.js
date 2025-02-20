@@ -100,13 +100,39 @@ function fetchAvailableDates() {
 }
 
 // Initialize the date picker
+// function initDatePicker() {
+//     flatpickr("#datePicker", {
+//         dateFormat: "Y-m-d",
+//         enable: availableDates,
+//         onChange: function (selectedDates, dateStr) {
+//             selectedDate = dateStr;
+//             fetchTimeSlots(dateStr); // Fetch available time slots when a date is selected
+//         },
+//     });
+// }
+const disabledDates = ["2025-02-26","2025-02-27"]; // Add all dates you want to disable
+
 function initDatePicker() {
     flatpickr("#datePicker", {
         dateFormat: "Y-m-d",
-        enable: availableDates,
+        enable: [
+            function (date) {
+                // Format the date to "Y-m-d"
+                const formattedDate = date.toISOString().slice(0, 10);
+
+                // Enable only if the date is in availableDates AND NOT in disabledDates
+                return (
+                    availableDates.includes(formattedDate) &&
+                    !disabledDates.includes(formattedDate)
+                );
+            },
+        ],
         onChange: function (selectedDates, dateStr) {
             selectedDate = dateStr;
             fetchTimeSlots(dateStr); // Fetch available time slots when a date is selected
+        },
+        locale: {
+            firstDayOfWeek: 1, // Start week on Monday
         },
     });
 }
@@ -325,10 +351,12 @@ document.getElementById("verifyCode").addEventListener("click", () => {
                 if (data.account) {
                     // Replace with a success message on the page
                     // alert("YOU HAVE ACCOUNT "); // Replace with a success message on the page
-                    window.location.href = "https://fixidev.com/success-page?ejkn2=hzne2"; // Redirect to a success page
+                    window.location.href =
+                        "https://fixidev.com/success-page?ejkn2=hzne2"; // Redirect to a success page
                 } else {
                     // alert(data.message); // Replace with a success message on the page
-                    window.location.href = "https://fixidev.com/success-page?ejkn2=kmal4"; // Redirect to a success page
+                    window.location.href =
+                        "https://fixidev.com/success-page?ejkn2=kmal4"; // Redirect to a success page
                 }
             } else {
                 showError(data.message || "Invalid verification code.");

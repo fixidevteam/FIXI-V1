@@ -42,6 +42,7 @@ class AppointmentController extends Controller
 
         return response()->json([
             'available_dates' => $dates,
+            
         ]);
     }
 
