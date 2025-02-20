@@ -20,6 +20,24 @@
     <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
 
+    <style>
+        @media (max-width: 768px) {
+            .fc-toolbar-chunk .fc-today-button {
+                margin-left: 6px !important;  /* Add left margin */
+                margin-top: 0 !important;    /* Remove top margin */
+            }
+            /* Hide the Liste button */
+            .fc-toolbar-chunk .fc-listWeek-button {
+                display: none !important;
+            }
+        }
+        @media (max-width: 320px) {
+            .fc-toolbar-chunk .fc-today-button {
+                margin-left: 0 !important;  /* Add left margin */
+                margin-top: 6px !important;    /* Remove top margin */
+            }
+        }
+    </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
