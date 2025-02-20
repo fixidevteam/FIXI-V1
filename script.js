@@ -324,11 +324,12 @@ document.getElementById("verifyCode").addEventListener("click", () => {
             if (data.message === "Appointment booked successfully!") {
                 if (data.account) {
                     // Replace with a success message on the page
-                    alert("YOU HAVE ACCOUNT "); // Replace with a success message on the page
+                    // alert("YOU HAVE ACCOUNT "); // Replace with a success message on the page
+                    window.location.href = "https://fixidev.com/success-page?account=true"; // Redirect to a success page
                 } else {
-                    alert(data.message); // Replace with a success message on the page
+                    // alert(data.message); // Replace with a success message on the page
+                    window.location.href = "https://fixidev.com/success-page?account=false"; // Redirect to a success page
                 }
-                window.location.href = "/success-page"; // Redirect to a success page
             } else {
                 showError(data.message || "Invalid verification code.");
             }
