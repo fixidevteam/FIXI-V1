@@ -17,6 +17,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -28,6 +31,9 @@
             {{ $slot }}
         </main>
     </div>
+    <!-- FullCalendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const operationSelect = document.getElementById('operation');
