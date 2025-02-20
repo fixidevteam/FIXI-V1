@@ -138,7 +138,7 @@
                             </div>
                             {{--  --}}
                             <div>
-                                <button type="button" id="addUnavailable">Ajouter une autre indisponibilité</button>
+                                <button type="button" id="addUnavailable" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">+ Ajouter une autre indisponibilité</button>
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
                 <label class="mb-1">Heure de fin d'indisponibilité:</label>
                 <input type="time" name="unavailable_to[]" class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 block mb-6 w-full unavailable_to">
     
-                <button type="button" class="remove-unavailable">Supprimer</button>
+                <button type="button" class="remove-unavailable text-red-600">Supprimer</button>
             `;
     
             document.getElementById('unavailableTimes').appendChild(div);
