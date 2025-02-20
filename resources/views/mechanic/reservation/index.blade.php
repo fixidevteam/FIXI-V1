@@ -104,17 +104,24 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('calendar');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            locale: 'fr', // Set language to French
-            initialView: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth', // Responsive views
-            headerToolbar: {
-                left: 'prev,next today', // Navigation buttons
-                center: 'title',
-                right: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            buttonText: { // Manually set button labels in French
+    // Detect screen size for responsive header buttons
+    var isMobile = window.innerWidth < 768;
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'fr', // Set language to French
+        initialView: isMobile ? 'listWeek' : 'dayGridMonth', // Responsive views
+        headerToolbar: isMobile ? {
+            left: 'prev,next today', // Only navigation on mobile
+            center: '',
+            right: 'listWeek' // Show only list view on mobile
+        } : {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: { // Manually set button labels in French
             today: "Aujourd’hui",
             month: "Mois",
             week: "Semaine",
@@ -122,17 +129,26 @@
             list: "Liste",
             next: "Suivant",
             prev: "Précédent"
-            },
-            events: @json($appointments),
-            eventTimeFormat: { // Display time in 24-hour format
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            },
-            nowIndicator: true, // Highlights the current time
-        });
+        },
+        events: @json($appointments),
+        eventTimeFormat: { // Display time in 24-hour format
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        },
+        nowIndicator: true, // Highlights the current time
+    });
 
-        calendar.render();
-        });
+    calendar.render();
+
+    // Optional: Adjust layout when window resizes
+    window.addEventListener('resize', function() {
+        var newIsMobile = window.innerWidth < 768;
+        if (newIsMobile !== isMobile) {
+            location.reload(); // Reload to apply new toolbar layout
+        }
+    });
+});
+
     </script>
 </x-mechanic-app-layout>
