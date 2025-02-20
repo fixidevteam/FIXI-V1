@@ -188,9 +188,11 @@ function showStep(stepId) {
 document.getElementById("nextStep1").addEventListener("click", () => {
     if (!selectedDate) {
         showError("Please select a date.");
+        document.getElementById("datePicker").classList.add("border-red-500");
         return;
     }
-    document.getElementById("nextStep1").classList.add('hidden');
+    document.getElementById("datePicker").classList.remove("border-red-500");
+    document.getElementById("nextStep1").classList.add("hidden");
     fetchTimeSlots(selectedDate);
     showStep("step2");
 });
@@ -204,7 +206,7 @@ document.getElementById("nextStep2").addEventListener("click", () => {
         showError("Please select a time slot.");
         return;
     }
-    document.getElementById("nextStep2").classList.add('hidden');
+    document.getElementById("nextStep2").classList.add("hidden");
 
     showStep("step3");
 });
@@ -216,8 +218,6 @@ document.getElementById("nextStep2").addEventListener("click", () => {
 // Handle form submission
 document.getElementById("bookingForm").onsubmit = function (e) {
     e.preventDefault();
-    showLoading(); // Show spinner
-
     let fullName = document.getElementById("full_name").value;
     let phone = document.getElementById("phone").value;
     let email = document.getElementById("email").value;
@@ -230,39 +230,60 @@ document.getElementById("bookingForm").onsubmit = function (e) {
     let modele = document.getElementById("modele").value;
     let objet_du_RDV = document.getElementById("objet_du_RDV").value;
 
-    fetch("http://localhost:8000/api/book-appointment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            full_name: fullName,
-            phone: phone,
-            email: email,
-            categorie_de_service: categorie_de_service,
-            numero_immatriculation: numero_immatriculation,
-            modele: modele,
-            objet_du_RDV: objet_du_RDV,
-            garage_ref: garageRef,
-            appointment_day: selectedDate,
-            appointment_time: selectedTime,
-        }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.status === "verification_required") {
-                showStep("step4");
-            } else {
-                showError(
-                    data.message || "An error occurred. Please try again."
-                );
-            }
+    if (fullName === "") {
+        showError("le nom est obligatoire! ");
+        document.getElementById("full_name").classList.add("border-red-500");
+    } else {
+        document.getElementById("full_name").classList.remove("border-red-500");
+    }
+    if (phone === "") {
+        showError("le telephone est obligatoire! ");
+        document.getElementById("phone").classList.add("border-red-500");
+    } else {
+        document.getElementById("phone").classList.remove("border-red-500");
+    }
+    if (fullName !== "" && phone !== "") {
+        showLoading(); // Show spinner
+        fetch("http://localhost:8000/api/book-appointment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                full_name: fullName,
+                phone: phone,
+                email: email,
+                categorie_de_service: categorie_de_service,
+                numero_immatriculation: numero_immatriculation,
+                modele: modele,
+                objet_du_RDV: objet_du_RDV,
+                garage_ref: garageRef,
+                appointment_day: selectedDate,
+                appointment_time: selectedTime,
+            }),
         })
-        .catch((error) => {
-            console.error("Error:", error);
-            showError("An error occurred. Please try again.");
-        })
-        .finally(() => {
-            hideLoading(); // Hide spinner
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "verification_required") {
+                    showStep("step4");
+                } else {
+                    showError(
+                        data.message || "An error occurred. Please try again."
+                    );
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                showError("An error occurred. Please try again.");
+            })
+            .finally(() => {
+                document.getElementById("bookingForm").classList.add("hidden");
+                document.getElementById("times").classList.add("hidden");
+                document.getElementById("step1").classList.add("hidden");
+
+                hideLoading();
+
+                // Hide spinner
+            });
+    }
 };
 
 // Handle verification code submission
