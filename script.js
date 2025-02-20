@@ -231,13 +231,13 @@ document.getElementById("bookingForm").onsubmit = function (e) {
     let objet_du_RDV = document.getElementById("objet_du_RDV").value;
 
     if (fullName === "") {
-        showError("le nom est obligatoire! ");
+        showError("le nom et telephone est obligatoire! ");
         document.getElementById("full_name").classList.add("border-red-500");
     } else {
         document.getElementById("full_name").classList.remove("border-red-500");
     }
     if (phone === "") {
-        showError("le telephone est obligatoire! ");
+        showError("le nom et le telephone est obligatoire! ");
         document.getElementById("phone").classList.add("border-red-500");
     } else {
         document.getElementById("phone").classList.remove("border-red-500");
@@ -322,7 +322,12 @@ document.getElementById("verifyCode").addEventListener("click", () => {
         .then((response) => response.json())
         .then((data) => {
             if (data.message === "Appointment booked successfully!") {
-                alert(data.message); // Replace with a success message on the page
+                if (data.account) {
+                    // Replace with a success message on the page
+                    alert("YOU HAVE ACCOUNT "); // Replace with a success message on the page
+                } else {
+                    alert(data.message); // Replace with a success message on the page
+                }
                 window.location.href = "/success-page"; // Redirect to a success page
             } else {
                 showError(data.message || "Invalid verification code.");

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\GarageSchedule;
 use App\Models\GarageUnavailableTime;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
@@ -187,7 +188,13 @@ class AppointmentController extends Controller
             // Clear the verification code from cache
             Cache::forget('verification_code_' . $email);
 
-            return response()->json(['message' => 'Appointment booked successfully!']);
+            $existEmail = User::where('email', $email)->first();
+
+            if ($existEmail) {
+                return response()->json(['message' => 'Appointment booked successfully!', 'account' => true]);
+            } else {
+                return response()->json(['message' => 'Appointment booked successfully!', 'account' => false]);
+            }
         } else {
             return response()->json(['message' => 'Invalid verification code.'], 400);
         }
