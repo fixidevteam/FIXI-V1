@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminGestionCalendrierController;
 use App\Http\Controllers\Admin\AdminGestionCategorieController;
 use App\Http\Controllers\Admin\AdminGestionGarageController;
 use App\Http\Controllers\Admin\AdminGestionMarqueContoller;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Admin\AdminGestionSousOperationController;
 use App\Http\Controllers\Admin\AdminGestionUserController;
 use App\Http\Controllers\Admin\AdminGestionVilleController;
 use App\Http\Controllers\Admin\AdminGestionPromotionsController;
+use App\Http\Controllers\Admin\AdminGestionReservationsController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -55,6 +57,17 @@ Route::middleware('auth:admin')->prefix('fp-admin')->name('admin.')->group(funct
     Route::resource('/gestionVille', AdminGestionVilleController::class);
     Route::resource('/gestionQuartier', AdminGestionQuartierController::class);
     Route::resource('/gestionPromotions', AdminGestionPromotionsController::class);
+    Route::resource('/gestionReservations', AdminGestionReservationsController::class);
+    Route::patch('/gestionReservations/{id}/update-status', [AdminGestionReservationsController::class, 'updateStatus'])
+        ->name('reservations.updateStatus');
+    Route::get('/gestionCalendrier', [AdminGestionCalendrierController::class, 'index'])->name('gestionCalendrier.index');
+    Route::get('/gestionCalendrier/{id}', [AdminGestionCalendrierController::class, 'show'])->name('gestionCalendrier.show');
+    Route::get('/gestionCalendrier/{id}/create', [AdminGestionCalendrierController::class, 'create'])->name('gestionCalendrier.create');
+    Route::post('/gestionCalendrier/{id}/store', [AdminGestionCalendrierController::class, 'store'])->name('gestionCalendrier.store');
+    Route::get('/gestionCalendrier/{id}/edit', [AdminGestionCalendrierController::class, 'edit'])->name('gestionCalendrier.edit');
+    Route::patch('/gestionCalendrier/update/{id}', [AdminGestionCalendrierController::class, 'update'])->name('gestionCalendrier.update');
+    Route::delete('/gestionCalendrier/destroy/{id}', [AdminGestionCalendrierController::class, 'destroy'])->name('gestionCalendrier.destroy');
+
 
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

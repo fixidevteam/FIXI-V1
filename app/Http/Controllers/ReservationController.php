@@ -16,20 +16,22 @@ class ReservationController extends Controller
     {
         $user = Auth()->user()->email;
 
-        // Fetch appointments with garage details
+        // Fetch paginated appointments ordered by latest
         $appointments = Appointment::where('user_email', $user)
             ->join('garages', 'appointments.garage_ref', '=', 'garages.ref')
             ->select('appointments.*', 'garages.name as garage_name')
-            ->get();
-        // dd($appointments);
+            ->orderBy('appointments.created_at', 'desc') // Order by latest
+            ->paginate(10); // Paginate with 10 records per page
+
         // Check if appointments exist
         if ($appointments->isEmpty()) {
-            return back()->with('error', 'You have no appointments.');
+            return back()->with('error', 'Vous n\'avez aucun rendez-vous.');
         }
 
         // Pass the data to the view
         return view('userRdv.index', compact('appointments'));
     }
+
 
     /**
      * Show the form for creating a new resource.

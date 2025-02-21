@@ -320,4 +320,4 @@
       modal.classList.toggle('flex', show);
     }
   </script>
-  </x-app-layout>
+  </x-admin-app-layout>
