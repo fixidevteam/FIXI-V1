@@ -1,4 +1,4 @@
-<x-mechanic-app-layout :subtitle="'Modifier calendrier'">
+<x-admin-app-layout>
     <div class="p-4 sm:ml-64">
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             {{-- content (slot on layouts/app.blade.php)--}}
@@ -9,7 +9,7 @@
                     class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                     <li class="inline-flex items-center">
                         <a
-                            href="{{ route('mechanic.dashboard') }}"
+                            href="{{ route('admin.dashboard') }}"
                             class="inline-flex items-center text-sm font-medium text-gray-700">
                             Accueil
                         </a>
@@ -30,7 +30,7 @@
                                     d="m1 9 4-4-4-4" />
                             </svg>
                             <a
-                                href="{{ route('mechanic.calendrier.index') }}"
+                                href="{{ route('admin.gestionCalendrier.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
                                 Calendrier des rendez-vous
                             </a>
@@ -65,7 +65,7 @@
         {{-- content --}}
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             {{-- content (slot on layouts/app.blade.php)--}}
-            <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @if ($errors->any())
                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
                         <ul>
@@ -75,15 +75,14 @@
                         </ul>
                     </div>
                 @endif
-                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Modifier Calendrier</h2>
-                <form method="POST" action="{{ route('mechanic.calendrier.update',$schedule->id) }}" class="space-y-6">
+                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Modifier Calendrier  pour {{ $garage->name }}</h2>
+                <form method="POST" action="{{ route('admin.gestionCalendrier.update',$schedule->id) }}" class="space-y-6">
                     @csrf
-                    @method('PUT')
+                    @method('PATCH')
                 
                     <div>
                         <x-input-label for="available_day" :value="__('Jour disponible')" />
                         <select id="available_day" name="available_day" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
-                            <option value="">Choisissez un jour</option>
                             @foreach ($daysOfWeek as $key => $value)
                                 <option value="{{ $key }}" {{ old('available_day', $schedule->available_day) == $key ? 'selected' : '' }}>
                                     {{ $value }}
@@ -123,7 +122,7 @@
                             @foreach ($unavailableTimes as $unavailable)
                                 <div class="unavailable-time mt-2 flex gap-2 items-center">
                                     <input type="hidden" name="unavailable_ids[]" value="{{ $unavailable->id }}">
-                                    <input type="time" name="unavailable_from[]" value="{{ $unavailable->unavailable_from }}" class="unavailable_from rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-600 block w-full">
+                                    <input type="time" name="unavailable_from[]" value="{{ $unavailable->unavailable_from }}" class="unavailable_from  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-600 block w-full">
                                     <input type="time" name="unavailable_to[]" value="{{ $unavailable->unavailable_to }}" class="unavailable_to rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-600 block w-full">
                                     <button type="button" class="remove-unavailable text-red-600 hover:text-red-800 px-2">
                                         ❌
@@ -153,25 +152,30 @@
     <script>
         document.getElementById('addUnavailable').addEventListener('click', function () {
             let div = document.createElement('div');
-            div.classList.add('unavailable-time', 'mt-2', 'flex', 'gap-2', 'items-center');
+            div.classList.add('flex', 'gap-4', 'unavailable-item');
             div.innerHTML = `
-                <input type="hidden" name="unavailable_ids[]" value="">
-                <input type="time" name="unavailable_from[]" class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-600 block w-full">
-                <input type="time" name="unavailable_to[]" class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-600 block w-full">
-                <button type="button" class="remove-unavailable text-red-600 hover:text-red-800 px-2">❌</button>
+                <div class="w-full">
+                    <label class="block text-sm font-medium text-gray-700">Début :</label>
+                    <input type="time" name="unavailable_from[]" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div class="w-full">
+                    <label class="block text-sm font-medium text-gray-700">Fin :</label>
+                    <input type="time" name="unavailable_to[]" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <button type="button" class="remove-unavailable text-red-600 mt-7">❌</button>
             `;
-    
+
             document.getElementById('unavailableTimes').appendChild(div);
-    
+
             div.querySelector('.remove-unavailable').addEventListener('click', function () {
                 div.remove();
             });
         });
-    
+
         document.querySelectorAll('.remove-unavailable').forEach(button => {
             button.addEventListener('click', function () {
                 this.parentElement.remove();
             });
         });
     </script>
-</x-mechanic-app-layout>
+</x-admin-app-layout>
