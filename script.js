@@ -87,7 +87,7 @@ function fetchAvailableDates() {
             if (data.available_dates && data.available_dates.length > 0) {
                 availableDates = data.available_dates;
                 disabledDates = data.unavailable_dates;
-                console.log(disabledDates);
+                
 
                 initDatePicker();
             } else {
