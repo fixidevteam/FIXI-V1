@@ -127,6 +127,10 @@
                         </table>
                     </div>
                     @endif
+                    <!-- Pagination -->
+                    <div class="my-4" id="paginationLinks">
+                        {{ $appointments->links() }}
+                    </div>
                 </div>
                 {{-- table close --}}
             </div>
