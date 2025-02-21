@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\GarageSchedule;
 use App\Models\GarageUnavailableTime;
+use App\Models\jour_indisponible;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -39,10 +40,15 @@ class AppointmentController extends Controller
                 $dates[] = $date->format('Y-m-d');
             }
         }
+        // fetch unavaible days 
+        $disabledDates = jour_indisponible::where('garage_ref', $garage_ref)
+            ->pluck('date')
+            ->toArray();
 
         return response()->json([
             'available_dates' => $dates,
-            
+            'unavailable_dates' => $disabledDates,
+
         ]);
     }
 

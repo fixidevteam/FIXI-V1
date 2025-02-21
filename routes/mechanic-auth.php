@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\getAnalyticsDataController;
 use App\Http\Controllers\Mechanic\ChartContoller;
 use App\Http\Controllers\Mechanic\ExportController;
+use App\Http\Controllers\Mechanic\JourIndisponibleController;
 use App\Http\Controllers\Mechanic\MechanicCalendrierController;
 use App\Http\Controllers\Mechanic\MechanicClientController;
 use App\Http\Controllers\Mechanic\MechanicOperatioController;
@@ -51,8 +52,13 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::resource('/jour-indisponible',JourIndisponibleController::class);
+
     Route::get('/test', function () {
         return view('mechanic.test1');
     });
+
+
     Route::get('/api/reservations/{year}/{month}', [RendezVousController::class, 'index']);
 });

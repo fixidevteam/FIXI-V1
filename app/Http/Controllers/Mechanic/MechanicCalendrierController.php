@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\garage;
 use App\Models\GarageSchedule;
 use App\Models\GarageUnavailableTime;
+use App\Models\jour_indisponible;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,7 +41,10 @@ class MechanicCalendrierController extends Controller
             '6' => 'Samedi',
         ];
 
-        return view('mechanic.calendrier.index', compact('schedules', 'unavailableTimes', 'daysOfWeek'));
+        $ref = Auth::user()->garage->ref;
+        $disabledDates = jour_indisponible::where('garage_ref', $ref)->get();
+
+        return view('mechanic.calendrier.index', compact('schedules', 'disabledDates', 'unavailableTimes', 'daysOfWeek'));
     }
 
 

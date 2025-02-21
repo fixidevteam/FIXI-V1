@@ -1,4 +1,5 @@
 let availableDates = [];
+let disabledDates = [];
 let selectedDate = "";
 let selectedTime = "";
 let verificationData = null; // To store verification response
@@ -85,6 +86,9 @@ function fetchAvailableDates() {
         .then((data) => {
             if (data.available_dates && data.available_dates.length > 0) {
                 availableDates = data.available_dates;
+                disabledDates = data.unavailable_dates;
+                console.log(disabledDates);
+
                 initDatePicker();
             } else {
                 showError("Aucune date disponible pour ce garage.");
@@ -98,27 +102,37 @@ function fetchAvailableDates() {
             hideLoading(); // Hide spinner
         });
 }
-
-// Initialize the date picker
 // function initDatePicker() {
 //     flatpickr("#datePicker", {
 //         dateFormat: "Y-m-d",
-//         enable: availableDates,
+//         enable: [
+//             function (date) {
+//                 // Format the date to "Y-m-d"
+//                 const formattedDate = date.toISOString().slice(0, 10);
+
+//                 // Enable only if the date is in availableDates AND NOT in disabledDates
+//                 return (
+//                     availableDates.includes(formattedDate) &&
+//                     !disabledDates.includes(formattedDate)
+//                 );
+//             },
+//         ],
 //         onChange: function (selectedDates, dateStr) {
 //             selectedDate = dateStr;
 //             fetchTimeSlots(dateStr); // Fetch available time slots when a date is selected
 //         },
 //     });
 // }
-const disabledDates = ["2025-02-26","2025-02-27"]; // Add all dates you want to disable
+
+// Fetch time slots for the selected date
 
 function initDatePicker() {
     flatpickr("#datePicker", {
         dateFormat: "Y-m-d",
         enable: [
             function (date) {
-                // Format the date to "Y-m-d"
-                const formattedDate = date.toISOString().slice(0, 10);
+                // Use flatpickr's formatDate to avoid timezone issues
+                const formattedDate = flatpickr.formatDate(date, "Y-m-d");
 
                 // Enable only if the date is in availableDates AND NOT in disabledDates
                 return (
@@ -131,13 +145,9 @@ function initDatePicker() {
             selectedDate = dateStr;
             fetchTimeSlots(dateStr); // Fetch available time slots when a date is selected
         },
-        locale: {
-            firstDayOfWeek: 1, // Start week on Monday
-        },
     });
 }
 
-// Fetch time slots for the selected date
 function fetchTimeSlots(date) {
     showLoading(); // Show spinner
     fetch(
