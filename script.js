@@ -87,7 +87,7 @@ function fetchAvailableDates() {
             if (data.available_dates && data.available_dates.length > 0) {
                 availableDates = data.available_dates;
                 disabledDates = data.unavailable_dates;
-                
+                console.log(disabledDates);
 
                 initDatePicker();
             } else {
@@ -150,14 +150,14 @@ function fetchTimeSlots(date) {
                         "text-sm",
                         "font-medium",
                         "text-center",
-                        "bg-white",
+                        "!bg-white",
                         "border",
                         "rounded-[20px]",
                         "cursor-pointer",
-                        "text-red-600",
-                        "border-red-600",
-                        "hover:text-white",
-                        "hover:bg-red-600"
+                        "!text-red-600",
+                        "!border-red-600",
+                        "!hover:text-white",
+                        "!hover:bg-red-600"
                     );
 
                     btn.onclick = () => {
@@ -165,11 +165,11 @@ function fetchTimeSlots(date) {
                             .querySelectorAll("#times button")
                             .forEach((button) => {
                                 button.classList.remove(
-                                    "bg-red-700",
-                                    "text-white"
+                                    "!bg-red-700",
+                                    "!text-white"
                                 );
                             });
-                        btn.classList.add("bg-red-700", "text-white");
+                        btn.classList.add("!bg-red-700", "!text-white");
                         selectedTime = time;
                     };
 
@@ -343,5 +343,3 @@ document.getElementById("verifyCode").addEventListener("click", () => {
             hideLoading(); // Hide spinner
         });
 });
-
-
