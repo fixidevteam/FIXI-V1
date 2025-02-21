@@ -89,10 +89,11 @@ class AppointmentController extends Controller
                 return $timeSlot >= $unavailable->unavailable_from && $timeSlot < $unavailable->unavailable_to;
             });
 
-            // Check if the slot is already booked
+            // Check if the slot is already booked and is not cancelled
             $isBooked = Appointment::where('garage_ref', $garage_ref)
                 ->where('appointment_day', $selectedDate)
                 ->where('appointment_time', $timeSlot)
+                ->where('status', '!=', 'cancelled') // Ensure only active bookings block slots
                 ->exists();
 
             if (!$isUnavailable && !$isBooked) {
