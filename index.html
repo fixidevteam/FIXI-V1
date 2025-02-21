@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Prise de rendez-vous au garage || SHADOW007</title>
         <!-- css tailwind -->
-        <!-- <link rel="stylesheet" href="css/main.css" /> -->
         <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Flatpickr for date selection -->
@@ -33,96 +32,6 @@
                 ></div>
             </div>
             <!-- Progress Indicator -->
-            <!-- <div
-                class="m-auto flex items-center w-full text-sm font-medium text-center text-gray-500 sm:text-base mb-8 scale-[0.7] md:scale-100"
-            >
-                <div
-                    id="step1-indicator"
-                    class="flex md:w-full items-center text-red-600 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10"
-                >
-                    <span
-                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200"
-                    >
-                        <svg
-                            id="step1-check"
-                            class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5 hidden"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                            />
-                        </svg>
-                        <span id="step1-text">1</span>
-                        Choisissez la Date
-                    </span>
-                </div>
-                <div
-                    id="step2-indicator"
-                    class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10"
-                >
-                    <span
-                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200"
-                    >
-                        <svg
-                            id="step2-check"
-                            class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5 hidden"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                            />
-                        </svg>
-                        <span id="step2-text">2</span>
-                        Choisissez l'heure
-                    </span>
-                </div>
-                <div
-                    id="step3-indicator"
-                    class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10"
-                >
-                    <span
-                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200"
-                    >
-                        <svg
-                            id="step3-check"
-                            class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5 hidden"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                            />
-                        </svg>
-                        <span id="step3-text">3</span>
-                        Informations Personnelle
-                    </span>
-                </div>
-                <div id="step4-indicator" class="flex items-center">
-                    <svg
-                        id="step4-check"
-                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5 hidden"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                        />
-                    </svg>
-                    <span id="step4-text">4</span>
-                    Vérification
-                </div>
-            </div> -->
-
             <div
                 class="m-auto flex items-center justify-center w-full text-sm font-medium text-center text-gray-500 sm:text-base mb-8 scale-[0.7] md:scale-100"
             >
@@ -230,7 +139,7 @@
             ></div>
 
             <!-- Step 1: Date Selection -->
-            <div id="step1" class="step active" >
+            <div id="step1" class="step active">
                 <div class="mb-6">
                     <label
                         for="datePicker"
@@ -259,12 +168,6 @@
             <div id="step2" class="step hidden">
                 <div id="times" class="mt-6 grid grid-cols-2 gap-4"></div>
                 <div class="flex gap-4 mt-6">
-                    <!-- <button
-            id="prevStep2"
-            class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-red-300"
-          >
-            Précédent
-          </button> -->
                     <button
                         id="nextStep2"
                         class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300"
@@ -347,12 +250,6 @@
                         />
                     </div>
                     <div class="flex gap-4">
-                        <!-- <button
-              id="prevStep3"
-              class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-red-300"
-            >
-              Précédent
-            </button> -->
                         <button
                             type="submit"
                             class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300"
@@ -380,12 +277,6 @@
                     />
                 </div>
                 <div class="flex gap-4 mt-6">
-                    <!-- <button
-            id="prevStep4"
-            class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-red-300"
-          >
-            Précédent
-          </button> -->
                     <button
                         id="verifyCode"
                         class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300"

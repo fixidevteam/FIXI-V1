@@ -102,27 +102,6 @@ function fetchAvailableDates() {
             hideLoading(); // Hide spinner
         });
 }
-// function initDatePicker() {
-//     flatpickr("#datePicker", {
-//         dateFormat: "Y-m-d",
-//         enable: [
-//             function (date) {
-//                 // Format the date to "Y-m-d"
-//                 const formattedDate = date.toISOString().slice(0, 10);
-
-//                 // Enable only if the date is in availableDates AND NOT in disabledDates
-//                 return (
-//                     availableDates.includes(formattedDate) &&
-//                     !disabledDates.includes(formattedDate)
-//                 );
-//             },
-//         ],
-//         onChange: function (selectedDates, dateStr) {
-//             selectedDate = dateStr;
-//             fetchTimeSlots(dateStr); // Fetch available time slots when a date is selected
-//         },
-//     });
-// }
 
 // Fetch time slots for the selected date
 
@@ -212,12 +191,6 @@ function showStep(stepId) {
     document.getElementById(stepId).classList.remove("hidden");
     updateProgressIndicator(Number(stepId.replace("step", "")));
     clearError(); // Clear errors when switching steps
-    // document.querySelectorAll(".step").forEach((step) => {
-    //     step.classList.add("hidden");
-    // });
-    // document.getElementById(stepId).classList.remove("hidden");
-    // updateProgressIndicator(Number(stepId.replace("step", "")));
-    // clearError(); // Clear errors when switching steps
 }
 
 // Event listeners for navigation buttons
@@ -233,10 +206,6 @@ document.getElementById("nextStep1").addEventListener("click", () => {
     showStep("step2");
 });
 
-// document.getElementById("prevStep2").addEventListener("click", () => {
-//     showStep("step1");
-// });
-
 document.getElementById("nextStep2").addEventListener("click", () => {
     if (!selectedTime) {
         showError("Please select a time slot.");
@@ -246,10 +215,6 @@ document.getElementById("nextStep2").addEventListener("click", () => {
 
     showStep("step3");
 });
-
-// document.getElementById("prevStep3").addEventListener("click", () => {
-//     showStep("step2");
-// });
 
 // Handle form submission
 document.getElementById("bookingForm").onsubmit = function (e) {
@@ -360,11 +325,9 @@ document.getElementById("verifyCode").addEventListener("click", () => {
             if (data.message === "Appointment booked successfully!") {
                 if (data.account) {
                     // Replace with a success message on the page
-                    // alert("YOU HAVE ACCOUNT "); // Replace with a success message on the page
                     window.location.href =
                         "https://fixidev.com/success-page?ejkn2=hzne2"; // Redirect to a success page
                 } else {
-                    // alert(data.message); // Replace with a success message on the page
                     window.location.href =
                         "https://fixidev.com/success-page?ejkn2=kmal4"; // Redirect to a success page
                 }
@@ -381,6 +344,4 @@ document.getElementById("verifyCode").addEventListener("click", () => {
         });
 });
 
-// document.getElementById("prevStep4").addEventListener("click", () => {
-//     showStep("step3");
-// });
+
