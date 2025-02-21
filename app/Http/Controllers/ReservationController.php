@@ -54,7 +54,13 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $appointment = Appointment::find($id);
+        $garage = garage::where('ref', $appointment->garage_ref)->first();
+
+        if (empty($appointment)) {
+            return back();
+        }
+        return view('userRdv.show', compact('appointment', 'garage'));
     }
 
     /**

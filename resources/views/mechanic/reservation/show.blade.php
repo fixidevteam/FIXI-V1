@@ -68,7 +68,53 @@
         <div class="flex justify-between items-center my-6">
           <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Détails du rendez-vous</h2>
         </div>
-        
+        {{-- alert --}}
+        @foreach (['success', 'error'] as $type)
+        @if (session($type))
+        <div class="fixed top-20 right-4 mb-5 flex justify-end z-10"
+            x-data="{ show: true }" 
+            x-show="show" 
+            x-transition:leave="transition ease-in duration-1000" 
+            x-transition:leave-start="opacity-100" 
+            x-transition:leave-end="opacity-0" 
+            x-init="setTimeout(() => show = false, 3000)" 
+            >
+                <div role="alert" class="rounded-xl border border-gray-100 bg-white p-4 shadow-md">
+                    <div class="flex items-start gap-4">
+                    <span class="{{ $type === 'success' ? 'text-green-600' : 'text-red-600' }}">
+                        @if ($type === 'success')
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-6"
+                        >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                        </svg>
+                        @else
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V13C12.75 13.4142 12.4142 13.75 12 13.75C11.5858 13.75 11.25 13.4142 11.25 13V7C11.25 6.58579 11.5858 6.25 12 6.25Z" fill="currentColor"/>
+                            <path d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z" fill="currentColor"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75Z" fill="currentColor"/>
+                        </svg>
+                        @endif
+                    </span>
+                    <div class="flex-1">
+                        <strong class="block font-medium text-gray-900"> {{ session($type) }} </strong>
+                        <p class="mt-1 text-sm text-gray-700">{{ session('subtitle') }}</p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        @endforeach
+        {{-- alert close --}}
         <div>
           <dl class="w-full text-gray-900 divide-y divide-gray-200">
             <div class="flex flex-col pb-3">
@@ -113,6 +159,24 @@
             </div>
           </dl>
         </div>
+        {{-- update status --}}
+        <form method="POST" action="{{ route('mechanic.reservation.updateStatus', $appointment->id) }}">
+          @csrf
+          @method('PATCH')
+      
+          <div class="flex space-x-4 mt-6">
+              <button type="submit" name="status" value="en_cour" class="px-4 py-2 bg-yellow-500 text-white rounded">
+                  Marquer comme En attente
+              </button>
+              <button type="submit" name="status" value="Confirmed" class="px-4 py-2 bg-green-500 text-white rounded">
+                  Marquer comme Confirmé
+              </button>
+              <button type="submit" name="status" value="cancelled" class="px-4 py-2 bg-red-500 text-white rounded">
+                  Marquer comme Annulé
+              </button>
+          </div>
+        </form>
+      {{-- end  --}}
 
       </div>
     </div>

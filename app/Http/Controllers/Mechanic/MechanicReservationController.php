@@ -109,6 +109,17 @@ class MechanicReservationController extends Controller
     {
         //
     }
+    /**
+     * Update the status of appointment.
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = $request->status;
+        $appointment->save();
+
+        return redirect()->back()->with('success', 'Le statut a été mis à jour avec succès.');
+    }
 
     /**
      * Remove the specified resource from storage.
