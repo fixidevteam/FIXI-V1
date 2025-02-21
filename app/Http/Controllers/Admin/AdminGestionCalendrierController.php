@@ -243,6 +243,6 @@ class AdminGestionCalendrierController extends Controller
         // Delete schedule
         $schedule->delete();
 
-        return redirect()->route('admin.gestionCalendrier.index')->with('success', 'Calendrier supprimé avec succès.');
+        return redirect()->route('admin.gestionCalendrier.show', $garage->id)->with('success', 'Calendrier supprimé avec succès.');
     }
 }
