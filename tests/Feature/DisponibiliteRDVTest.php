@@ -99,9 +99,6 @@ class DisponibiliteRDVTest extends TestCase
             'localisation' => 'Casablanca',
             'ville' => 'Casablanca',
         ]);
-
-
-        
         $selectedDate = now()->addDays(5)->toDateString();
 
         // Call the API without a schedule
