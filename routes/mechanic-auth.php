@@ -44,6 +44,8 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
     Route::resource('/promotions', MechanicPromotionController::class);
     Route::resource('/calendrier', MechanicCalendrierController::class);
     Route::resource('/reservation', MechanicReservationController::class);
+    Route::patch('/reservation/{id}/update-status', [MechanicReservationController::class, 'updateStatus'])
+    ->name('reservation.updateStatus');
     Route::get('/analytics-data', [getAnalyticsDataController::class, 'getAnalyticsData'])->name('analytics.data');
     Route::get('/chart', [ChartContoller::class, 'index'])->name('chart');
     Route::get('/mechanic/voitures/export/{voitureId}', [ExportController::class, 'exportOperations'])->name('voitures.export');

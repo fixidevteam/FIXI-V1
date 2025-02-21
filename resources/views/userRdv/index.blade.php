@@ -119,7 +119,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        action
+                                        <a href="{{ route('RDV.show',$appointment->id) }}" class="font-medium capitalize text-blue-600 dark:text-blue-500 hover:underline">Détails</a>
                                     </td>
                                 </tr>
                                 @endforeach
