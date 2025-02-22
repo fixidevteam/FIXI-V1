@@ -81,7 +81,7 @@ class AppointmentController extends Controller
         $toTime = Carbon::createFromFormat('H:i:s', $schedule->available_to);
         $slots = [];
 
-        while ($fromTime->lessThanOrEqualTo($toTime)) {
+        while ($fromTime->lessThan($toTime)) {
             $timeSlot = $fromTime->format('H:i:s');
 
             // Check if the slot falls within an unavailable period

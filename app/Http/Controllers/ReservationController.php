@@ -54,14 +54,22 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        $appointment = Appointment::find($id);
+        $userEmail = Auth()->user()->email;
+
+        // Find the appointment by id and user email
+        $appointment = Appointment::where('id', $id)
+            ->where('user_email', $userEmail)
+            ->first();
+
+        if (!$appointment) {
+            return back()->with('error', 'Rendez-vous introuvable.');
+        }
+
         $garage = garage::where('ref', $appointment->garage_ref)->first();
 
-        if (empty($appointment)) {
-            return back();
-        }
         return view('userRdv.show', compact('appointment', 'garage'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

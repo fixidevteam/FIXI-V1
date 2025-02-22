@@ -82,13 +82,13 @@ class MechanicReservationController extends Controller
         // Check if the schedule exists
         if (!$appointment) {
             return redirect()->route('mechanic.reservation.index')
-                ->with('error', 'appointment not found.');
+                ->with('error', 'Rendez-vous introuvable.');
         }
 
         // Check if the schedule belongs to the authenticated user's garage
         if ($appointment->garage_ref !== $garage->ref) {
             return redirect()->route('mechanic.reservation.index')
-                ->with('error', 'You are not authorized to show this appointment.');
+                ->with('error', 'Vous n\'êtes pas autorisé à afficher ce rendez-vous.');
         }
 
         return view('mechanic.reservation.show', compact('appointment'));

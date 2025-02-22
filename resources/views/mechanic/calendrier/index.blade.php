@@ -219,12 +219,11 @@
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.25C6.06294 1.25 1.25 6.06294 1.25 12C1.25 17.9371 6.06294 22.75 12 22.75C17.9371 22.75 22.75 17.9371 22.75 12C22.75 6.06294 17.9371 1.25 12 1.25ZM2.75 12C2.75 6.89137 6.89137 2.75 12 2.75C17.1086 2.75 21.25 6.89137 21.25 12C21.25 17.1086 17.1086 21.25 12 21.25C6.89137 21.25 2.75 17.1086 2.75 12Z" fill="currentColor" />
                             </svg>
                         </x-primary-button>
+                    </a>
                 </div>
                 <div class="my-5">
                     <div>
                         <h2 class="mb-3 text-xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilités</h2>
-
-                        </a>
                     </div>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($disabledDates->isEmpty())
