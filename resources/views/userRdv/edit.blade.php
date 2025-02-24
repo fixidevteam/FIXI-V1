@@ -118,13 +118,16 @@
                             @method('PUT')
                             <div>
                                 <x-input-label for="note" :value="__('Garage')" />
-                                <x-text-input id="garage" class="block mt-1 w-full cursor-not-allowed " type="text" name="garage" :value="old('garage') ?? $garage->name" autofocus autocomplete="garage" disabled readonly />
+                                <x-text-input id="garage" class="block bg-gray-200 mt-1 w-full cursor-not-allowed " type="text" name="garage" :value="old('garage') ?? $garage->name" autofocus autocomplete="garage" disabled readonly />
                                 <x-input-error :messages="$errors->get('garage')" class="mt-2" />
                             </div>
                             <div>
                                 <x-input-label for="note" :value="__('Garage ref')" />
-                                <x-text-input id="garage_ref" class="block mt-1 w-full cursor-not-allowed " type="text" name="garage_ref" :value="old('garage_ref') ?? $garage->ref" autofocus autocomplete="garage_ref" disabled readonly />
+                                <x-text-input id="garage_ref" class="block bg-gray-200 mt-1 w-full cursor-not-allowed " type="text" name="garage_ref" :value="old('garage_ref') ?? $garage->ref" autofocus autocomplete="garage_ref" disabled readonly />
                                 <x-input-error :messages="$errors->get('garage_ref')" class="mt-2" />
+                            </div>
+                            <div class="flex justify-center ">
+                                <hr class="h-[2px]  bg-gray-200 border-0 w-[90%]">
                             </div>
                             <div id="step1" class="step">
                                 <label
