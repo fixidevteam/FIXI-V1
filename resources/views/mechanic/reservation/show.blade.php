@@ -190,7 +190,7 @@
         </button>
       </div>
       
-      <div id="modal-en_cour" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+      <div id="modal-en_cour" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
         <div class="bg-white p-6 rounded shadow-lg">
           <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
           <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "En attente" ?</p>
@@ -206,7 +206,7 @@
       </div>
       
       
-      <div id="modal-confirmed" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+      <div id="modal-confirmed" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
         <div class="bg-white p-6 rounded shadow-lg">
           <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
           <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "Confirmé" ?</p>
@@ -221,7 +221,7 @@
         </div>
       </div>
             
-      <div id="modal-cancelled" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+      <div id="modal-cancelled" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
         <div class="bg-white p-6 rounded shadow-lg">
           <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
           <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "Annulé" ? Cette action est irréversible.</p>
