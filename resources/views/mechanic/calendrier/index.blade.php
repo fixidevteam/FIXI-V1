@@ -1,4 +1,4 @@
-<x-mechanic-app-layout :subtitle="'Mon calendrier'">
+<x-mechanic-app-layout :subtitle="'Planning de travail'">
     <div class="p-4 sm:ml-64">
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             {{-- content (slot on layouts/app.blade.php)--}}
@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.calendrier.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Calendrier des rendez-vous
+                                Planning de travail
                             </a>
                         </div>
                     </li>
@@ -44,7 +44,7 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des Rendez-vous (Disponibilités)</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Horaires de travail</h2>
                 </div>
                 {{-- table --}}
                 <div class="my-5">
@@ -91,15 +91,12 @@
                     </div>
                     @endif
                     @endforeach
-                    <div>
-                        <h2 class="mb-3 text-xl font-bold leading-9 tracking-tight text-gray-900">Disponibilités</h2>
-                    </div>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($schedules->isEmpty())
-                        <p class="p-4 text-gray-500 text-center">Aucun calendrier disponible.</p>
+                        <p class="p-4 text-gray-500 text-center">Aucun Horaires de travail disponible.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Calendrier des Rendez-vous</caption>
+                            <caption class="sr-only">Horaires de travail</caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
@@ -158,18 +155,15 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des Rendez-vous (Indisponibilités)</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilité</h2>
                 </div>
                 <div class="my-5">
-                    <div>
-                        <h2 class="mb-3 text-xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilités</h2>
-                    </div>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($unavailableTimes->isEmpty())
-                        <p class="p-4 text-gray-500 text-center">Aucun calendrier disponible.</p>
+                        <p class="p-4 text-gray-500 text-center">Aucun Indisponibilité.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Calendrier des Rendez-vous</caption>
+                            <caption class="sr-only">Indisponibilité</caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
@@ -210,7 +204,7 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des jours indisponibiles </h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Jours indisponibiles</h2>
                     <a href="{{route('mechanic.jour-indisponible.create')}}">
                         <x-primary-button class="hidden md:block">Ajouter un jour</x-primary-button>
                         <x-primary-button class="sm:hidden">
@@ -222,9 +216,6 @@
                     </a>
                 </div>
                 <div class="my-5">
-                    <div>
-                        <h2 class="mb-3 text-xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilités</h2>
-                    </div>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($disabledDates->isEmpty())
                         <p class="p-4 text-gray-500 text-center">Il n'y a pas de jours indisponibles.</p>

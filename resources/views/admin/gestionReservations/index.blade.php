@@ -123,89 +123,8 @@
                     @endif
                     @endforeach
                     {{-- alert close --}}
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        @if($appointments->isEmpty())
-                        <p class="p-4 text-gray-500 text-center">Aucun rendez-vous trouvé.</p>
-                        @else
-                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Liste des garages</caption>
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        Client
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        email
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        tel
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        appointment day
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        appointment time
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Status
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach($appointments as $appointment)
-                                <tr class="bg-white border-b">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {{ $appointment->user_full_name }}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ $appointment->user_email ?? 'N/A'}}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $appointment->user_phone ?? 'N/A'}}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $appointment->appointment_day }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-full border border-blue-400">
-                                            <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                                            </svg>
-                                            {{ $appointment->appointment_time ?? 'N/A' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        @if($appointment->status === 'en_cour')
-                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
-                                                En Cour
-                                            </span>
-                                        @elseif($appointment->status === 'confirmed')
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
-                                                Confirmed
-                                            </span>
-                                        @elseif($appointment->status === 'cancelled')
-                                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
-                                                Cancelled
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <a href="{{ route('admin.gestionReservations.show',$appointment->id) }}" class="font-medium capitalize text-blue-600 dark:text-blue-500 hover:underline">détails</a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    @endif
-                    <!-- Pagination -->
-                    <div class="my-4" id="paginationLinks">
-                        {{ $appointments->links() }}
-                    </div>
+                     <!-- Calendar Container -->
+                    <div id="calendar"></div>
                 </div>
                 {{-- table close --}}
             </div>
@@ -216,4 +135,52 @@
             @include('layouts.footer')
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+        
+            // Check screen width for responsive view options
+            var isMobile = window.innerWidth < 768;
+        
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'fr', // Set calendar language to French
+                initialView: isMobile ? 'listWeek' : 'dayGridMonth', // Responsive initial view
+                headerToolbar: isMobile ? {
+                    left: 'prev,next today',
+                    center: '',
+                    right: 'listWeek'
+                } : {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: "Aujourd’hui",
+                    month: "Mois",
+                    week: "Semaine",
+                    day: "Jour",
+                    list: "Liste",
+                    next: "Suivant",
+                    prev: "Précédent"
+                },
+                events: @json($events),
+                eventTimeFormat: { // 24-hour format for event times
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                },
+                nowIndicator: true, // Show the current time indicator
+            });
+        
+            calendar.render();
+        
+            // Optional: Reload on window resize to adjust toolbar layout
+            window.addEventListener('resize', function() {
+                var newIsMobile = window.innerWidth < 768;
+                if (newIsMobile !== isMobile) {
+                    location.reload();
+                }
+            });
+        });
+        </script>
 </x-admin-app-layout>

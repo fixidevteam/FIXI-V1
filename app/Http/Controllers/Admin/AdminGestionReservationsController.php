@@ -14,18 +14,41 @@ class AdminGestionReservationsController extends Controller
      */
     public function index(Request $request)
     {
+        // Get all garages for the filter dropdown
         $garages = Garage::all();
+
+        // Build the appointment query
         $query = Appointment::query();
 
         if ($request->has('garage_ref') && !empty($request->garage_ref)) {
             $query->where('garage_ref', $request->garage_ref);
         }
 
-        // Order by latest (descending order)
-        $appointments = $query->orderBy('created_at', 'desc')->paginate(10);
+        // Fetch appointments (order as needed)
+        $appointments = $query->orderBy('created_at', 'desc')
+            ->get(['id', 'user_full_name', 'appointment_day', 'appointment_time', 'status']);
 
-        return view('admin.gestionReservations.index', compact('garages', 'appointments'));
+        // Map each appointment to FullCalendar event format
+        $events = $appointments->map(function ($appointment) {
+            $color = match ($appointment->status) {
+                'en_cour'   => 'orange',
+                'confirmed' => 'green',
+                'cancelled' => 'red',
+                default     => 'blue',
+            };
+
+            return [
+                'title' => 'Reservation: ' . $appointment->user_full_name,
+                'start' => $appointment->appointment_day . 'T' . $appointment->appointment_time,
+                'url'   => route('admin.gestionReservations.show', $appointment->id),
+                'time'  => $appointment->appointment_time,
+                'color' => $color,
+            ];
+        })->toArray();
+
+        return view('admin.gestionReservations.index', compact('garages', 'events'));
     }
+
 
 
 

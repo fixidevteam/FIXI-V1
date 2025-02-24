@@ -44,7 +44,7 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">List des Rendez-vous</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des rendez-vous</h2>
                 </div>
                 {{-- table --}}
                 <div class="my-5">
@@ -91,9 +91,9 @@
                     </div>
                     @endif
                     @endforeach
-                        <div id="calendar"></div>
+                    {{-- calendar  --}}
+                    <div id="calendar"></div>
                 </div>
-                {{-- table close --}}
             </div>
         </div>
         {{-- contet close colse --}}
@@ -103,7 +103,7 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
     // Detect screen size for responsive header buttons
@@ -146,9 +146,8 @@
         var newIsMobile = window.innerWidth < 768;
         if (newIsMobile !== isMobile) {
             location.reload(); // Reload to apply new toolbar layout
-        }
+            }
+        });
     });
-});
-
     </script>
 </x-mechanic-app-layout>

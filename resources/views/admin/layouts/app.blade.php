@@ -11,7 +11,27 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
 
+    <style>
+        @media (max-width: 768px) {
+            .fc-toolbar-chunk .fc-today-button {
+                margin-left: 6px !important;  /* Add left margin */
+                margin-top: 0 !important;    /* Remove top margin */
+            }
+            /* Hide the Liste button */
+            .fc-toolbar-chunk .fc-listWeek-button {
+                display: none !important;
+            }
+        }
+        @media (max-width: 320px) {
+            .fc-toolbar-chunk .fc-today-button {
+                margin-left: 0 !important;  /* Add left margin */
+                margin-top: 6px !important;    /* Remove top margin */
+            }
+        }
+    </style>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -25,6 +45,9 @@
     </main>
     </div>
 </body>
+    <!-- FullCalendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+
 <script>
     function toggleModal(show, form) {
         const modal = document.getElementById(form); // Get the modal element by ID
