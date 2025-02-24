@@ -118,43 +118,43 @@
           <div>
             <dl class="w-full text-gray-900 divide-y divide-gray-200">
               <div class="flex flex-col pb-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">Client Name</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Nom du client</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->user_full_name }}</dd>
               </div>
               <div class="flex flex-col py-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">Email</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Adresse E-Mail</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->user_email ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">Phone number</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">N° de téléphone</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->user_phone }}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">categorie de service</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Domaine de service</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">numero immatriculation</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">N° d’immatriculation</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->numero_immatriculation ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">modele</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Marque da la voiture</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">appointment day</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Date du rendez-vous</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->appointment_day }}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">appointment time</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Heure du rendez-vous</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->appointment_time }}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">status</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Statut du rendez-vous</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->status }}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">objet du RDV</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Message</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->objet_du_RDV ?? 'N/A'}}</dd>
               </div>
             </dl>
@@ -166,13 +166,13 @@
           
               <div class="flex space-x-4 mt-6">
                   <button type="submit" name="status" value="en_cour" class="px-4 py-2 bg-yellow-500 text-white rounded">
-                      Marquer comme En attente
+                      En attente
                   </button>
                   <button type="submit" name="status" value="Confirmed" class="px-4 py-2 bg-green-500 text-white rounded">
-                      Marquer comme Confirmé
+                      Confirmé
                   </button>
                   <button type="submit" name="status" value="cancelled" class="px-4 py-2 bg-red-500 text-white rounded">
-                      Marquer comme Annulé
+                      Annulé
                   </button>
               </div>
           </form>

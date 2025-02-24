@@ -49,6 +49,29 @@ class MechanicReservationController extends Controller
 
         return view('mechanic.reservation.index', compact('appointments'));
     }
+    /**
+     * index as list of appointments.
+     */
+    public function list()
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Fetch the garage associated with the mechanic
+        $garage = Garage::where('id', $user->garage_id)->first();
+
+        // Check if the garage exists
+        if (!$garage) {
+            return redirect()->back()->with('error', 'Garage not found.');
+        }
+
+        // Fetch paginated appointments for the garage, ordered by the latest
+        $appointments = Appointment::where('garage_ref', $garage->ref)
+            ->latest() // Orders by `created_at` descending
+            ->paginate(10); // Adjust per page as needed
+
+        return view('mechanic.reservation.list', compact('appointments'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -90,6 +113,8 @@ class MechanicReservationController extends Controller
             return redirect()->route('mechanic.reservation.index')
                 ->with('error', 'Vous n\'êtes pas autorisé à afficher ce rendez-vous.');
         }
+        // Store the referring URL before navigating to show page
+        session(['previous_url' => url()->previous()]);
 
         return view('mechanic.reservation.show', compact('appointment'));
     }
@@ -118,9 +143,15 @@ class MechanicReservationController extends Controller
         $appointment->status = $request->status;
         $appointment->save();
 
-        return redirect()->back()->with('success', 'Le statut a été mis à jour avec succès.');
-    }
+        // Retrieve the previous URL from the session
+        $previousUrl = session('previous_url');
 
+        if (str_contains($previousUrl, route('mechanic.reservation.index'))) {
+            return redirect()->route('mechanic.reservation.index')->with('success', 'Le statut a été mis à jour avec succès.');
+        } else {
+            return redirect()->route('mechanic.reservation.list')->with('success', 'Le statut a été mis à jour avec succès.');
+        }
+    }
     /**
      * Remove the specified resource from storage.
      */

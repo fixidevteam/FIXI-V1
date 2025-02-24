@@ -112,7 +112,17 @@ class MechanicCalendrierController extends Controller
     {
         $schedule = GarageSchedule::find($id);
         if (!$schedule) {
-            return redirect()->route('mechanic.calendrier.index')->with('error', 'Schedule not found.');
+            return redirect()->route('mechanic.calendrier.index')->with('error', 'Calendrier non trouvé.');
+        }
+
+        // Check if a schedule already exists for the given day (excluding the current one)
+        $existingSchedule = GarageSchedule::where('garage_ref', $schedule->garage_ref)
+            ->where('available_day', $request->available_day)
+            ->where('id', '!=', $id)
+            ->first();
+
+        if ($existingSchedule) {
+            return redirect()->route('mechanic.calendrier.index')->with('error', 'Un horaire existe déjà pour ce jour.');
         }
 
         // Validate form input

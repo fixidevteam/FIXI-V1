@@ -134,27 +134,27 @@
                   <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">Numero immatriculation</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">N° d’immatriculation</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->numero_immatriculation ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">Modele</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Marque da la voiture</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">appointment day</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Date du rendez-vous</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->appointment_day }}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">appointment time</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Heure du rendez-vous</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->appointment_time }}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">status</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Statut du rendez-vous</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->status }}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg">objet du RDV</dt>
+                  <dt class="mb-1 text-gray-500 md:text-lg">Message</dt>
                   <dd class="text-lg font-semibold">{{ $appointment->objet_du_RDV ?? 'N/A'}}</dd>
               </div>
             </dl>

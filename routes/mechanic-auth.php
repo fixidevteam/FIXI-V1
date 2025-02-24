@@ -44,8 +44,10 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
     Route::resource('/promotions', MechanicPromotionController::class);
     Route::resource('/calendrier', MechanicCalendrierController::class);
     Route::resource('/reservation', MechanicReservationController::class);
+    Route::get('/list', [MechanicReservationController::class, 'list'])
+        ->name('reservation.list');
     Route::patch('/reservation/{id}/update-status', [MechanicReservationController::class, 'updateStatus'])
-    ->name('reservation.updateStatus');
+        ->name('reservation.updateStatus');
     Route::get('/analytics-data', [getAnalyticsDataController::class, 'getAnalyticsData'])->name('analytics.data');
     Route::get('/chart', [ChartContoller::class, 'index'])->name('chart');
     Route::get('/mechanic/voitures/export/{voitureId}', [ExportController::class, 'exportOperations'])->name('voitures.export');
@@ -55,7 +57,7 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-    Route::resource('/jour-indisponible',JourIndisponibleController::class);
+    Route::resource('/jour-indisponible', JourIndisponibleController::class);
 
     Route::get('/test', function () {
         return view('mechanic.test1');

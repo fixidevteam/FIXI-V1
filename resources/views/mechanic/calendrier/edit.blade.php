@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.calendrier.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Calendrier des rendez-vous
+                                Planning de travail
                             </a>
                         </div>
                     </li>
@@ -54,7 +54,7 @@
                             <a
                                 href=""
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Modifier Calendrier
+                                Modifier Planning de travail
                             </a>
                         </div>
                     </li>
@@ -75,7 +75,7 @@
                         </ul>
                     </div>
                 @endif
-                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Modifier Calendrier</h2>
+                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Modifier Planning de travail</h2>
                 <form method="POST" action="{{ route('mechanic.calendrier.update',$schedule->id) }}" class="space-y-6">
                     @csrf
                     @method('PUT')
