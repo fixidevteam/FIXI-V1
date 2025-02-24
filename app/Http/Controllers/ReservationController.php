@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\garage;
+use App\Models\nom_categorie;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,7 +78,13 @@ class ReservationController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $appointment = Appointment::where('id', $id)->where('user_email', Auth::user()->email)->first();
+        if ($appointment) {
+            $garage = garage::where('ref', $appointment->garage_ref)->first();
+            return view('userRdv.edit', compact('appointment', 'garage'));
+        } else {
+            return back()->with('error', 'Rendez-vous introuvable.');
+        }
     }
 
     /**
@@ -84,7 +92,27 @@ class ReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'appointment_day' => 'required|date',
+            'appointment_time' => 'required',
+            'categorie_de_service' => 'required|string',
+            'modele' => 'nullable|string',
+            'objet_du_RDV' => 'nullable|string'
+        ]);
+        $appointment = Appointment::where('id', $id)->where('user_email', Auth::user()->email)->first();
+        if ($appointment) {
+            $data['status'] = 'en_cour';
+            $appointment->update($data);
+            // send email to garage 
+
+            // end sending email
+            session()->flash('success', 'Rendez-vous');
+            session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
+
+            return redirect()->route('RDV.show', $appointment);
+        } else {
+            return back()->with('error', 'Rendez-vous introuvable.');
+        }
     }
 
     /**
@@ -92,6 +120,23 @@ class ReservationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $appointment = Appointment::where('id', $id)->where('user_email', Auth::user()->email)->first();
+        if ($appointment) {
+            if (Carbon::parse($appointment->appointment_day)->diffInHours(now()) < 24) {
+                session()->flash('error', 'Rendez-vous');
+                session()->flash('subtitle', "L’annulation est possible uniquement si le RDV est à plus de 24h.");
+                return redirect()->route('RDV.show', $appointment);
+            }
+            $appointment->update(['status' => 'cancelled']);
+            // send email to garage 
+
+            // end sending email
+            session()->flash('success', 'Rendez-vous');
+            session()->flash('subtitle', 'Votre rendez-vous a été annulé avec succès.');
+
+            return redirect()->route('RDV.show', $appointment);
+        } else {
+            return back()->with('error', 'Rendez-vous introuvable.');
+        }
     }
 }
