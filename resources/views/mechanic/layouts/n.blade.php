@@ -135,7 +135,7 @@
                         <span class="ms-3 first-letter:capitalize">Mes promotions</span>
                      </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('mechanic.calendrier.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group {{ Route::is('mechanic.calendrier.index', 'mechanic.calendrier.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                         <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 {{ Route::is('mechanic.calendrier.index', 'mechanic.calendrier.*') ? 'text-gray-900' : '' }}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M17 14C17.5523 14 18 13.5523 18 13C18 12.4477 17.5523 12 17 12C16.4477 12 16 12.4477 16 13C16 13.5523 16.4477 14 17 14Z" fill="currentColor"/>
@@ -148,7 +148,7 @@
                         </svg>                                                        
                         <span class="ms-3 first-letter:capitalize">Planning de travail</span>
                      </a>
-                </li>
+                </li> --}}
                 {{-- <li>
                     <a href="{{ route('mechanic.reservation.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group {{ Route::is('mechanic.reservation.index', 'mechanic.reservation.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                         <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 {{ Route::is('mechanic.reservation.index', 'mechanic.reservation.*') ? 'text-gray-900' : '' }}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +157,7 @@
                         <span class="ms-3 first-letter:capitalize">Mes Rendez-vous</span>
                      </a>
                 </li> --}}
-                <li x-data="{ open: {{ Route::is('mechanic.reservation.*') ? 'true' : 'false' }} }">
+                <li x-data="{ open: {{ Route::is('mechanic.reservation.*', 'mechanic.calendrier.index', 'mechanic.calendrier.*','mechanic.jour-indisponible.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="flex items-center justify-between w-full p-2 mb-1 text-gray-900 rounded-lg hover:bg-gray-100 group">
                         <span class="flex items-center">
                             <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 {{ Route::is('mechanic.reservation.*') ? 'text-gray-900' : '' }}" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -179,6 +179,11 @@
                         <li>
                             <a href="{{ route('mechanic.reservation.index') }}" class="block p-2 text-gray-700 rounded-lg hover:bg-gray-100 {{ Route::is('mechanic.reservation.index') ? 'bg-gray-100 text-gray-900' : '' }}">
                                 Calendrier des réservations
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('mechanic.calendrier.index') }}" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group {{ Route::is('mechanic.calendrier.index', 'mechanic.calendrier.*') ? 'bg-gray-100 text-gray-900' : '' }}">
+                                <span class="ms-3 first-letter:capitalize">Paramètres</span>
                             </a>
                         </li>
                     </ul>

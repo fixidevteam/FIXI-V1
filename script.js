@@ -291,7 +291,9 @@ document.getElementById("bookingForm").onsubmit = function (e) {
 document.getElementById("verifyCode").addEventListener("click", () => {
     showLoading(); // Show spinner
 
-    let verificationCode = document.getElementById("verificationCode").value;
+    let verificationCode = document
+        .getElementById("verificationCode")
+        .value.trim();
 
     if (!verificationCode) {
         showError("Please enter the verification code.");
@@ -304,7 +306,7 @@ document.getElementById("verifyCode").addEventListener("click", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             email: document.getElementById("email").value,
-            verification_code: verificationCode,
+            verification_code: verificationCode.toString(),
             full_name: document.getElementById("full_name").value,
             phone: document.getElementById("phone").value,
             categorie_de_service: document.getElementById(
