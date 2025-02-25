@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Appointment;
 use App\Models\garage;
+use App\Models\Mechanic;
 use App\Models\nom_categorie;
+use App\Notifications\CancelledRdv;
+use App\Notifications\UpdatedRdv;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class ReservationController extends Controller
 {
+
     /**
+     * 
      * Display a listing of the resource.
      */
     public function index()
@@ -104,7 +111,24 @@ class ReservationController extends Controller
             $data['status'] = 'en_cour';
             $appointment->update($data);
             // send email to garage 
-
+            $admins = Admin::all();
+            foreach ($admins as $admin) {
+                Notification::route('mail', $admin->email)
+                    ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', true, $admin));
+            }
+            // Fetch garage by ref
+            $garage = Garage::where('ref', $appointment->garage_ref)->first();
+            if ($garage) {
+                // Get mechanics related to the garage
+                $mechanics = $garage->mechanics;
+                if ($mechanics->count() > 0) {
+                    // Notify all mechanics associated with the garage
+                    foreach ($mechanics as $mechanic) {
+                        Notification::route('mail', $mechanic->email)
+                            ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', false, null));
+                    }
+                }
+            }
             // end sending email
             session()->flash('success', 'Rendez-vous');
             session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
@@ -129,6 +153,29 @@ class ReservationController extends Controller
             }
             $appointment->update(['status' => 'cancelled']);
             // send email to garage 
+            // send to admin : 
+            $admins = Admin::all();
+            foreach ($admins as $admin) {
+                Notification::route('mail', $admin->email)
+                    ->notify(new CancelledRdv($appointment, 'Une réservation a été annulée par le client.', true, $admin));
+            }
+            // Fetch garage by ref
+            $garage = Garage::where('ref', $appointment->garage_ref)->first();
+            if ($garage) {
+                // Get mechanics related to the garage
+                $mechanics = $garage->mechanics;
+                if ($mechanics->count() > 0) {
+                    // Notify all mechanics associated with the garage
+                    foreach ($mechanics as $mechanic) {
+                        Notification::route('mail', $mechanic->email)
+                            ->notify(new CancelledRdv($appointment, 'Une réservation a été annulée par le client.', false, null));
+                    }
+                }
+            } else {
+                session()->flash('error', 'Garage introuvable.');
+                return redirect()->route('RDV.show', $appointment);
+            }
+
 
             // end sending email
             session()->flash('success', 'Rendez-vous');
