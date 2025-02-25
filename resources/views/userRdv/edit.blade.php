@@ -118,7 +118,7 @@
                             @method('PUT')
                             <div>
                                 <x-input-label for="note" :value="__('Garage')" />
-                                <x-text-input id="garage" class="block bg-gray-200 mt-1 w-full cursor-not-allowed " type="text" name="garage" :value="old('garage') ?? $garage->name" autofocus autocomplete="garage" disabled readonly />
+                                <x-text-input id="garage" class="block bg-gray-200 mt-1 w-full cursor-not-allowed" type="text" name="garage" :value="old('garage') ?? $garage->name" autofocus autocomplete="garage" disabled readonly />
                                 <x-input-error :messages="$errors->get('garage')" class="mt-2" />
                             </div>
                             <div>

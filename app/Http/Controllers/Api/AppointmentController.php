@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AppointmentVerificationMail;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\GarageSchedule;
@@ -137,16 +138,21 @@ class AppointmentController extends Controller
         }
 
         // Generate a verification code
-        $verificationCode = Str::random(6); // 6-digit code
+        // $verificationCode = Str::random(6); // 6-digit code
+        $verificationCode = mt_rand(100000, 999999);
         $email = $request->email;
 
         // Store the verification code in cache with an expiration time (e.g., 10 minutes)
         Cache::put('verification_code_' . $email, $verificationCode, now()->addMinutes(10));
 
         // Send the verification code to the user's email
-        Mail::raw("Your verification code is: $verificationCode", function ($message) use ($email) {
-            $message->to($email)->subject('Appointment Verification Code');
-        });
+        // Mail::raw("Your verification code is: $verificationCode", function ($message) use ($email) {
+        //     $message->to($email)->subject('Appointment Verification Code');
+        // });
+        // Send the verification code via email
+        if ($email) {
+            Mail::to($email)->send(new AppointmentVerificationMail($verificationCode, $request->full_name));
+        }
 
         return response()->json([
             'message' => 'Verification code sent to your email. Please enter the code to confirm your appointment.',
@@ -159,7 +165,7 @@ class AppointmentController extends Controller
         // Validate the request
         $request->validate([
             'email' => 'nullable|email|max:255',
-            'verification_code' => 'required|string|max:6',
+            'verification_code' => 'required|digits:6',
             'full_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'garage_ref' => 'required|string|max:255',
@@ -172,12 +178,12 @@ class AppointmentController extends Controller
         ]);
 
         $email = $request->email;
-        $verificationCode = $request->verification_code;
+        $verificationCode = trim($request->verification_code);
 
         // Retrieve the stored verification code from cache
         $storedCode = Cache::get('verification_code_' . $email);
 
-        if ($storedCode && $storedCode === $verificationCode) {
+        if ($storedCode && strval($storedCode) === strval($verificationCode)) {
             // Verification successful, create the appointment
             $appointment = Appointment::create([
                 'user_full_name' => $request->full_name,

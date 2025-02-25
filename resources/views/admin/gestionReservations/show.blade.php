@@ -160,7 +160,7 @@
             </dl>
           </div>
           {{-- update status --}}
-          <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
+          {{-- <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
               @csrf
               @method('PATCH')
           
@@ -175,8 +175,67 @@
                       Annulé
                   </button>
               </div>
-          </form>
+          </form> --}}
           {{-- end  --}}
+          {{-- models for status --}}
+          <div class="flex space-x-4 mt-6">
+            <button type="button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModalStatus('modal-en_cour', true)">
+              En attente
+            </button>
+            <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModalStatus('modal-confirmed', true)">
+              Confirmé
+            </button>
+            <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModalStatus('modal-cancelled', true)">
+              Annulé
+            </button>
+          </div>
+          
+          <div id="modal-en_cour" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+            <div class="bg-white p-6 rounded shadow-lg">
+              <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
+              <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "En attente" ?</p>
+              <div class="flex justify-end mt-4">
+                <button onclick="toggleModalStatus('modal-en_cour', false)" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">Annuler</button>
+                <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
+                  @csrf
+                  @method('PATCH')
+                  <button type="submit" name="status" value="en_cour" class="px-4 py-2 bg-yellow-500 text-white rounded">Confirmer En attente</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+          
+          <div id="modal-confirmed" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+            <div class="bg-white p-6 rounded shadow-lg">
+              <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
+              <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "Confirmé" ?</p>
+              <div class="flex justify-end mt-4">
+                <button onclick="toggleModalStatus('modal-confirmed', false)" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">Annuler</button>
+                <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
+                  @csrf
+                  @method('PATCH')
+                  <button type="submit" name="status" value="Confirmed" class="px-4 py-2 bg-green-500 text-white rounded">Confirmer Confirmé</button>
+                </form>
+              </div>
+            </div>
+          </div>
+                
+          <div id="modal-cancelled" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+            <div class="bg-white p-6 rounded shadow-lg">
+              <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
+              <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "Annulé" ? Cette action est irréversible.</p>
+              <div class="flex justify-end mt-4">
+                <button onclick="toggleModalStatus('modal-cancelled', false)" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">Annuler</button>
+                <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
+                  @csrf
+                  @method('PATCH')
+                  <button type="submit" name="status" value="cancelled" class="px-4 py-2 bg-red-500 text-white rounded">Confirmer Annulé</button>
+                </form>
+              </div>
+            </div>
+          </div>      
+          {{-- close --}}
         </div>
       </div>
     </div>
@@ -186,4 +245,9 @@
       @include('layouts.footer')
     </div>
   </div>
+  <script>
+    function toggleModalStatus(modalId, show) {
+      document.getElementById(modalId).classList.toggle('hidden', !show);
+    }
+  </script>
   </x-admin-app-layout>
