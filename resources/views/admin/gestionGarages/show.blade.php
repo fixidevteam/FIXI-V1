@@ -193,6 +193,12 @@
                   !!}
                 </p>
               </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">confirmation </p>
+                <p class="text-sm text-gray-500">
+                      {{ $garage->confirmation ?? 'N/A'}}
+                </p>
+              </div>
             </div>
           </div>
         </div>

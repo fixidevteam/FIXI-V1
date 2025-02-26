@@ -44,7 +44,8 @@ class AdminGestionGarageController extends Controller
             'quartier' => ['nullable', 'string'],
             'ville' => ['required', 'string'],
             'virtualGarage' => ['nullable', 'string'],
-            'services' => ['nullable', 'array'], // Expecting an array for services
+            'services' => ['nullable', 'array'],
+            'confirmation' => ['required', 'string'], // Expecting an array for services
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
         ]);
 
@@ -116,6 +117,7 @@ class AdminGestionGarageController extends Controller
             'quartier' => ['nullable', 'string'],
             'ville' => ['required', 'string'],
             'virtualGarage' => ['nullable', 'string'],
+            'confirmation' => ['required', 'string'], // Expecting an array for services
             'services' => ['nullable', 'array'], // Expecting an array for services
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120']
         ]);

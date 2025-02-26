@@ -125,7 +125,7 @@ class ReservationController extends Controller
                     // Notify all mechanics associated with the garage
                     foreach ($mechanics as $mechanic) {
                         Notification::route('mail', $mechanic->email)
-                            ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', false, null));
+                    ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', false, null));
                     }
                 }
             }

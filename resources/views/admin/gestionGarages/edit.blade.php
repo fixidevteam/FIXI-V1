@@ -87,90 +87,98 @@
                     </div>
                     <div>
                         <x-input-label for="ville" :value="__('Ville')" />
-                        <select id="ville" 
-                                class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
-                                name="ville">
+                        <select id="ville"
+                            class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            name="ville">
                             <option value="" {{ old('ville', $garage->ville) ? '' : 'selected' }}>
                                 {{ __('Sélectionnez une Ville') }}
                             </option>
                             @foreach($villes as $ville)
-                                <option value="{{ $ville->id }}" {{ old('ville', $garage->ville) == $ville->ville ? 'selected' : '' }}>
-                                    {{ $ville->ville }}
-                                </option>
+                            <option value="{{ $ville->id }}" {{ old('ville', $garage->ville) == $ville->ville ? 'selected' : '' }}>
+                                {{ $ville->ville }}
+                            </option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('ville')" class="mt-2" />
                     </div>
-                    
+
                     <div>
                         <x-input-label for="quartier" :value="__('Quartier')" />
-                        <select id="quartier" 
-                                class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
-                                name="quartier">
+                        <select id="quartier"
+                            class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            name="quartier">
                             <option value="" selected>
                                 {{ __('Sélectionnez un Quartier (Optionnel)') }}
                             </option>
                             @if(old('ville', $garage->ville))
-                                @foreach($quartiers as $quartier)
-                                    <option value="{{ $quartier->quartier }}" {{ old('quartier', $garage->quartier) == $quartier->quartier ? 'selected' : '' }}>
-                                        {{ $quartier->quartier }}
-                                    </option>
-                                @endforeach
+                            @foreach($quartiers as $quartier)
+                            <option value="{{ $quartier->quartier }}" {{ old('quartier', $garage->quartier) == $quartier->quartier ? 'selected' : '' }}>
+                                {{ $quartier->quartier }}
+                            </option>
+                            @endforeach
                             @endif
                         </select>
                         <x-input-error :messages="$errors->get('quartier')" class="mt-2" />
                     </div>
-                    
+
                     <div>
                         <x-input-label for="virtualGarage" :value="__('Garage virtual')" />
                         <x-text-input id="virtualGarage" class="block mt-1 w-full" type="text" name="virtualGarage" :value="old('virtualGarage')?? $garage->virtualGarage" autofocus autocomplete="virtualGarage" />
                         <x-input-error :messages="$errors->get('virtualGarage')" class="mt-2" />
                     </div>
                     <div>
+                        <x-input-label for="confirmation" :value="__('Confirmation')" />
+                        <select id="confirmation" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" name="confirmation">
+                            <option value="automatique" {{ old('confirmation', $garage->confirmation) === 'automatique' ? 'selected' : '' }}>Automatique</option>
+                            <option value="manuelle" {{ old('confirmation', $garage->confirmation) === 'manuelle' ? 'selected' : '' }}>Manuelle</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('confirmation')" class="mt-2" />
+                    </div>
+                    <div>
                         <x-input-label for="services" :value="__('Domaines')" />
                         <div class="mt-2 space-y-2">
                             <label class="flex items-center">
-                                <input type="checkbox" 
-                                    name="services[]" 
-                                    value="Carrosserie" 
+                                <input type="checkbox"
+                                    name="services[]"
+                                    value="Carrosserie"
                                     class="w-4 h-4 text-black border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                                     {{ in_array('Carrosserie', old('services', $garage->services ?? [])) ? 'checked' : '' }} />
                                 <span class="ml-2 text-sm text-gray-600">{{ __('Carrosserie') }}</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" 
-                                    name="services[]" 
-                                    value="Lavage" 
+                                <input type="checkbox"
+                                    name="services[]"
+                                    value="Lavage"
                                     class="w-4 h-4 text-black border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                                     {{ in_array('Lavage', old('services', $garage->services ?? [])) ? 'checked' : '' }} />
                                 <span class="ml-2 text-sm text-gray-600">{{ __('Lavage') }}</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" 
-                                    name="services[]" 
-                                    value="Mécanique" 
+                                <input type="checkbox"
+                                    name="services[]"
+                                    value="Mécanique"
                                     class="w-4 h-4 text-black border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                                     {{ in_array('Mécanique', old('services', $garage->services ?? [])) ? 'checked' : '' }} />
                                 <span class="ml-2 text-sm text-gray-600">{{ __('Mécanique') }}</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" 
-                                    name="services[]" 
-                                    value="Pneumatique" 
+                                <input type="checkbox"
+                                    name="services[]"
+                                    value="Pneumatique"
                                     class="w-4 h-4 text-black border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                                     {{ in_array('Pneumatique', old('services', $garage->services ?? [])) ? 'checked' : '' }} />
                                 <span class="ml-2 text-sm text-gray-600">{{ __('Pneumatique') }}</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" 
-                                    name="services[]" 
-                                    value="Dépannage" 
+                                <input type="checkbox"
+                                    name="services[]"
+                                    value="Dépannage"
                                     class="w-4 h-4 text-black border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                                     {{ in_array('Dépannage', old('services', $garage->services ?? [])) ? 'checked' : '' }} />
                                 <span class="ml-2 text-sm text-gray-600">{{ __('Dépannage') }}</span>
                             </label>
                         </div>
-                    </div>                    
+                    </div>
                     <div>
                         <x-input-label for="file_input" :value="__('Photo')" />
                         <x-file-input id="file_input" class="block mt-1 w-full" type="file" name="photo" :value="old('photo')" autofocus autocomplete="photo" accept="image/jpeg,png" />
@@ -194,43 +202,43 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-    const villeSelect = document.getElementById('ville');
-    const quartierSelect = document.getElementById('quartier');
+            const villeSelect = document.getElementById('ville');
+            const quartierSelect = document.getElementById('quartier');
 
-    function fetchQuartiers(villeId, preSelectedQuartier = null) {
-        quartierSelect.innerHTML = '<option value="" selected>{{ __("Chargement...") }}</option>';
+            function fetchQuartiers(villeId, preSelectedQuartier = null) {
+                quartierSelect.innerHTML = '<option value="" selected>{{ __("Chargement...") }}</option>';
 
-        fetch(`/quartiers?ville_id=${villeId}`)
-            .then(response => response.json())
-            .then(data => {
-                quartierSelect.innerHTML = '<option value="" selected>{{ __("Sélectionnez un quartier (Optionnel)") }}</option>';
-                data.forEach(quartier => {
-                    const selected = preSelectedQuartier === quartier.quartier ? 'selected' : '';
-                    quartierSelect.innerHTML += `<option value="${quartier.quartier}" ${selected}>${quartier.quartier}</option>`;
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching quartiers:', error);
-                quartierSelect.innerHTML = '<option value="" disabled>{{ __("Erreur de chargement") }}</option>';
+                fetch(`/quartiers?ville_id=${villeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        quartierSelect.innerHTML = '<option value="" selected>{{ __("Sélectionnez un quartier (Optionnel)") }}</option>';
+                        data.forEach(quartier => {
+                            const selected = preSelectedQuartier === quartier.quartier ? 'selected' : '';
+                            quartierSelect.innerHTML += `<option value="${quartier.quartier}" ${selected}>${quartier.quartier}</option>`;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching quartiers:', error);
+                        quartierSelect.innerHTML = '<option value="" disabled>{{ __("Erreur de chargement") }}</option>';
+                    });
+            }
+
+            // Fetch quartiers when a new ville is selected
+            villeSelect.addEventListener('change', function() {
+                const villeId = this.value;
+                if (villeId) {
+                    fetchQuartiers(villeId);
+                } else {
+                    quartierSelect.innerHTML = '<option value="" selected>{{ __("Sélectionnez un Quartier (Optionnel)") }}</option>';
+                }
             });
-    }
 
-    // Fetch quartiers when a new ville is selected
-    villeSelect.addEventListener('change', function () {
-        const villeId = this.value;
-        if (villeId) {
-            fetchQuartiers(villeId);
-        } else {
-            quartierSelect.innerHTML = '<option value="" selected>{{ __("Sélectionnez un Quartier (Optionnel)") }}</option>';
-        }
-    });
-
-    // Preload quartiers if a ville is pre-selected
-    const preSelectedVille = "{{ old('ville', $garage->ville) }}";
-    const preSelectedQuartier = "{{ old('quartier', $garage->quartier) }}";
-    if (preSelectedVille) {
-        fetchQuartiers(preSelectedVille, preSelectedQuartier);
-        }
-    });
+            // Preload quartiers if a ville is pre-selected
+            const preSelectedVille = "{{ old('ville', $garage->ville) }}";
+            const preSelectedQuartier = "{{ old('quartier', $garage->quartier) }}";
+            if (preSelectedVille) {
+                fetchQuartiers(preSelectedVille, preSelectedQuartier);
+            }
+        });
     </script>
 </x-admin-app-layout>

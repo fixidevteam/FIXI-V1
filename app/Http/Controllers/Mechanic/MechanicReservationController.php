@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Mechanic;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\garage;
+use App\Notifications\GarageAcceptRdv;
+use App\Notifications\GarageCancelledRdv;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class MechanicReservationController extends Controller
 {
@@ -142,6 +145,13 @@ class MechanicReservationController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
+        if ($appointment->status === 'cancelled') {
+            Notification::route('mail', $appointment->user_email)
+                ->notify(new GarageCancelledRdv($appointment, 'Une réservation a été annulée par le garage'));
+        } elseif ($appointment->status === 'Confirmed') {
+            Notification::route('mail', $appointment->user_email)
+                ->notify(new GarageAcceptRdv($appointment, 'Une réservation a été confirmée par le garage'));
+        }
 
         // Retrieve the previous URL from the session
         $previousUrl = session('previous_url');

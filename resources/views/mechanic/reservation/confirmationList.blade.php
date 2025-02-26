@@ -36,6 +36,28 @@
                             </a>
                         </div>
                     </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg
+                                class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 6 10">
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="m1 9 4-4-4-4" />
+                            </svg>
+                            <a
+                                href="{{ route('mechanic.reservation.list') }}"
+                                class="inline-flex items-center text-sm font-medium text-gray-700">
+                                Confirmation des rendez-vous
+                            </a>
+                        </div>
+                    </li>
                 </ol>
             </nav>
         </div>
@@ -44,7 +66,7 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">List des rendez-vous</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des demandes de rendez-vous</h2>
                 </div>
                 {{-- table --}}
                 <div class="my-5">
@@ -94,10 +116,10 @@
                     {{-- table --}}
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($appointments->isEmpty())
-                        <p class="p-4 text-gray-500 text-center">Aucun rendez-vous disponible.</p>
+                        <p class="p-4 text-gray-500 text-center">Aucune demande de rendez-vous disponible.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">List des Rendez-vous</caption>
+                            <caption class="sr-only">Liste des demandes de rendez-vous</caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
@@ -147,28 +169,32 @@
                                     <td class="px-6 py-4">
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-full border border-blue-400">
                                             <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
                                             </svg>
                                             {{ $appointment->appointment_time }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        @if($appointment->status === 'en_cour')
-                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
-                                                En cours
-                                            </span>
-                                        @elseif($appointment->status === 'confirmed')
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
-                                                Confirmed
-                                            </span>
-                                        @elseif($appointment->status === 'cancelled')
-                                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
-                                                Cancelled
-                                            </span>
-                                        @endif
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mx-2 px-2.5 py-0.5 rounded-full">
+                                            En cours
+                                        </span>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <a href="{{route('mechanic.reservation.show',$appointment->id)}}" class="font-medium capitalize text-blue-600 dark:text-blue-500 hover:underline">détails</a>
+
+                                    <td class="px-6 py-4 flex items-center justify-center space-x-2">
+                                        <button onclick="toggleModal(true, 'acceptation-{{$appointment->id}}')" class="ml-5 text-red-500 flex items-center">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="2" y="2" width="20" height="20" rx="5" stroke="#34C759" stroke-width="1.5" />
+                                                <path d="M9.5 11.5L11.5 13.5L15.5 9.5" stroke="#34C759" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+
+                                        <button onclick="toggleModal(true, 'annuler-{{$appointment->id}}')" class="ml-5 text-red-500 flex items-center">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="2" y="2" width="20" height="20" rx="5" stroke="#FF3B30" stroke-width="1.5" />
+                                                <path d="M9.8787 14.1215L14.1213 9.87891" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M9.8787 9.87894L14.1213 14.1216" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -190,4 +216,53 @@
             @include('layouts.footer')
         </div>
     </div>
+    @foreach($appointments as $appointment)
+    <div id="acceptation-{{ $appointment->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
+            <h2 class="text-lg font-bold text-gray-800">Confirmation d'acceptation</h2>
+            <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir accepter ce rendez-vous ? Cette action ne peut pas être annulée.</p>
+            <div class="flex justify-end mt-4">
+                <button onclick="toggleModal(false, 'acceptation-{{ $appointment->id }}')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">
+                    Annuler
+                </button>
+                <form action="{{ route('mechanic.confirmation.accepter', $appointment->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                        Confirmer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endforeach
+
+    @foreach($appointments as $appointment)
+    <div id="annuler-{{ $appointment->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
+            <h2 class="text-lg font-bold text-gray-800">Confirmer l'annulation</h2>
+            <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir annuler ce rendez-vous ? Cette action ne peut pas être annulée.</p>
+            <div class="flex justify-end mt-4">
+                <button onclick="toggleModal(false, 'annuler-{{ $appointment->id }}')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">
+                    Annuler
+                </button>
+                <form action="{{ route('mechanic.confirmation.annuler', $appointment->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                        Confirmer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endforeach
+    <script>
+        function toggleModal(show, modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle('hidden', !show);
+            }
+        }
+    </script>
 </x-mechanic-app-layout>
