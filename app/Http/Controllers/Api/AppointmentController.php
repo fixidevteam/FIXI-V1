@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Mail\AppointmentVerificationMail;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
+use App\Models\garage;
 use App\Models\GarageSchedule;
 use App\Models\GarageUnavailableTime;
 use App\Models\jour_indisponible;
+use App\Models\MarqueVoiture;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -46,10 +48,18 @@ class AppointmentController extends Controller
             ->pluck('date')
             ->toArray();
 
+        // Fetch services from the garages table (stored as JSON)
+        $garage = Garage::where('ref', $garage_ref)->first();
+        $services =  $garage ? $garage->services : [];
+
+        // Fetch marques from the marque_voitures table
+        $marques = MarqueVoiture::pluck('marque')->toArray();
+
         return response()->json([
             'available_dates' => $dates,
             'unavailable_dates' => $disabledDates,
-
+            'services' => $services,
+            'marques' => $marques,
         ]);
     }
 

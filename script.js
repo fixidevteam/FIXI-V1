@@ -88,8 +88,16 @@ function fetchAvailableDates() {
                 availableDates = data.available_dates;
                 disabledDates = data.unavailable_dates;
                 console.log(disabledDates);
-
                 initDatePicker();
+                // Populate services dropdown
+                if (data.services && data.services.length > 0) {
+                    populateServicesDropdown(data.services);
+                }
+
+                // Populate marques input with datalist
+                if (data.marques && data.marques.length > 0) {
+                    populateMarquesInput(data.marques);
+                }
             } else {
                 showError("Aucune date disponible pour ce garage.");
             }
@@ -102,7 +110,49 @@ function fetchAvailableDates() {
             hideLoading(); // Hide spinner
         });
 }
+// Function to populate the services dropdown
+function populateServicesDropdown(services) {
+    const serviceMapping = {
+        Mécanique: "Services d'un garage mécanique",
+        Lavage: "Services d'un garage de lavage",
+        Carrosserie: "Services d'un garage de carrosserie",
+        Pneumatique: "Services d'un garage pneumatique",
+        Dépannage: "Services d'un garage dépannage",
+    };
+    const servicesSelect = document.getElementById("categorie_de_service");
+    servicesSelect.innerHTML = ""; // Clear existing options
 
+    // Add services as options
+    services.forEach((service) => {
+        const fullServiceName = serviceMapping[service] || service; // Use mapping or fallback to the original name
+        const option = document.createElement("option");
+        option.value = fullServiceName; // Use the full name as the value
+        option.textContent = fullServiceName; // Display the full name
+        servicesSelect.appendChild(option);
+    });
+}
+
+// Function to populate the marques input with a datalist
+function populateMarquesInput(marques) {
+    const marquesInput = document.getElementById("modele");
+    marquesInput.innerHTML = ""; // Clear existing options
+
+    // Add a default option
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Sélectionnez une marque";
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    marquesInput.appendChild(defaultOption);
+
+    // Add marques as options
+    marques.forEach((marque) => {
+        const option = document.createElement("option");
+        option.value = marque;
+        option.textContent = marque;
+        marquesInput.appendChild(option);
+    });
+}
 // Fetch time slots for the selected date
 
 function initDatePicker() {
