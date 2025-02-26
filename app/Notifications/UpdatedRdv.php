@@ -46,9 +46,9 @@ class UpdatedRdv extends Notification
             $url = route('admin.gestionReservations.show', $this->reservation);
             $garage = garage::where('ref', $this->reservation->garage_ref)->first();
             return (new MailMessage)
-                ->subject('❌ Réservation Modifiée - ' . $this->reservation->client_name)
+                ->subject('⚠️ Réservation Modifiée - ' . $this->reservation->client_name)
                 ->view('emails.UpdatedRdv', [
-                    'title' => '❌ Une réservation a été modifiée',
+                    'title' => '⚠️ Une réservation a été modifiée',
                     'garage' => $garage,
                     'admin' => $this->admin,
                     'reservation' => $this->reservation, // Pass reservation data
@@ -61,9 +61,9 @@ class UpdatedRdv extends Notification
             $url = route('mechanic.reservation.show', $this->reservation);
             $garage = garage::where('ref', $this->reservation->garage_ref)->first();
             return (new MailMessage)
-                ->subject('❌  Réservation annulée -' . $this->reservation->client_name)
+                ->subject('⚠️  Réservation Modifiée -' . $this->reservation->client_name)
                 ->view('emails.UpdatedRdv', [
-                    'title' => '❌ Une réservation a été annulée',
+                    'title' => '⚠️ Une réservation a été Modifiée',
                     'garage' => $garage,
                     'reservation' => $this->reservation, // Pass reservation data
                     'messageContent' => $this->message, // Custom message

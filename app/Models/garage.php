@@ -19,7 +19,8 @@ class garage extends Model
         'localisation',
         'user_id',
         'virtualGarage',
-        'services'
+        'services',
+        'confirmation'
     ];
     protected $casts = [
         'services' => 'array',

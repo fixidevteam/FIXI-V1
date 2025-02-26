@@ -5,6 +5,7 @@ use App\Http\Controllers\Mechanic\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\getAnalyticsDataController;
 use App\Http\Controllers\Mechanic\ChartContoller;
+use App\Http\Controllers\Mechanic\ConfirmationRdv;
 use App\Http\Controllers\Mechanic\ExportController;
 use App\Http\Controllers\Mechanic\JourIndisponibleController;
 use App\Http\Controllers\Mechanic\MechanicCalendrierController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Mechanic\MechanicPromotionController;
 use App\Http\Controllers\Mechanic\MechanicReservationController;
 use App\Http\Controllers\TEST\RendezVousController;
 use App\Models\Appointment;
+use App\Models\Mechanic;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:mechanic')->prefix('fixi-pro')->name('mechanic.')->group(function () {
@@ -62,7 +64,9 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
     Route::get('/test', function () {
         return view('mechanic.test1');
     });
+    Route::get('/confirmation',[ConfirmationRdv::class,'index'])->name('confirmation');
+    Route::put('/confirmation/{id}/accepter',[ConfirmationRdv::class,'accepter'])->name('confirmation.accepter');
+    Route::put('/confirmation/{id}/annuler',[ConfirmationRdv::class,'annuler'])->name('confirmation.annuler');
 
-
-    Route::get('/api/reservations/{year}/{month}', [RendezVousController::class, 'index']);
+    // Route::get('/api/reservations/{year}/{month}', [RendezVousController::class, 'index']);
 });
