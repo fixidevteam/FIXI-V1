@@ -136,7 +136,7 @@
                     ->where('garage_ref', Auth::user()->garage->ref)
                     ->count();
                     @endphp
-                    <li x-data="{ open: {{ Route::is('mechanic.reservation.*') ? 'true' : 'false' }} }">
+                    <li x-data="{ open: {{ Route::is('mechanic.reservation.*','mechanic.confirmation') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="flex items-center justify-between w-full p-2 mb-1 text-gray-900 rounded-lg hover:bg-gray-100 group">
                             <span class="flex items-center">
                                 <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 {{ Route::is('mechanic.reservation.*') ? 'text-gray-900' : '' }}" width="24" height="24" viewBox="0 0 24 24" fill="none">
