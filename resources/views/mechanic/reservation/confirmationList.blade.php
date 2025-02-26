@@ -52,7 +52,7 @@
                                     d="m1 9 4-4-4-4" />
                             </svg>
                             <a
-                                href="{{ route('mechanic.reservation.list') }}"
+                                href="{{ route('mechanic.confirmation') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
                                 Confirmation des rendez-vous
                             </a>
@@ -181,7 +181,7 @@
                                     </td>
 
                                     <td class="px-6 py-4 flex items-center justify-center space-x-2">
-                                        <button onclick="toggleModal(true, 'acceptation-{{$appointment->id}}')" class="ml-5 text-red-500 flex items-center">
+                                        <button onclick="toggleModal(true, 'acceptation-{{$appointment->id}}')" class="text-red-500 flex items-center">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <rect x="2" y="2" width="20" height="20" rx="5" stroke="#34C759" stroke-width="1.5" />
                                                 <path d="M9.5 11.5L11.5 13.5L15.5 9.5" stroke="#34C759" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -228,7 +228,7 @@
                 <form action="{{ route('mechanic.confirmation.accepter', $appointment->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                         Confirmer
                     </button>
                 </form>
