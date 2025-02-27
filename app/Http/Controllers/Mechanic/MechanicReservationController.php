@@ -199,10 +199,10 @@ class MechanicReservationController extends Controller
         $appointment->save();
         if ($appointment->status === 'cancelled') {
             Notification::route('mail', $appointment->user_email)
-                ->notify(new GarageCancelledRdv($appointment, 'Une réservation a été annulée par le garage'));
+                ->notify(new GarageCancelledRdv($appointment, 'la réservation a été annulée par le garage'));
         } elseif ($appointment->status === 'Confirmed') {
             Notification::route('mail', $appointment->user_email)
-                ->notify(new GarageAcceptRdv($appointment, 'Une réservation a été confirmée par le garage'));
+                ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
         }
 
         // Retrieve the previous URL from the session

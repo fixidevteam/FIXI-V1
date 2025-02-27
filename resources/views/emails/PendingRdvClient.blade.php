@@ -25,7 +25,7 @@
         }
 
         h1 {
-            color:rgb(42, 229, 0);
+            color: #38a169;
         }
 
         .alert-details {
@@ -45,7 +45,6 @@
             margin: 20px auto;
             padding: 15px 25px;
             background-color: #1f2937;
-            /* Gris foncé */
             color: #ffffff;
             text-decoration: none;
             border-radius: 24px;
@@ -72,23 +71,20 @@
         <h1>{{ $title }}</h1>
 
         <h3>Bonjour, {{ $reservation->user_full_name }}</h3>
-        <p>Nous vous informons que le rendez-vous suivant a été confirmé par  le garage :</p>
+        <p>Nous vous informons que votre demande de rendez-vous a bien été enregistrée et est en attente de confirmation par le garage :</p>
         <div class="alert-details">
             <p style="text-align: center;"> <strong>{{ $garage->name }}</strong> </p>
             <p style="text-align: center;"> <strong>{{ $garage->ref }}</strong> </p>
             <hr style="height: 2px;">
-            <p>🛠️ <strong>Nom du client :</strong> {{ $reservation->user_full_name }}</p>
-            <p>📞 <strong>Téléphone du client :</strong> {{ $reservation->user_phone ?? 'N/A' }}</p>
-            <p>📧 <strong>Email du client :</strong> {{ $reservation->user_email ?? 'N/A' }}</p>
             <p>🔧 <strong>Catégorie de service :</strong> {{ $reservation->categorie_de_service }}</p>
-            <p>🚗 <strong>Modèle du véhicule :</strong> {{ $reservation->modele ?? 'N/a'}}</p>
+            <p>🚗 <strong>Modèle du véhicule :</strong> {{ $reservation->modele ?? 'N/A'}}</p>
             <p>🚙 <strong>Numéro d'immatriculation :</strong> {{ $reservation->numero_immatriculation ?? 'N/A' }}</p>
             <p>📝 <strong>Objet du RDV :</strong> {{ $reservation->objet_du_RDV  ?? 'N/A'}}</p>
             <p>📅 <strong>Date de la réservation :</strong> {{ $reservation->appointment_day }}</p>
             <p>⏰ <strong>Heure :</strong> {{ $reservation->appointment_time }}</p>
         </div>
 
-        <p>Vous pouvez consulter les détails complets dans votre tableau de bord :</p>
+        <p>Vous recevrez une notification dès que le garage aura confirmé votre rendez-vous. Vous pouvez suivre l'état de votre demande dans votre tableau de bord :</p>
         <a href="{{ $dashboardUrl }}" class="button">{{ $actionText }}</a>
 
         <p>{{ $messageContent }}</p>

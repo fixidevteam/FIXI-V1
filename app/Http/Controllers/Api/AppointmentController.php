@@ -12,9 +12,13 @@ use App\Models\GarageUnavailableTime;
 use App\Models\jour_indisponible;
 use App\Models\MarqueVoiture;
 use App\Models\User;
+use App\Notifications\ClientAddRdv;
+use App\Notifications\ClientAddRdvManuelle;
+use App\Notifications\GarageAcceptRdv;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class AppointmentController extends Controller
@@ -63,6 +67,7 @@ class AppointmentController extends Controller
         ]);
     }
 
+    
     public function getTimeSlots(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
@@ -130,7 +135,6 @@ class AppointmentController extends Controller
             'categorie_de_service' => 'required|string|max:255',
             'appointment_day' => 'required|date',
             'appointment_time' => 'required|date_format:H:i:s',
-            'categorie_de_service' => 'required|string|max:255',
             'modele' => 'nullable|string|max:255',
             'numero_immatriculation' => 'nullable|string|max:255',
             'objet_du_RDV' => 'nullable|string|max:255',
@@ -189,12 +193,18 @@ class AppointmentController extends Controller
 
         $email = $request->email;
         $verificationCode = trim($request->verification_code);
+        $garage = garage::where("ref", $request->garage_ref)->first();
 
         // Retrieve the stored verification code from cache
         $storedCode = Cache::get('verification_code_' . $email);
 
         if ($storedCode && strval($storedCode) === strval($verificationCode)) {
             // Verification successful, create the appointment
+            if ($garage->confirmation === 'automatique') {
+                $status = 'confirmed';
+            } else {
+                $status = 'en_cour';
+            }
             $appointment = Appointment::create([
                 'user_full_name' => $request->full_name,
                 'user_phone' => $request->phone,
@@ -202,7 +212,7 @@ class AppointmentController extends Controller
                 'garage_ref' => $request->garage_ref,
                 'appointment_day' => $request->appointment_day,
                 'appointment_time' => $request->appointment_time,
-                'status' => 'en_cour',
+                'status' => $status,
                 'categorie_de_service' => $request->categorie_de_service,
                 'modele' => $request->modele,
                 'numero_immatriculation' => $request->numero_immatriculation,
@@ -215,8 +225,49 @@ class AppointmentController extends Controller
             $existEmail = User::where('email', $email)->first();
 
             if ($existEmail) {
+                // sending email:
+                if ($appointment->status === "confirmed") {
+                    // send email to garage :
+                    if ($garage) {
+                        // Get mechanics related to the garage
+                        $mechanics = $garage->mechanics;
+
+                        if ($mechanics->count() > 0) {
+                            // Notify all mechanics associated with the garage
+                            foreach ($mechanics as $mechanic) {
+                                Notification::route('mail', $mechanic->email)
+                                    ->notify(new ClientAddRdv($appointment));
+                            }
+                        }
+                    }
+                    // 
+                    // send email to user
+                    Notification::route('mail', $appointment->user_email)
+                        ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
+                    // 
+                } elseif ($appointment->status === "en_cour") {
+                    // send email to garage
+                    if ($garage) {
+                        // Get mechanics related to the garage
+                        $mechanics = $garage->mechanics;
+                        if ($mechanics->count() > 0) {
+                            // Notify all mechanics associated with the garage
+                            foreach ($mechanics as $mechanic) {
+                                Notification::route('mail', $mechanic->email)
+                                    ->notify(new ClientAddRdv($appointment));
+                            }
+                        }
+                    }
+                    // end
+                    // send email to client 
+                    Notification::route('mail', $appointment->user_email)
+                        ->notify(new ClientAddRdvManuelle($appointment));
+                    // end
+                }
                 return response()->json(['message' => 'Appointment booked successfully!', 'account' => true]);
             } else {
+                // sendin email 
+                // 
                 return response()->json(['message' => 'Appointment booked successfully!', 'account' => false]);
             }
         } else {

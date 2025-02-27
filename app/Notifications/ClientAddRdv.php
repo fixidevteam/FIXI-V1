@@ -8,19 +8,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class GarageAcceptRdv extends Notification
+class ClientAddRdv extends Notification
 {
     use Queueable;
 
     private $reservation;
-    private $message;
 
 
 
-    public function __construct($reservation, $message)
+    public function __construct($reservation)
     {
         $this->reservation = $reservation;
-        $this->message = $message;
     }
 
     /**
@@ -39,19 +37,18 @@ class GarageAcceptRdv extends Notification
     public function toMail(object $notifiable): MailMessage
     {
 
-
-        $url = route('RDV.show', $this->reservation);
+        
+        $url = route('mechanic.reservation.show', $this->reservation);
         $garage = garage::where('ref', $this->reservation->garage_ref)->first();
+
         return (new MailMessage)
-            ->subject('✅ Confirmation de votre rendez-vous chez ' . $garage->name)
-            ->view('emails.AcceptedRdvClient', [
-                'title' => '🎉 Bonne nouvelle ! Votre demande de réservation a été validée.
-Voici les détails de votre rendez-vous :',
+            ->subject('📅 Nouveau rendez-vous programmé chez ' . $garage->name)
+            ->view('emails.ClientAddRdv', [
+                'title' => '📢 Un client a pris un rendez-vous dans votre garage !',
                 'garage' => $garage,
-                'reservation' => $this->reservation, // Pass reservation data
-                'messageContent' => $this->message, // Custom message
-                'actionText' => 'Voir la réservation',
-                'dashboardUrl' => $url // Example link to reservation
+                'reservation' => $this->reservation, // Passer les données de la réservation
+                'actionText' => 'Voir le rendez-vous',
+                'dashboardUrl' => $url // Lien vers la réservation
             ]);
     }
 

@@ -122,7 +122,7 @@ function showStep(stepId) {
     updateStepTitle(stepNumber);
 
     // Update the summary section if on Step 3 or Step 4
-    if (stepNumber === 3 && selectedDate && selectedTime) {
+    if (stepNumber >= 3 && selectedDate && selectedTime) {
         updateSummary(selectedDate, selectedTime);
     } else {
         updateSummary("", ""); // Hide the summary section if no date/time is selected
@@ -184,6 +184,14 @@ function populateServicesDropdown(services) {
     servicesSelect.innerHTML = ""; // Clear existing options
 
     // Add services as options
+    // Add a default option
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Choisir le domaine";
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    servicesSelect.appendChild(defaultOption);
+
     services.forEach((service) => {
         const fullServiceName = serviceMapping[service] || service; // Use mapping or fallback to the original name
         const option = document.createElement("option");
@@ -373,8 +381,8 @@ document.getElementById("bookingForm").onsubmit = function (e) {
     let modele = document.getElementById("modele").value;
     let objet_du_RDV = document.getElementById("objet_du_RDV").value;
 
-    if (fullName === "" || phone === "") {
-        showError("Le nom et le téléphone sont obligatoires.");
+    if (fullName === "" || phone === "" || categorie_de_service === "") {
+        showError("Le nom et le téléphone et le domaine sont obligatoires.");
         return;
     }
 
