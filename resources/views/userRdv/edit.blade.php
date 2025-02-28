@@ -146,6 +146,9 @@
                             <div id="step2" class="step">
                                 <div id="times" class="mt-6 grid grid-cols-2 gap-4">
                                     <h3 class='text-lg font-medium text-gray-900 mb-4'>Sélectionnez une heure : <x-input-error :messages="$errors->get('appointment_time')" class="mt-2" /></h3>
+                                    <span id="Nonetime">
+
+                                    </span>
                                 </div>
                                 <div id="timesbtn" class="flex grid grid-cols-2 gap-4">
                                 </div>
@@ -292,9 +295,10 @@
                 .then((response) => response.json())
                 .then((data) => {
                     let timesDiv = document.getElementById("times");
+                    let Nonetime = document.getElementById("Nonetime");
                     let timesDivBtn = document.getElementById("timesbtn");
                     if (data.time_slots.length === 0) {
-                        timesDiv.innerHTML = +
+                        timesDivBtn.innerHTML = 
                             "<p class='text-red-600'>Aucune plage horaire disponible pour ce jour.</p>";
                     } else {
                         timesDivBtn.innerHTML = "";
