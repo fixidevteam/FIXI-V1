@@ -110,83 +110,78 @@ class DatabaseSeeder extends Seeder
             'nom_operation_id' => '2'
         ]);
 
-        // garage::create([
-        //     'id' => 1,
-        //     'name' => 'Auto Atlas',
-        //     'ref' => 'GAR-00001',
-        //     'localisation' => 'marrakech, cherifia',
-        //     'ville' => 'Marrakech',
-        // ]);
-        // garage::create([
-        //     'id' => 2,
-        //     'name' => 'Auto Madina',
-        //     'ref' => 'GAR-00002',
-        //     'localisation' => 'marrakech, Madina',
-        //     'ville' => 'Marrakech',
+        garage::create([
+            'id' => 1,
+            'name' => 'Auto Atlas',
+            'ref' => 'GAR-00001',
+            'localisation' => 'marrakech, cherifia',
+            'ville' => 'Marrakech',
+        ]);
+        garage::create([
+            'id' => 2,
+            'name' => 'Auto Madina',
+            'ref' => 'GAR-00002',
+            'localisation' => 'marrakech, Madina',
+            'ville' => 'Marrakech',
 
-        // ]);
-        // garage::create([
-        //     'id' => 3,
-        //     'name' => 'Auto Nassim',
-        //     'ref' => 'GAR-00003',
-        //     'localisation' => 'marrakech, Nassim',
-        //     'ville' => 'Marrakech',
+        ]);
+        garage::create([
+            'id' => 3,
+            'name' => 'Auto Nassim',
+            'ref' => 'GAR-00003',
+            'localisation' => 'marrakech, Nassim',
+            'ville' => 'Marrakech',
 
-        // ]);
-        // garage::create([
-        //     'id' => 4,
-        //     'name' => 'Auto Tari9',
-        //     'ref' => 'GAR-00004',
-        //     'localisation' => 'marrakech, Mhamid',
-        //     'ville' => 'Marrakech',
-        // ]);
+        ]);
+        garage::create([
+            'id' => 4,
+            'name' => 'Auto Tari9',
+            'ref' => 'GAR-00004',
+            'localisation' => 'marrakech, Mhamid',
+            'ville' => 'Marrakech',
+        ]);
 
-        // $types = [
-        //     'Carte grise',
-        //     'Visite technique',
-        //     'Assurance auto',
-        //     'Certificat de dédouanement',
-        //     'Permis de circulation temporaire',
-        //     'Procès-verbal d\'accord de transformation',
-        //     'Vignette',
-        //     'Reçu de vente',
-        //     'Attestation d\'immatriculation provisoire',
-        //     'Fiche technique',
-        // ]; // Replace with your types
+        $types = [
+            'Carte grise',
+            'Visite technique',
+            'Assurance auto',
+            'Certificat de dédouanement',
+            'Permis de circulation temporaire',
+            'Procès-verbal d\'accord de transformation',
+            'Vignette',
+            'Reçu de vente',
+            'Attestation d\'immatriculation provisoire',
+            'Fiche technique',
+        ]; // Replace with your types
 
-        // foreach ($types as $type) {
-        //     type_papierv::create(['type' => $type]);
-        // }
-        // $types = [
-        //     'Permis de Conduire',
-        //     'Visite Médicale (Conduite)',
-        //     'Autorisation de Conduire',
-        // ]; // Replace with your types
+        foreach ($types as $type) {
+            type_papierv::create(['type' => $type]);
+        }
+        $types = [
+            'Permis de Conduire',
+            'Visite Médicale (Conduite)',
+            'Autorisation de Conduire',
+        ]; // Replace with your types
 
-        // foreach ($types as $type) {
-        //     type_papierp::create(['type' => $type]);
-        // }
-        // Admin::create([
-        //     'name' => 'admin',
-        //     'email' => 'admin@gmail.com',
-        //     'password' => Hash::make('adminadmin')
-        // ]);
-        // Mechanic::create([
-        //     'name' => 'mechannic',
-        //     'email' => 'user@gmail.com',
-        //     'password' => Hash::make('user12345'),
-        //     'garage_id'=>1 
-        // ]);
-        // $this->call([
-        //     OperationSeeder::class,
-
-        // Other seeders can be listed here
-        // ]);
-        // Mechanic::create([
-        //     'name' => 'mechannic',
-        //     'email' => 'user1@gmail.com',
-        //     'password' => Hash::make('user12345'),
-        //     'garage_id'=>1 
-        // ]);
+        foreach ($types as $type) {
+            type_papierp::create(['type' => $type]);
+        }
+        Admin::create([
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('adminadmin')
+        ]);
+        Mechanic::create([
+            'name' => 'mechannic',
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('user12345'),
+            'garage_id'=>1 
+        ]);
+        Mechanic::create([
+            'name' => 'mechannic',
+            'email' => 'user1@gmail.com',
+            'password' => Hash::make('user12345'),
+            'garage_id'=>1 
+        ]);
     }
 }

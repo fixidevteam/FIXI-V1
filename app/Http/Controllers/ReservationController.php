@@ -108,7 +108,7 @@ class ReservationController extends Controller
         ]);
         $appointment = Appointment::where('id', $id)->where('user_email', Auth::user()->email)->first();
         if ($appointment) {
-            $data['status'] = 'en_cour';
+            $data['status'] = 'en cours';
             $appointment->update($data);
             // send email to garage 
             $admins = Admin::all();
@@ -125,7 +125,7 @@ class ReservationController extends Controller
                     // Notify all mechanics associated with the garage
                     foreach ($mechanics as $mechanic) {
                         Notification::route('mail', $mechanic->email)
-                    ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', false, null));
+                            ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', false, null));
                     }
                 }
             }
@@ -151,7 +151,7 @@ class ReservationController extends Controller
                 session()->flash('subtitle', "L’annulation est possible uniquement si le RDV est à plus de 24h.");
                 return redirect()->route('RDV.show', $appointment);
             }
-            $appointment->update(['status' => 'cancelled']);
+            $appointment->update(['status' => 'annulé']);
             // send email to garage 
             // send to admin : 
             $admins = Admin::all();

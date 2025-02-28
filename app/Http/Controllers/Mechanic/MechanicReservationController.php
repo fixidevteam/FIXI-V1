@@ -17,42 +17,6 @@ class MechanicReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     // Get the authenticated user
-    //     $user = Auth::user();
-
-    //     // Fetch the garage associated with the mechanic
-    //     $garage = garage::where('id', $user->garage_id)->first();
-
-    //     // Check if the garage exists
-    //     if (!$garage) {
-    //         return redirect()->back()->with('error', 'Garage not found.');
-    //     }
-
-    //     // Fetch appointments for the garage
-    //     $appointments = Appointment::where('garage_ref', $garage->ref)
-    //         ->get(['id', 'user_full_name', 'appointment_day', 'appointment_time', 'status'])
-    //         ->map(function ($appointment) {
-    //             $color = match ($appointment->status) {
-    //                 'en_cour' => 'orange',
-    //                 'confirmed' => 'green',
-    //                 'cancelled' => 'red',
-    //                 default => 'blue'
-    //             };
-
-    //             return [
-    //                 'title' => 'Reservation: ' . $appointment->user_full_name,
-    //                 'start' => $appointment->appointment_day . 'T' . $appointment->appointment_time,
-    //                 'url' => route('mechanic.reservation.show', $appointment->id),
-    //                 'time' => $appointment->appointment_time,
-    //                 'color' => $color
-    //             ];
-    //         })
-    //         ->toArray();
-
-    //     return view('mechanic.reservation.index', compact('appointments'));
-    // }
     public function index()
     {
         // Get the authenticated user
@@ -71,9 +35,9 @@ class MechanicReservationController extends Controller
             ->get(['id', 'user_full_name', 'appointment_day', 'appointment_time', 'status'])
             ->map(function ($appointment) {
                 $color = match ($appointment->status) {
-                    'en_cour' => 'orange',
-                    'confirmed' => 'green',
-                    'cancelled' => 'red',
+                    'en cours' => 'orange',
+                    'confirmé' => 'green',
+                    'annulé' => 'red',
                     default => 'blue'
                 };
 
@@ -197,10 +161,10 @@ class MechanicReservationController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
-        if ($appointment->status === 'cancelled') {
+        if ($appointment->status === 'annulé') {
             Notification::route('mail', $appointment->user_email)
                 ->notify(new GarageCancelledRdv($appointment, 'la réservation a été annulée par le garage'));
-        } elseif ($appointment->status === 'Confirmed') {
+        } elseif ($appointment->status === 'confirmé') {
             Notification::route('mail', $appointment->user_email)
                 ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
         }

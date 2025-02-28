@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('garage_ref');
             $table->date('appointment_day');
             $table->time('appointment_time');
-            $table->enum('status', ['en_cour', 'confirmed', 'cancelled'])->default('en_cour');
+            $table->enum('status', ['en cours', 'confirmé', 'annulé', 'terminé'])->default('en cours');
             $table->timestamps();
         });
     }
