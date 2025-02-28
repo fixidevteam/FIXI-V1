@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\garage;
+use App\Notifications\GarageAcceptRdv;
+use App\Notifications\GarageCancelledRdv;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class AdminGestionReservationsController extends Controller
 {
@@ -104,7 +107,13 @@ class AdminGestionReservationsController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
-
+        if ($appointment->status === 'cancelled') {
+            Notification::route('mail', $appointment->user_email)
+                ->notify(new GarageCancelledRdv($appointment, 'la réservation a été annulée par le garage'));
+        } elseif ($appointment->status === 'Confirmed') {
+            Notification::route('mail', $appointment->user_email)
+                ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
+        }
         return redirect()->back()->with('success', 'Le statut a été mis à jour avec succès.');
     }
 
