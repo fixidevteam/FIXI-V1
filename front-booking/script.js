@@ -138,6 +138,74 @@ function showStep(stepId) {
         document.getElementById("nextStep2").classList.remove("hidden");
     }
 }
+// Event listener for the "Prev" button
+document.getElementById("prev1").addEventListener("click", () => {
+    showStep("step1"); // Go back to Step 1
+});
+
+// Function to toggle the modal
+function toggleModal(show, modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.toggle("hidden", !show);
+    }
+}
+
+// Function to handle confirmed Modify action
+function confirmModify() {
+    toggleModal(false, "confirmationModalModify"); // Hide the modal
+
+    // Reset selected  time
+    selectedTime = "";
+
+    // Clear the time slots display
+    document.getElementById("times").innerHTML = "";
+
+    // Go back to Step 1 (Date Selection)
+    showStep("step1");
+
+    // Clear the summary section
+    updateSummary("", "");
+
+    // Show the "Next" button for Step 1
+    document.getElementById("nextStep1").classList.remove("hidden");
+    document.getElementById("step2").classList.add("hidden");
+    document.getElementById("step3").classList.add("hidden");
+}
+
+// Function to handle confirmed Cancel action
+function confirmCancel() {
+    toggleModal(false, "confirmationModalCancel"); // Hide the modal
+    // Redirect the user to the previous page (garage page)
+    window.history.back();
+
+    // Reset the form and selections
+    selectedDate = "";
+    selectedTime = "";
+    document.getElementById("datePicker").value = "";
+    document.getElementById("times").innerHTML = "";
+
+    // Clear the summary section
+    updateSummary("", "");
+
+    // Go back to Step 1
+    showStep("step1");
+
+    // Show the "Next" button for Step 1
+    document.getElementById("nextStep1").classList.remove("hidden");
+    document.getElementById("step2").classList.add("hidden");
+    document.getElementById("step3").classList.add("hidden");
+}
+
+// Event listener for the Modify button
+document.getElementById("modify-btn").addEventListener("click", () => {
+    toggleModal(true, "confirmationModalModify"); // Show the Modify confirmation modal
+});
+
+// Event listener for the Cancel button
+document.getElementById("cancel-btn").addEventListener("click", () => {
+    toggleModal(true, "confirmationModalCancel"); // Show the Cancel confirmation modal
+});
 
 // Fetch available dates from the API
 function fetchAvailableDates() {
@@ -258,6 +326,11 @@ function fetchTimeSlots(date) {
             if (data.time_slots.length === 0) {
                 timesDiv.innerHTML =
                     "<p class='text-red-600'>Aucune plage horaire disponible pour ce jour.</p>";
+                // Show the "Prev" button
+                document.getElementById("prev1").classList.remove("hidden");
+
+                // Hide the "Next" button
+                document.getElementById("nextStep2").classList.add("hidden");
             } else {
                 data.time_slots.forEach((time) => {
                     let btn = document.createElement("button");
@@ -293,6 +366,11 @@ function fetchTimeSlots(date) {
 
                     timesDiv.appendChild(btn);
                 });
+                // Hide the "Prev" button
+                document.getElementById("prev1").classList.add("hidden");
+
+                // Show the "Next" button
+                document.getElementById("nextStep2").classList.remove("hidden");
             }
         })
         .catch((error) => {
@@ -327,65 +405,50 @@ document.getElementById("nextStep2").addEventListener("click", () => {
     showStep("step3"); // Move to Step 3 and update the title
 });
 
-// Event listener for the Modify button
-document.getElementById("modify-btn").addEventListener("click", () => {
-    // Reset the selected time
-    selectedTime = "";
-
-    // Clear the time slots display
-    document.getElementById("times").innerHTML = "";
-
-    // Go back to Step 1 (Date Selection)
-    showStep("step1");
-
-    // Clear the summary section
-    updateSummary("", "");
-
-    // Show the "Next" button for Step 1
-    document.getElementById("nextStep1").classList.remove("hidden");
-    document.getElementById("step3").classList.add("hidden");
-});
-
-// Event listener for the Cancel button
-document.getElementById("cancel-btn").addEventListener("click", () => {
-    // Reset the form and selections
-    selectedDate = "";
-    selectedTime = "";
-    document.getElementById("datePicker").value = "";
-    document.getElementById("times").innerHTML = "";
-
-    // Clear the summary section
-    updateSummary("", "");
-
-    // Go back to Step 1
-    showStep("step1");
-
-    // Show the "Next" button for Step 1
-    document.getElementById("nextStep1").classList.remove("hidden");
-    document.getElementById("step2").classList.add("hidden");
-    document.getElementById("step3").classList.add("hidden");
-});
-
 // Handle form submission
 document.getElementById("bookingForm").onsubmit = function (e) {
     e.preventDefault();
+
+    // Get form values
     let fullName = document.getElementById("full_name").value;
     let phone = document.getElementById("phone").value;
     let email = document.getElementById("email").value;
     let categorie_de_service = document.getElementById(
         "categorie_de_service"
     ).value;
-    let numero_immatriculation = document.getElementById(
-        "numero_immatriculation"
-    ).value;
     let modele = document.getElementById("modele").value;
     let objet_du_RDV = document.getElementById("objet_du_RDV").value;
 
-    if (fullName === "" || phone === "" || categorie_de_service === "") {
-        showError("Le nom et le téléphone et le domaine sont obligatoires.");
+    // Validate form fields one by one
+    if (fullName === "") {
+        showError("Le nom est obligatoire.");
+        document.getElementById("full_name").classList.add("border-red-500");
         return;
+    } else {
+        document.getElementById("full_name").classList.remove("border-red-500");
     }
 
+    if (phone === "") {
+        showError("Le numéro de téléphone est obligatoire.");
+        document.getElementById("phone").classList.add("border-red-500");
+        return;
+    } else {
+        document.getElementById("phone").classList.remove("border-red-500");
+    }
+
+    if (categorie_de_service === "") {
+        showError("Le domaine est obligatoire.");
+        document
+            .getElementById("categorie_de_service")
+            .classList.add("border-red-500");
+        return;
+    } else {
+        document
+            .getElementById("categorie_de_service")
+            .classList.remove("border-red-500");
+    }
+
+    // If all fields are valid, proceed with form submission
     showLoading(); // Show spinner
     fetch("http://localhost:8000/api/book-appointment", {
         method: "POST",
@@ -395,7 +458,6 @@ document.getElementById("bookingForm").onsubmit = function (e) {
             phone: phone,
             email: email,
             categorie_de_service: categorie_de_service,
-            numero_immatriculation: numero_immatriculation,
             modele: modele,
             objet_du_RDV: objet_du_RDV,
             garage_ref: garageRef,
@@ -446,9 +508,6 @@ document.getElementById("verifyCode").addEventListener("click", () => {
             phone: document.getElementById("phone").value,
             categorie_de_service: document.getElementById(
                 "categorie_de_service"
-            ).value,
-            numero_immatriculation: document.getElementById(
-                "numero_immatriculation"
             ).value,
             modele: document.getElementById("modele").value,
             objet_du_RDV: document.getElementById("objet_du_RDV").value,

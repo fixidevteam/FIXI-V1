@@ -67,7 +67,7 @@ class AppointmentController extends Controller
         ]);
     }
 
-    
+
     public function getTimeSlots(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
@@ -136,7 +136,6 @@ class AppointmentController extends Controller
             'appointment_day' => 'required|date',
             'appointment_time' => 'required|date_format:H:i:s',
             'modele' => 'nullable|string|max:255',
-            'numero_immatriculation' => 'nullable|string|max:255',
             'objet_du_RDV' => 'nullable|string|max:255',
         ]);
 
@@ -187,7 +186,6 @@ class AppointmentController extends Controller
             'appointment_time' => 'required|date_format:H:i:s',
             'categorie_de_service' => 'required|string|max:255',
             'modele' => 'nullable|string|max:255',
-            'numero_immatriculation' => 'nullable|string|max:255',
             'objet_du_RDV' => 'nullable|string|max:255',
         ]);
 
@@ -215,7 +213,6 @@ class AppointmentController extends Controller
                 'status' => $status,
                 'categorie_de_service' => $request->categorie_de_service,
                 'modele' => $request->modele,
-                'numero_immatriculation' => $request->numero_immatriculation,
                 'objet_du_RDV' => $request->objet_du_RDV,
             ]);
 
