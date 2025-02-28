@@ -29,7 +29,7 @@ class ConfirmationRdv extends Controller
         }
 
         // Fetch paginated appointments for the garage, ordered by the latest
-        $appointments = Appointment::where('garage_ref', $garage->ref)->where('status', 'en_cour')
+        $appointments = Appointment::where('garage_ref', $garage->ref)->where('status', 'en cours')
             ->latest() // Orders by `created_at` descending
             ->paginate(10); // Adjust per page as needed
 
@@ -44,7 +44,7 @@ class ConfirmationRdv extends Controller
         $garage = garage::where('id', $user->garage_id)->first();
 
         $appointment = Appointment::where('id', $id)->where('garage_ref', $user->garage->ref)->first();
-        $appointment->update(['status' => 'confirmed']);
+        $appointment->update(['status' => 'confirmé']);
         Notification::route('mail', $appointment->user_email)
             ->notify(new GarageAcceptRdv($appointment, 'Une réservation a été confirmée par le garage'));
 
@@ -61,7 +61,7 @@ class ConfirmationRdv extends Controller
         $garage = garage::where('id', $user->garage_id)->first();
 
         $appointment = Appointment::where('id', $id)->where('garage_ref', $user->garage->ref)->first();
-        $appointment->update(['status' => 'cancelled']);
+        $appointment->update(['status' => 'annulé']);
         Notification::route('mail', $appointment->user_email)
             ->notify(new GarageCancelledRdv($appointment, 'Une réservation a été annulée par le garage'));
 

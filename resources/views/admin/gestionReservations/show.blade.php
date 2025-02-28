@@ -131,10 +131,6 @@
                 <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                <dt class="mb-1 text-gray-500 md:text-lg">N° d’immatriculation</dt>
-                <dd class="text-lg font-semibold">{{ $appointment->numero_immatriculation ?? 'N/A'}}</dd>
-              </div>
-              <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">Marque da la voiture</dt>
                 <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
               </div>
@@ -179,23 +175,16 @@
             <!-- <button type="button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModalStatus('modal-en_cour', true)">
               En attente
             </button> -->
-            @if($appointment->status === 'en_cour')
+            @if($appointment->status === 'en cours')
             <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModalStatus('modal-confirmed', true)">
               Confirmé
             </button>
             <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModalStatus('modal-cancelled', true)">
               Annulé
             </button>
-            @elseif($appointment->status === 'confirmed')
+            @elseif($appointment->status === 'confirmé')
             <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModalStatus('modal-cancelled', true)">
               Annulé
-            </button>
-            <button type="button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModalStatus('modal-en_cour', true)">
-              En attente
-            </button>
-            @else
-            <button type="button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModalStatus('modal-en_cour', true)">
-              En attente
             </button>
             @endif
           </div>
@@ -209,7 +198,7 @@
                 <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
                   @csrf
                   @method('PATCH')
-                  <button type="submit" name="status" value="en_cour" class="px-4 py-2 bg-yellow-500 text-white rounded">Confirmer</button>
+                  <button type="submit" name="status" value="en cours" class="px-4 py-2 bg-yellow-500 text-white rounded">Confirmer</button>
                 </form>
               </div>
             </div>
@@ -225,7 +214,7 @@
                 <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
                   @csrf
                   @method('PATCH')
-                  <button type="submit" name="status" value="Confirmed" class="px-4 py-2 bg-green-500 text-white rounded">Confirmer</button>
+                  <button type="submit" name="status" value="confirmé" class="px-4 py-2 bg-green-500 text-white rounded">Confirmer</button>
                 </form>
               </div>
             </div>
@@ -240,7 +229,7 @@
                 <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
                   @csrf
                   @method('PATCH')
-                  <button type="submit" name="status" value="cancelled" class="px-4 py-2 bg-red-500 text-white rounded">Confirmer </button>
+                  <button type="submit" name="status" value="annulé" class="px-4 py-2 bg-red-500 text-white rounded">Confirmer </button>
                 </form>
               </div>
             </div>

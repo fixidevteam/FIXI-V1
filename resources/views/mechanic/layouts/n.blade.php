@@ -132,7 +132,7 @@
                         </a>
                     </li>
                     @php
-                    $count = App\Models\Appointment::where('status', 'en_cour')
+                    $count = App\Models\Appointment::where('status', 'en cours')
                     ->where('garage_ref', Auth::user()->garage->ref)
                     ->count();
                     @endphp

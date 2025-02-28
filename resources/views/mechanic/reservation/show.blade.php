@@ -131,10 +131,6 @@
               <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
             </div>
             <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">N° d’immatriculation</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->numero_immatriculation ?? 'N/A'}}</dd>
-            </div>
-            <div class="flex flex-col pt-3">
               <dt class="mb-1 text-gray-500 md:text-lg">Marque da la voiture</dt>
               <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
             </div>
@@ -156,52 +152,18 @@
             </div>
           </dl>
         </div>
-        {{-- update status --}}
-        {{-- <form method="POST" action="{{ route('mechanic.reservation.updateStatus', $appointment->id) }}">
-        @csrf
-        @method('PATCH')
-
-        <div class="flex space-x-4 mt-6">
-          <button type="submit" name="status" value="en_cour" class="px-4 py-2 bg-yellow-500 text-white rounded">
-            En attente
-          </button>
-          <button type="submit" name="status" value="Confirmed" class="px-4 py-2 bg-green-500 text-white rounded">
-            Confirmé
-          </button>
-          <button type="submit" name="status" value="cancelled" class="px-4 py-2 bg-red-500 text-white rounded">
-            Annulé
-          </button>
-        </div>
-        </form> --}}
-        {{-- end  --}}
         {{-- models for status --}}
         <div class="flex space-x-4 mt-6">
-          <!-- <button type="button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModal('modal-en_cour', true)">
-          En attente
-        </button>
-        <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModal('modal-confirmed', true)">
-          Confirmé
-        </button>
-        <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)">
-          Annulé
-        </button> -->
-          @if($appointment->status === 'en_cour')
+          @if($appointment->status === 'en cours')
           <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModal('modal-confirmed', true)"">
             Confirmé
           </button>
           <button type=" button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
             Annulé
           </button>
-          @elseif($appointment->status === 'confirmed')
+          @elseif($appointment->status === 'confirmé')
           <button type=" button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
             Annulé
-          </button>
-          <button type=" button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModal('modal-en_cour', true)">
-            En attente
-          </button>
-          @else
-          <button type="button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModal('modal-en_cour', true)">
-            En attente
           </button>
           @endif
         </div>
@@ -215,7 +177,7 @@
               <form method="POST" action="{{ route('mechanic.reservation.updateStatus', $appointment->id) }}">
                 @csrf
                 @method('PATCH')
-                <button type="submit" name="status" value="en_cour" class="px-4 py-2 bg-yellow-500 text-white rounded">Confirmer </button>
+                <button type="submit" name="status" value="en cours" class="px-4 py-2 bg-yellow-500 text-white rounded">Confirmer </button>
               </form>
             </div>
           </div>
@@ -231,7 +193,7 @@
               <form method="POST" action="{{ route('mechanic.reservation.updateStatus', $appointment->id) }}">
                 @csrf
                 @method('PATCH')
-                <button type="submit" name="status" value="Confirmed" class="px-4 py-2 bg-green-500 text-white rounded">Confirmer</button>
+                <button type="submit" name="status" value="confirmé" class="px-4 py-2 bg-green-500 text-white rounded">Confirmer</button>
               </form>
             </div>
           </div>
@@ -246,7 +208,7 @@
               <form method="POST" action="{{ route('mechanic.reservation.updateStatus', $appointment->id) }}">
                 @csrf
                 @method('PATCH')
-                <button type="submit" name="status" value="cancelled" class="px-4 py-2 bg-red-500 text-white rounded">Confirmer</button>
+                <button type="submit" name="status" value="annulé" class="px-4 py-2 bg-red-500 text-white rounded">Confirmer</button>
               </form>
             </div>
           </div>

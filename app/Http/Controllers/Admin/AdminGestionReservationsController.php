@@ -34,9 +34,9 @@ class AdminGestionReservationsController extends Controller
         // Map each appointment to FullCalendar event format
         $events = $appointments->map(function ($appointment) {
             $color = match ($appointment->status) {
-                'en_cour'   => 'orange',
-                'confirmed' => 'green',
-                'cancelled' => 'red',
+                'en cours'   => 'orange',
+                'confirmé' => 'green',
+                'annulé' => 'red',
                 default     => 'blue',
             };
 
@@ -107,10 +107,10 @@ class AdminGestionReservationsController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
-        if ($appointment->status === 'cancelled') {
+        if ($appointment->status === 'annulé') {
             Notification::route('mail', $appointment->user_email)
                 ->notify(new GarageCancelledRdv($appointment, 'la réservation a été annulée par le garage'));
-        } elseif ($appointment->status === 'Confirmed') {
+        } elseif ($appointment->status === 'confirmé') {
             Notification::route('mail', $appointment->user_email)
                 ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
         }

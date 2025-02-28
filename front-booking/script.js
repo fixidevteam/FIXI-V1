@@ -82,8 +82,8 @@ function updateStepTitle(step) {
         3: "Saisissez vos informations",
         4: "Vérification",
     };
+    const h2Element = document.getElementById("progress-title");
 
-    const h2Element = document.querySelector("h2");
     if (h2Element && stepTitles[step]) {
         h2Element.textContent = stepTitles[step];
     }

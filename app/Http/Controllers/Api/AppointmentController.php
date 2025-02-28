@@ -109,7 +109,7 @@ class AppointmentController extends Controller
             $isBooked = Appointment::where('garage_ref', $garage_ref)
                 ->where('appointment_day', $selectedDate)
                 ->where('appointment_time', $timeSlot)
-                ->where('status', '!=', 'cancelled') // Ensure only active bookings block slots
+                ->where('status', '!=', 'annulé') // Ensure only active bookings block slots
                 ->exists();
 
             if (!$isUnavailable && !$isBooked) {
@@ -151,17 +151,12 @@ class AppointmentController extends Controller
         }
 
         // Generate a verification code
-        // $verificationCode = Str::random(6); // 6-digit code
         $verificationCode = mt_rand(100000, 999999);
         $email = $request->email;
 
         // Store the verification code in cache with an expiration time (e.g., 10 minutes)
         Cache::put('verification_code_' . $email, $verificationCode, now()->addMinutes(10));
 
-        // Send the verification code to the user's email
-        // Mail::raw("Your verification code is: $verificationCode", function ($message) use ($email) {
-        //     $message->to($email)->subject('Appointment Verification Code');
-        // });
         // Send the verification code via email
         if ($email) {
             Mail::to($email)->send(new AppointmentVerificationMail($verificationCode, $request->full_name));
@@ -199,9 +194,9 @@ class AppointmentController extends Controller
         if ($storedCode && strval($storedCode) === strval($verificationCode)) {
             // Verification successful, create the appointment
             if ($garage->confirmation === 'automatique') {
-                $status = 'confirmed';
+                $status = "confirmé";
             } else {
-                $status = 'en_cour';
+                $status = "en cours";
             }
             $appointment = Appointment::create([
                 'user_full_name' => $request->full_name,
@@ -223,7 +218,7 @@ class AppointmentController extends Controller
 
             if ($existEmail) {
                 // sending email:
-                if ($appointment->status === "confirmed") {
+                if ($appointment->status === "confirmé") {
                     // send email to garage :
                     if ($garage) {
                         // Get mechanics related to the garage
@@ -242,7 +237,7 @@ class AppointmentController extends Controller
                     Notification::route('mail', $appointment->user_email)
                         ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
                     // 
-                } elseif ($appointment->status === "en_cour") {
+                } elseif ($appointment->status === "en cours") {
                     // send email to garage
                     if ($garage) {
                         // Get mechanics related to the garage
