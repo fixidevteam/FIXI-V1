@@ -436,6 +436,14 @@ document.getElementById("bookingForm").onsubmit = function (e) {
         document.getElementById("phone").classList.remove("border-red-500");
     }
 
+    if (email === "") {
+        showError("Adresse e-mail est obligatoire.");
+        document.getElementById("email").classList.add("border-red-500");
+        return;
+    } else {
+        document.getElementById("email").classList.remove("border-red-500");
+    }
+
     if (categorie_de_service === "") {
         showError("Le domaine est obligatoire.");
         document
