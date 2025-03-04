@@ -8,31 +8,30 @@
             <h1 class="text-lg font-medium text-gray-900">Bonjour, {{ Auth::user()->name }} </h1>
             <div>
               <h2 class="text-lg font-medium text-gray-900 flex items-center">
-                REF: 
+                REF:
                 <span id="garage-ref" class="cursor-pointer ml-2 flex items-center">
                   {{ Auth::user()->garage?->ref }}
                   <!-- Copy Icon -->
-                  <svg 
-                        id="copy-icon"
-                        class="ml-1 w-4 h-4 text-gray-700 hover:text-gray-900" 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="none">
-                        <path 
-                            fill-rule="evenodd" 
-                            clip-rule="evenodd" 
-                            d="M7.2626 3.26045C7.38219 2.13044 8.33828 1.25 9.5 1.25H14.5C15.6617 1.25 16.6178 2.13044 16.7374 3.26045C17.5005 3.27599 18.1603 3.31546 18.7236 3.41895C19.4816 3.55818 20.1267 3.82342 20.6517 4.34835C21.2536 4.95027 21.5125 5.70814 21.6335 6.60825C21.75 7.47522 21.75 8.57754 21.75 9.94513V16.0549C21.75 17.4225 21.75 18.5248 21.6335 19.3918C21.5125 20.2919 21.2536 21.0497 20.6517 21.6517C20.0497 22.2536 19.2919 22.5125 18.3918 22.6335C17.5248 22.75 16.4225 22.75 15.0549 22.75H8.94513C7.57754 22.75 6.47522 22.75 5.60825 22.6335C4.70814 22.5125 3.95027 22.2536 3.34835 21.6517C2.74643 21.0497 2.48754 20.2919 2.36652 19.3918C2.24996 18.5248 2.24998 17.4225 2.25 16.0549V9.94513C2.24998 8.57754 2.24996 7.47522 2.36652 6.60825C2.48754 5.70814 2.74643 4.95027 3.34835 4.34835C3.87328 3.82342 4.51835 3.55818 5.27635 3.41895C5.83973 3.31546 6.49952 3.27599 7.2626 3.26045ZM7.26496 4.76087C6.54678 4.7762 5.99336 4.81234 5.54735 4.89426C4.98054 4.99838 4.65246 5.16556 4.40901 5.40901C4.13225 5.68577 3.9518 6.07435 3.85315 6.80812C3.75159 7.56347 3.75 8.56458 3.75 10V16C3.75 17.4354 3.75159 18.4365 3.85315 19.1919C3.9518 19.9257 4.13225 20.3142 4.40901 20.591C4.68577 20.8678 5.07435 21.0482 5.80812 21.1469C6.56347 21.2484 7.56458 21.25 9 21.25H15C16.4354 21.25 17.4365 21.2484 18.1919 21.1469C18.9257 21.0482 19.3142 20.8678 19.591 20.591C19.8678 20.3142 20.0482 19.9257 20.1469 19.1919C20.2484 18.4365 20.25 17.4354 20.25 16V10C20.25 8.56458 20.2484 7.56347 20.1469 6.80812C20.0482 6.07434 19.8678 5.68577 19.591 5.40901C19.3475 5.16556 19.0195 4.99838 18.4527 4.89426C18.0066 4.81234 17.4532 4.7762 16.735 4.76087C16.6058 5.88062 15.6544 6.75 14.5 6.75H9.5C8.34559 6.75 7.39424 5.88062 7.26496 4.76087ZM9.5 2.75C9.08579 2.75 8.75 3.08579 8.75 3.5V4.5C8.75 4.91421 9.08579 5.25 9.5 5.25H14.5C14.9142 5.25 15.25 4.91421 15.25 4.5V3.5C15.25 3.08579 14.9142 2.75 14.5 2.75H9.5ZM6.25 10.5C6.25 10.0858 6.58579 9.75 7 9.75H17C17.4142 9.75 17.75 10.0858 17.75 10.5C17.75 10.9142 17.4142 11.25 17 11.25H7C6.58579 11.25 6.25 10.9142 6.25 10.5ZM7.25 14C7.25 13.5858 7.58579 13.25 8 13.25H16C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H8C7.58579 14.75 7.25 14.4142 7.25 14ZM8.25 17.5C8.25 17.0858 8.58579 16.75 9 16.75H15C15.4142 16.75 15.75 17.0858 15.75 17.5C15.75 17.9142 15.4142 18.25 15 18.25H9C8.58579 18.25 8.25 17.9142 8.25 17.5Z" 
-                            fill="currentColor" 
-                        />
-                    </svg>
+                  <svg
+                    id="copy-icon"
+                    class="ml-1 w-4 h-4 text-gray-700 hover:text-gray-900"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M7.2626 3.26045C7.38219 2.13044 8.33828 1.25 9.5 1.25H14.5C15.6617 1.25 16.6178 2.13044 16.7374 3.26045C17.5005 3.27599 18.1603 3.31546 18.7236 3.41895C19.4816 3.55818 20.1267 3.82342 20.6517 4.34835C21.2536 4.95027 21.5125 5.70814 21.6335 6.60825C21.75 7.47522 21.75 8.57754 21.75 9.94513V16.0549C21.75 17.4225 21.75 18.5248 21.6335 19.3918C21.5125 20.2919 21.2536 21.0497 20.6517 21.6517C20.0497 22.2536 19.2919 22.5125 18.3918 22.6335C17.5248 22.75 16.4225 22.75 15.0549 22.75H8.94513C7.57754 22.75 6.47522 22.75 5.60825 22.6335C4.70814 22.5125 3.95027 22.2536 3.34835 21.6517C2.74643 21.0497 2.48754 20.2919 2.36652 19.3918C2.24996 18.5248 2.24998 17.4225 2.25 16.0549V9.94513C2.24998 8.57754 2.24996 7.47522 2.36652 6.60825C2.48754 5.70814 2.74643 4.95027 3.34835 4.34835C3.87328 3.82342 4.51835 3.55818 5.27635 3.41895C5.83973 3.31546 6.49952 3.27599 7.2626 3.26045ZM7.26496 4.76087C6.54678 4.7762 5.99336 4.81234 5.54735 4.89426C4.98054 4.99838 4.65246 5.16556 4.40901 5.40901C4.13225 5.68577 3.9518 6.07435 3.85315 6.80812C3.75159 7.56347 3.75 8.56458 3.75 10V16C3.75 17.4354 3.75159 18.4365 3.85315 19.1919C3.9518 19.9257 4.13225 20.3142 4.40901 20.591C4.68577 20.8678 5.07435 21.0482 5.80812 21.1469C6.56347 21.2484 7.56458 21.25 9 21.25H15C16.4354 21.25 17.4365 21.2484 18.1919 21.1469C18.9257 21.0482 19.3142 20.8678 19.591 20.591C19.8678 20.3142 20.0482 19.9257 20.1469 19.1919C20.2484 18.4365 20.25 17.4354 20.25 16V10C20.25 8.56458 20.2484 7.56347 20.1469 6.80812C20.0482 6.07434 19.8678 5.68577 19.591 5.40901C19.3475 5.16556 19.0195 4.99838 18.4527 4.89426C18.0066 4.81234 17.4532 4.7762 16.735 4.76087C16.6058 5.88062 15.6544 6.75 14.5 6.75H9.5C8.34559 6.75 7.39424 5.88062 7.26496 4.76087ZM9.5 2.75C9.08579 2.75 8.75 3.08579 8.75 3.5V4.5C8.75 4.91421 9.08579 5.25 9.5 5.25H14.5C14.9142 5.25 15.25 4.91421 15.25 4.5V3.5C15.25 3.08579 14.9142 2.75 14.5 2.75H9.5ZM6.25 10.5C6.25 10.0858 6.58579 9.75 7 9.75H17C17.4142 9.75 17.75 10.0858 17.75 10.5C17.75 10.9142 17.4142 11.25 17 11.25H7C6.58579 11.25 6.25 10.9142 6.25 10.5ZM7.25 14C7.25 13.5858 7.58579 13.25 8 13.25H16C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H8C7.58579 14.75 7.25 14.4142 7.25 14ZM8.25 17.5C8.25 17.0858 8.58579 16.75 9 16.75H15C15.4142 16.75 15.75 17.0858 15.75 17.5C15.75 17.9142 15.4142 18.25 15 18.25H9C8.58579 18.25 8.25 17.9142 8.25 17.5Z"
+                      fill="currentColor" />
+                  </svg>
                   <!-- Check Icon (hidden by default) -->
-                  <svg id="check-icon" 
-                       class="ml-1 w-4 h-4 text-green-600 hidden" 
-                       xmlns="http://www.w3.org/2000/svg" 
-                       fill="none" 
-                       viewBox="0 0 24 24" 
-                       stroke-width="1.5" 
-                       stroke="currentColor">
+                  <svg id="check-icon"
+                    class="ml-1 w-4 h-4 text-green-600 hidden"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </span>
@@ -49,40 +48,15 @@
       </div>
     </div>
     {{-- content --}}
-    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
-      {{-- content (slot on layouts/app.blade.php)--}}
-      <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-      <div class="p-6 text-gray-900">
-        <!-- THE CHART  -->
-        <form method="GET" action="{{ route('mechanic.dashboard') }}" class="mb-4 w-full flex flex-col sm:flex-row sm:items-end items-end justify-between  gap-4">
-          <!-- Dropdown Container -->
-          <div class="flex flex-col w-full  ">
-            <label for="year" class="text-sm font-medium text-gray-700 mb-1 sm:mb-0">Sélectionnez l'année :</label>
-            <select name="year" id="year" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              @foreach($years as $year)
-              <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
-                {{ $year }}
-              </option>
-              @endforeach
-            </select>
-          </div>
+    <!-- CHART SECTION -->
+    <!-- END OF CHART SECTION -->
 
-          <!-- Submit Button -->
-          <x-primary-button class="">
-            {{ __('Filter') }}
-          </x-primary-button>
-        </form>
-        <canvas id="operationsChart" height="250" class="w-full bg-white"></canvas>
-        <!-- END OF CHART -->
-      </div>
-      </div>
-    </div>
 
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
       {{-- content (slot on layouts/app.blade.php)--}}
       <div>
         <div>
-          <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {{-- box 1 --}}
             <div class="flex items-center bg-white p-8 rounded-lg shadow">
               <div class="flex-shrink-0">
@@ -145,6 +119,22 @@
                 </svg>
               </div>
             </div>
+            {{-- box 4 --}}
+            <div class="flex items-center bg-white p-8 rounded-lg shadow">
+              <div class="flex-shrink-0">
+                <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
+                  {{$Rdvcount}} </span>
+                <h3 class="text-base font-normal text-gray-500 first-letter:capitalize">nombre des RDV's</h3>
+              </div>
+              <div class="ml-5 w-0 flex items-center justify-end flex-1 text-gray-600 text-base font-bold">
+                <svg class="w-5 h-5" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9 1.25C6.37665 1.25 4.25 3.37665 4.25 6C4.25 8.62335 6.37665 10.75 9 10.75C11.6234 10.75 13.75 8.62335 13.75 6C13.75 3.37665 11.6234 1.25 9 1.25ZM5.75 6C5.75 4.20507 7.20507 2.75 9 2.75C10.7949 2.75 12.25 4.20507 12.25 6C12.25 7.79493 10.7949 9.25 9 9.25C7.20507 9.25 5.75 7.79493 5.75 6Z" fill="currentColor" />
+                  <path d="M15 2.25C14.5858 2.25 14.25 2.58579 14.25 3C14.25 3.41421 14.5858 3.75 15 3.75C16.2426 3.75 17.25 4.75736 17.25 6C17.25 7.24264 16.2426 8.25 15 8.25C14.5858 8.25 14.25 8.58579 14.25 9C14.25 9.41421 14.5858 9.75 15 9.75C17.0711 9.75 18.75 8.07107 18.75 6C18.75 3.92893 17.0711 2.25 15 2.25Z" fill="currentColor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M3.67815 13.5204C5.07752 12.7208 6.96067 12.25 9 12.25C11.0393 12.25 12.9225 12.7208 14.3219 13.5204C15.7 14.3079 16.75 15.5101 16.75 17C16.75 18.4899 15.7 19.6921 14.3219 20.4796C12.9225 21.2792 11.0393 21.75 9 21.75C6.96067 21.75 5.07752 21.2792 3.67815 20.4796C2.3 19.6921 1.25 18.4899 1.25 17C1.25 15.5101 2.3 14.3079 3.67815 13.5204ZM4.42236 14.8228C3.26701 15.483 2.75 16.2807 2.75 17C2.75 17.7193 3.26701 18.517 4.42236 19.1772C5.55649 19.8253 7.17334 20.25 9 20.25C10.8267 20.25 12.4435 19.8253 13.5776 19.1772C14.733 18.517 15.25 17.7193 15.25 17C15.25 16.2807 14.733 15.483 13.5776 14.8228C12.4435 14.1747 10.8267 13.75 9 13.75C7.17334 13.75 5.55649 14.1747 4.42236 14.8228Z" fill="currentColor" />
+                  <path d="M18.1607 13.2674C17.7561 13.1787 17.3561 13.4347 17.2674 13.8393C17.1787 14.2439 17.4347 14.6439 17.8393 14.7326C18.6317 14.9064 19.2649 15.2048 19.6829 15.5468C20.1014 15.8892 20.25 16.2237 20.25 16.5C20.25 16.7507 20.1294 17.045 19.7969 17.3539C19.462 17.665 18.9475 17.9524 18.2838 18.1523C17.8871 18.2717 17.6624 18.69 17.7818 19.0867C17.9013 19.4833 18.3196 19.708 18.7162 19.5886C19.5388 19.3409 20.2743 18.9578 20.8178 18.4529C21.3637 17.9457 21.75 17.2786 21.75 16.5C21.75 15.6352 21.2758 14.912 20.6328 14.3859C19.9893 13.8593 19.1225 13.4783 18.1607 13.2674Z" fill="currentColor" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -191,11 +181,11 @@
                         </p>
                         <p class="text-sm text-gray-500 truncate">
                           @php
-                                $nomOp = $operation->nom === 'Autre'
-                                ? "Autre" // Display "autre" or a default
-                                : App\Models\nom_operation::find($operation->nom);
+                          $nomOp = $operation->nom === 'Autre'
+                          ? "Autre" // Display "autre" or a default
+                          : App\Models\nom_operation::find($operation->nom);
                           @endphp
-                                {{ is_string($nomOp) ? $nomOp : ($nomOp->nom_operation ?? 'N/A') }}
+                          {{ is_string($nomOp) ? $nomOp : ($nomOp->nom_operation ?? 'N/A') }}
                         </p>
                       </div>
                       <div class="inline-flex items-center text-base font-semibold text-gray-900">
@@ -222,7 +212,7 @@
                 <p class="p-4 text-gray-500 text-center">Aucun voiture disponible.</p>
                 @else
                 <ul role="list" class="divide-y divide-gray-200">
-                  @foreach (Auth::user()->garage->operations->take(5) as $operation)
+                  @foreach (Auth::user()->garage->operations->unique('voiture.id')->take(5) as $operation)
                   <li class="py-3 sm:py-4">
                     <div class="flex items-center space-x-4">
                       <div class="flex-shrink-0">
@@ -261,40 +251,5 @@
       @include('layouts.footer')
     </div>
   </div>
-  <script>
-    // Data passed from the controller
-    const labels = @json($labels); // Month names
-    const values = @json($values); // Operation counts
 
-    const ctx = document.getElementById('operationsChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels, // Labels for the x-axis
-        datasets: [{
-          label: 'Nombre des operations',
-          data: values, // Data for the y-axis
-          backgroundColor: 'rgb(220, 38, 28)',
-          borderColor: 'rgb(220, 38, 28)',
-          borderWidth: 1,
-          tension: 0.4,
-
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1,
-              callback: function(value) {
-                return Number.isInteger(value) ? value : '';
-              }
-            }
-          }
-        }
-      }
-    });
-  </script>
 </x-mechanic-app-layout>
