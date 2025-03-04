@@ -142,7 +142,7 @@
                                         {{ $appointment->categorie_de_service }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $appointment->appointment_day }}
+                                        {{ \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-full border border-blue-400">

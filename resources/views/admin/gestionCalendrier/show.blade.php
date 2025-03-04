@@ -132,10 +132,10 @@
                                         {{ $daysOfWeek[$schedule->available_day] }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $schedule->available_from }}
+                                        {{ \Carbon\Carbon::parse($schedule->available_from)->format('H:i') }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $schedule->available_to }}
+                                        {{ \Carbon\Carbon::parse($schedule->available_to)->format('H:i') }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
@@ -199,10 +199,10 @@
                                         {{ $daysOfWeek[$unavailable->unavailable_day] }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $unavailable->unavailable_from }}
+                                        {{ \Carbon\Carbon::parse($unavailable->unavailable_from)->format('H:i') }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $unavailable->unavailable_to }}
+                                        {{ \Carbon\Carbon::parse($unavailable->unavailable_to)->format('H:i') }}
                                     </td>
                                 </tr>
                                 @endforeach

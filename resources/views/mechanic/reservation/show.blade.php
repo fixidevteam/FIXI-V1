@@ -131,16 +131,16 @@
               <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
             </div>
             <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Marque da la voiture</dt>
+              <dt class="mb-1 text-gray-500 md:text-lg">Marque de la voiture</dt>
               <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
             </div>
             <div class="flex flex-col pt-3">
               <dt class="mb-1 text-gray-500 md:text-lg">Date du rendez-vous</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->appointment_day }}</dd>
+              <dd class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') }}</dd>
             </div>
             <div class="flex flex-col pt-3">
               <dt class="mb-1 text-gray-500 md:text-lg">Heure du rendez-vous</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->appointment_time }}</dd>
+              <dd class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</dd>
             </div>
             <div class="flex flex-col pt-3">
               <dt class="mb-1 text-gray-500 md:text-lg">Statut du rendez-vous</dt>

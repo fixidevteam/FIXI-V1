@@ -131,16 +131,16 @@
                 <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
-                <dt class="mb-1 text-gray-500 md:text-lg">Marque da la voiture</dt>
+                <dt class="mb-1 text-gray-500 md:text-lg">Marque de la voiture</dt>
                 <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
               </div>
               <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">Date du rendez-vous</dt>
-                <dd class="text-lg font-semibold">{{ $appointment->appointment_day }}</dd>
+                <dd class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') }}</dd>
               </div>
               <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">Heure du rendez-vous</dt>
-                <dd class="text-lg font-semibold">{{ $appointment->appointment_time }}</dd>
+                <dd class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</dd>
               </div>
               <div class="flex flex-col pt-3">
                 <dt class="mb-1 text-gray-500 md:text-lg">Statut du rendez-vous</dt>
@@ -153,28 +153,8 @@
             </dl>
           </div>
           {{-- update status --}}
-          {{-- <form method="POST" action="{{ route('admin.reservations.updateStatus', $appointment->id) }}">
-          @csrf
-          @method('PATCH')
-
-          <div class="flex space-x-4 mt-6">
-            <button type="submit" name="status" value="en_cour" class="px-4 py-2 bg-yellow-500 text-white rounded">
-              En attente
-            </button>
-            <button type="submit" name="status" value="Confirmed" class="px-4 py-2 bg-green-500 text-white rounded">
-              Confirmé
-            </button>
-            <button type="submit" name="status" value="cancelled" class="px-4 py-2 bg-red-500 text-white rounded">
-              Annulé
-            </button>
-          </div>
-          </form> --}}
-          {{-- end  --}}
           {{-- models for status --}}
           <div class="flex space-x-4 mt-6">
-            <!-- <button type="button" class="px-4 py-2 bg-yellow-500 text-white rounded" onclick="toggleModalStatus('modal-en_cour', true)">
-              En attente
-            </button> -->
             @if($appointment->status === 'en cours')
             <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModalStatus('modal-confirmed', true)">
               Confirmé

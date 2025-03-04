@@ -231,7 +231,7 @@
                                 @foreach($disabledDates as $disabledDate)
                                 <tr class="bg-white border-b">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {{ $disabledDate->date }}
+                                        {{ \Carbon\Carbon::parse($disabledDate->date)->format('d/m/Y') }}
                                     </th>
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                         <div class="flex items-center">
