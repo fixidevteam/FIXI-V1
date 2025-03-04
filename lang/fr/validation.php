@@ -151,6 +151,25 @@ return [
             'max' => 'La taille du fichier ne peut pas dépasser 5 Mo.',
             'upload_failed' => 'La photo n\'a pas pu être téléchargée.',
         ],
+        'available_day' => [
+            'required' => 'Le jour disponible est requis.',
+            'integer' => 'Le jour disponible doit être un nombre entier.',
+            'between' => 'Le jour disponible doit être un jour de la semaine, de dimanche à samedi.',
+        ],
+        'available_from' => [
+            'required' => 'L\'heure de début est requise.',
+        ],
+        'available_to' => [
+            'required' => 'L\'heure de fin est requise.',
+            'after' => 'L\'heure de fin doit être après l\'heure de début.',
+        ],
+        'unavailable_from' => [
+            'nullable' => 'L\'heure de début d\'indisponibilité est facultative.',
+        ],
+        'unavailable_to' => [
+            'nullable' => 'L\'heure de fin d\'indisponibilité est facultative.',
+            'after' => 'L\'heure de fin d\'indisponibilité doit être après l\'heure de début d\'indisponibilité.',
+        ],
     ],
 
     /*

@@ -82,8 +82,8 @@ function updateStepTitle(step) {
         3: "Saisissez vos informations",
         4: "Vérification",
     };
-    const h2Element = document.getElementById("progress-title");
 
+    const h2Element = document.getElementById("progress-title");
     if (h2Element && stepTitles[step]) {
         h2Element.textContent = stepTitles[step];
     }
@@ -96,12 +96,22 @@ function updateSummary(date, time) {
     const selectedTimeSpan = document.getElementById("selected-time");
 
     if (date && time) {
-        selectedDateSpan.textContent = date;
-        selectedTimeSpan.textContent = time;
+        // Format the date to d/m/Y format
+        const formattedDate = formatDateToDMY(date); // Convert Y-m-d to d/m/Y
+        // Format the time to remove seconds (if present)
+        const formattedTime = time.includes(":") ? time.slice(0, 5) : time; // Ensure "HH:MM" format
+        selectedDateSpan.textContent = formattedDate;
+        selectedTimeSpan.textContent = formattedTime;
         summaryDiv.classList.remove("hidden"); // Show the summary section
     } else {
         summaryDiv.classList.add("hidden"); // Hide the summary section if no date/time is selected
     }
+}
+
+// Helper function to convert Y-m-d to d/m/Y
+function formatDateToDMY(date) {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`; // Convert to d/m/Y format
 }
 
 // Function to show a specific step
@@ -294,7 +304,8 @@ function populateMarquesInput(marques) {
 // Initialize the date picker
 function initDatePicker() {
     flatpickr("#datePicker", {
-        dateFormat: "Y-m-d",
+        dateFormat: "d/m/Y",
+        locale: "fr",
         enable: [
             function (date) {
                 const formattedDate = flatpickr.formatDate(date, "Y-m-d");
@@ -305,8 +316,10 @@ function initDatePicker() {
             },
         ],
         onChange: function (selectedDates, dateStr) {
-            selectedDate = dateStr;
-            fetchTimeSlots(dateStr); // Fetch available time slots
+            // Store the selected date in Y-m-d format for the backend
+            selectedDate = flatpickr.formatDate(selectedDates[0], "Y-m-d");
+            // selectedDate = dateStr;
+            fetchTimeSlots(selectedDate); // Fetch available time slots
             updateSummary(selectedDate, selectedTime); // Update the summary section
         },
     });
@@ -332,9 +345,14 @@ function fetchTimeSlots(date) {
                 // Hide the "Next" button
                 document.getElementById("nextStep2").classList.add("hidden");
             } else {
+                // Create a container for the buttons
+                const buttonsContainer = document.createElement("div");
+                buttonsContainer.classList.add("grid", "grid-cols-2", "gap-4");
                 data.time_slots.forEach((time) => {
+                    // Format the time to remove seconds
+                    const formattedTime = time.slice(0, 5); // Extract "HH:MM" from "HH:MM:SS"
                     let btn = document.createElement("button");
-                    btn.innerText = time;
+                    btn.innerText = formattedTime;
                     btn.classList.add(
                         "p-2.5",
                         "text-sm",
@@ -364,8 +382,10 @@ function fetchTimeSlots(date) {
                         updateSummary(selectedDate, selectedTime); // Update the summary section
                     };
 
-                    timesDiv.appendChild(btn);
+                    buttonsContainer.appendChild(btn);
                 });
+                // Append the buttons container to the times div
+                timesDiv.appendChild(buttonsContainer);
                 // Hide the "Prev" button
                 document.getElementById("prev1").classList.add("hidden");
 

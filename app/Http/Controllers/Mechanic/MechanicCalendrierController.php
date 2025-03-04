@@ -18,7 +18,7 @@ class MechanicCalendrierController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $garage = Garage::where('id', $user->garage_id)->first();
+        $garage = garage::where('id', $user->garage_id)->first();
 
         if (!$garage) {
             return redirect()->back()->with('error', 'Garage not found.');

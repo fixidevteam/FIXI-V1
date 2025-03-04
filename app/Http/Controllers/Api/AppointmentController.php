@@ -256,11 +256,10 @@ class AppointmentController extends Controller
                         ->notify(new ClientAddRdvManuelle($appointment));
                     // end
                 }
-                return response()->json(['message' => 'Appointment booked successfully!', 'account' => true]);
+                return response()->json(['message' => 'Appointment booked successfully!', 'account' => true, 'ref' => $garage->ref, 'appointment' => $appointment]);
             } else {
                 // sendin email 
-                // 
-                return response()->json(['message' => 'Appointment booked successfully!', 'account' => false]);
+                return response()->json(['message' => 'Appointment booked successfully!', 'account' => false, 'ref' => $garage->ref, 'appointment' => $appointment]);
             }
         } else {
             return response()->json(['message' => 'Invalid verification code.'], 400);

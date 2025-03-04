@@ -14,6 +14,7 @@
             href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
         />
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     </head>
     <body class="bg-gray-50 p-6 flex justify-center items-center min-h-screen">
         <div class="w-full max-w-6xl">
@@ -81,7 +82,7 @@
                 id="summary"
                 class="hidden bg-white p-4 shadow-lg rounded-lg mb-8"
             >
-                <p class="text-sm text-gray-700 mb-2">Vous rendez vous le:</p>
+                <p class="text-sm text-gray-700 mb-2">Date du rendez-vous:</p>
                 <div
                     class="flex justify-between items-center space-y-2 flex-wrap"
                 >
@@ -249,7 +250,7 @@
                             type="text"
                             id="datePicker"
                             class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                            placeholder="Choose a date"
+                            placeholder="Choisir la date"
                             readonly
                         />
                     </div>
@@ -264,7 +265,7 @@
 
                 <!-- Step 2: Time Slot Selection -->
                 <div id="step2" class="step hidden">
-                    <div id="times" class="mt-6 grid grid-cols-2 gap-4"></div>
+                    <div id="times" class="times"></div>
                     <div class="flex gap-4 mt-6">
                         <button
                             id="prev1"
@@ -345,8 +346,7 @@
                 <div id="step4" class="step hidden">
                     <div class="mt-6">
                         <p class="text-sm text-gray-600 mb-4">
-                            Un code de vérification a été envoyé à votre adresse
-                            e-mail. Veuillez entrer le code ci-dessous pour
+                            Veuillez entrer le code de confirmation reçu pour
                             confirmer votre rendez-vous.
                         </p>
                         <input
