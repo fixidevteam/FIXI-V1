@@ -1,4 +1,4 @@
-<x-mechanic-app-layout :subtitle="'Paramètres'">
+<x-mechanic-app-layout :subtitle="'Gestion des RDV’s'">
     <div class="p-4 sm:ml-64">
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             {{-- content (slot on layouts/app.blade.php)--}}
@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.calendrier.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Paramètres
+                                Gestion des RDV’s
                             </a>
                         </div>
                     </li>
@@ -44,7 +44,7 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Horaires de travail</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Configuration de la disponibilité</h2>
                 </div>
                 {{-- table --}}
                 <div class="my-5">
@@ -96,7 +96,7 @@
                         <p class="p-4 text-gray-500 text-center">Aucun Horaires de travail disponible.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Horaires de travail</caption>
+                            <caption class="sr-only">Configuration de la disponibilité</caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
@@ -120,10 +120,10 @@
                                         {{ $daysOfWeek[$schedule->available_day] }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $schedule->available_from }}
+                                        {{ \Carbon\Carbon::parse($schedule->available_from)->format('H:i') }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $schedule->available_to }}
+                                        {{ \Carbon\Carbon::parse($schedule->available_to)->format('H:i') }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
@@ -148,9 +148,10 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilité</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Configuration des plages d’indisponibilité</h2>
                 </div>
                 <div class="my-5">
+                    <h2 class="text-xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilité</h2>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($unavailableTimes->isEmpty())
                         <p class="p-4 text-gray-500 text-center">Aucun Indisponibilité.</p>
@@ -177,10 +178,10 @@
                                         {{ $daysOfWeek[$unavailable->unavailable_day] }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $unavailable->unavailable_from }}
+                                        {{ \Carbon\Carbon::parse($unavailable->unavailable_from)->format('H:i') }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $unavailable->unavailable_to }}
+                                        {{ \Carbon\Carbon::parse($unavailable->unavailable_to)->format('H:i') }}
                                     </td>
                                 </tr>
                                 @endforeach
@@ -191,13 +192,14 @@
                 </div>
                 {{-- second --}}
                 {{-- table close --}}
-            </div>
-        </div>
-        <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
-            {{-- content (slot on layouts/app.blade.php)--}}
-            <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Jours indisponibiles</h2>
+                <!-- </div> -->
+                <!-- </div> -->
+                <!-- <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4"> -->
+                {{-- content (slot on layouts/app.blade.php)--}}
+                <!-- <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg"> -->
+
+                <div class="flex justify-between items-center my-8">
+                    <h2 class="text-xl font-bold leading-9 tracking-tight text-gray-900 ">Jours indisponibiles</h2>
                     <a href="{{route('mechanic.jour-indisponible.create')}}">
                         <x-primary-button class="hidden md:block">Ajouter un jour</x-primary-button>
                         <x-primary-button class="sm:hidden">
@@ -261,34 +263,34 @@
         </div>
 
         {{-- contet close colse --}}
-    <!-- confirmation des jour indesponsibles -->
-    @foreach($disabledDates as $disabledDate)
-    <div id="confirmationJour-{{ $disabledDate->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
-            <h2 class="text-lg font-bold text-gray-800">Confirmation de suppression</h2>
-            <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer ce jour ? Cette action ne peut pas être annulée.</p>
-            <div class="flex justify-end mt-4">
-                <button onclick="toggleModalJour(false, 'confirmationJour-{{ $disabledDate->id }}')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">
-                    Annuler
-                </button>
-                <form action="{{ route('mechanic.jour-indisponible.destroy', $disabledDate->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                        Confirmer
+        <!-- confirmation des jour indesponsibles -->
+        @foreach($disabledDates as $disabledDate)
+        <div id="confirmationJour-{{ $disabledDate->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
+            <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
+                <h2 class="text-lg font-bold text-gray-800">Confirmation de suppression</h2>
+                <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer ce jour ? Cette action ne peut pas être annulée.</p>
+                <div class="flex justify-end mt-4">
+                    <button onclick="toggleModalJour(false, 'confirmationJour-{{ $disabledDate->id }}')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">
+                        Annuler
                     </button>
-                </form>
+                    <form action="{{ route('mechanic.jour-indisponible.destroy', $disabledDate->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                            Confirmer
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
+        @endforeach
+        {{-- footer --}}
+        <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
+            @include('layouts.footer')
+        </div>
     </div>
-    @endforeach
-    {{-- footer --}}
-    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
-        @include('layouts.footer')
-    </div>
-    </div>
-    
-    <script> 
+
+    <script>
         function toggleModalJour(show, modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
@@ -296,5 +298,5 @@
             }
         }
     </script>
-   
+
 </x-mechanic-app-layout>

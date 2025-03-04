@@ -1,4 +1,4 @@
-<x-mechanic-app-layout :subtitle="'Mes Rendez-vous'">
+<x-mechanic-app-layout :subtitle="'Calendrier des RDV’s'">
     <div class="p-4 sm:ml-64">
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             {{-- content (slot on layouts/app.blade.php)--}}
@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.reservation.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Mes rendez-vous
+                                Calendrier des RDV’s
                             </a>
                         </div>
                     </li>
@@ -44,7 +44,7 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Calendrier des rendez-vous</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900"> Calendrier des RDV’s</h2>
                 </div>
                 {{-- table --}}
                 <div class="my-5">

@@ -82,7 +82,7 @@
                 
                     <div>
                         <x-input-label for="available_day" :value="__('Jour disponible')" />
-                        <select id="available_day" name="available_day" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+                        <select id="available_day" name="available_day" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 cursor-not-allowed" disabled readonly>
                             <option value="">Choisissez un jour</option>
                             @foreach ($daysOfWeek as $key => $value)
                                 <option value="{{ $key }}" {{ old('available_day', $schedule->available_day) == $key ? 'selected' : '' }}>
@@ -97,10 +97,11 @@
                         <x-input-label for="available_from" :value="__('Heure de début')" />
                         <x-text-input 
                             id="available_from" 
-                            class="block mt-1 w-full" 
+                            class="block mt-1 w-full cursor-not-allowed" 
                             type="time" 
                             name="available_from" 
                             :value="old('available_from') ?? $schedule->available_from" 
+                            disabled readonly
                         />
                         <x-input-error :messages="$errors->get('available_from')" class="mt-2" />
                     </div>
@@ -109,10 +110,11 @@
                         <x-input-label for="available_to" :value="__('Heure de fin')" />
                         <x-text-input 
                             id="available_to" 
-                            class="block mt-1 w-full" 
+                            class="block mt-1 w-full cursor-not-allowed" 
                             type="time" 
                             name="available_to" 
                             :value="old('available_to', $schedule->available_to)" 
+                            disabled readonly
                         />
                         <x-input-error :messages="$errors->get('available_to')" class="mt-2" />
                     </div>

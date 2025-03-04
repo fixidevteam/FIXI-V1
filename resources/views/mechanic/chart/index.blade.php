@@ -1,4 +1,4 @@
-<x-mechanic-app-layout :subtitle="'Analytique'">
+<x-mechanic-app-layout :subtitle="'Analytics'">
     <div class="p-4 sm:ml-64">
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             {{-- content (slot on layouts/app.blade.php)--}}
@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.chart') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Analytique
+                                Analytics
                             </a>
                         </div>
                     </li>
@@ -43,7 +43,7 @@
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <h2 class="mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900">Analytique</h2>
+                <h2 class="mt-10 text-2xl font-bold leading-9 tracking-tight text-gray-900">Analytics</h2>
                 <div class="container">
                     <div class="my-4">
                         <h2 class="text-sm md:text-base mb-4">Suivi global des opérations (Toutes les années)</h2>
