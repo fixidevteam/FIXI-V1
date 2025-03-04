@@ -140,7 +140,16 @@
       </div>
     </div>
 
-
+    <!-- calendrie SECTION -->
+    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
+      <div class="bg-white p-8 rounded-lg shadow w-full">
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900"> Calendrier des RDV’s</h2>
+        </div>
+        <div id="calendar" class="w-full"></div>
+      </div>
+    </div>
+    <!-- END OF calendrie SECTION -->
 
 
 
@@ -251,5 +260,53 @@
       @include('layouts.footer')
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      // Detect screen size for responsive header buttons
+      var isMobile = window.innerWidth < 768;
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'fr', // Set language to French
+        initialView: isMobile ? 'listWeek' : 'dayGridMonth', // Responsive views
+        headerToolbar: isMobile ? {
+          left: 'prev,next today', // Only navigation on mobile
+          center: '',
+          right: 'listWeek' // Show only list view on mobile
+        } : {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: { // Manually set button labels in French
+          today: "Aujourd’hui",
+          month: "Mois",
+          week: "Semaine",
+          day: "Jour",
+          list: "Liste",
+          next: "Suivant",
+          prev: "Précédent"
+        },
+        events: @json($appointments),
+        eventTimeFormat: { // Display time in 24-hour format
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        },
+        nowIndicator: true, // Highlights the current time
+      });
+
+      calendar.render();
+
+      // Optional: Adjust layout when window resizes
+      window.addEventListener('resize', function() {
+        var newIsMobile = window.innerWidth < 768;
+        if (newIsMobile !== isMobile) {
+          location.reload(); // Reload to apply new toolbar layout
+        }
+      });
+    });
+  </script>
 
 </x-mechanic-app-layout>
