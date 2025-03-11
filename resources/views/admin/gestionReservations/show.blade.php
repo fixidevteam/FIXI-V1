@@ -157,14 +157,14 @@
           <div class="flex space-x-4 mt-6">
             @if($appointment->status === 'en cours')
             <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModalStatus('modal-confirmed', true)">
-              Confirmé
+              Confirmer
             </button>
             <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModalStatus('modal-cancelled', true)">
-              Annulé
+              Annuler
             </button>
             @elseif($appointment->status === 'confirmé')
             <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModalStatus('modal-cancelled', true)">
-              Annulé
+              Annuler
             </button>
             @endif
           </div>
