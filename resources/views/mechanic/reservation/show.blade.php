@@ -112,58 +112,70 @@
         @endif
         @endforeach
         {{-- alert close --}}
-        <div>
-          <dl class="w-full text-gray-900 divide-y divide-gray-200">
-            <div class="flex flex-col pb-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Nom du client</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->user_full_name }}</dd>
+        <div class="space-y-6">
+          {{-- box 1 --}}
+          <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Statut du rendez-vous</h3>
+              <p class="text-lg font-semibold first-letter:uppercase">{{ $appointment->status }}</p>
             </div>
-            <div class="flex flex-col py-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Adresse E-Mail</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->user_email ?? 'N/A'}}</dd>
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Date du rendez-vous</h3>
+              <p class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') }}</p>
             </div>
-            <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">N° de téléphone</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->user_phone }}</dd>
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Heure du rendez-vous</h3>
+              <p class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</p>
             </div>
-            <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Domaine de service</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</dd>
+          </div>
+          {{-- box 2 --}}
+          <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Nom du client</h3>
+              <p class="text-lg font-semibold">{{ $appointment->user_full_name }}</p>
             </div>
-            <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Marque de la voiture</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</dd>
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Adresse E-Mail</h3>
+              <p class="text-lg font-semibold">{{ $appointment->user_email ?? 'N/A'}}</p>
             </div>
-            <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Date du rendez-vous</dt>
-              <dd class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') }}</dd>
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">N° de téléphone</h3>
+              <p class="text-lg font-semibold">{{ $appointment->user_phone }}</p>
             </div>
-            <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Heure du rendez-vous</dt>
-              <dd class="text-lg font-semibold">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}</dd>
+          </div>
+          {{-- box 3 --}}
+          <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Domaine de service</h3>
+              <p class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</p>
             </div>
-            <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Statut du rendez-vous</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->status }}</dd>
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Marque de la voiture</h3>
+              <p class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</p>
             </div>
-            <div class="flex flex-col pt-3">
-              <dt class="mb-1 text-gray-500 md:text-lg">Message</dt>
-              <dd class="text-lg font-semibold">{{ $appointment->objet_du_RDV ?? 'N/A'}}</dd>
+          </div>
+          {{-- box 4 --}}
+          @if($appointment->objet_du_RDV)
+          <div class="grid grid-cols-1">
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Message</h3>
+              <p class="text-lg font-semibold">{{ $appointment->objet_du_RDV ?? 'N/A'}}</p>
             </div>
-          </dl>
+          </div> 
+          @endif
         </div>
         {{-- models for status --}}
         <div class="flex space-x-4 mt-6">
           @if($appointment->status === 'en cours')
           <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModal('modal-confirmed', true)"">
-            Confirmé
+            Confirmer
           </button>
           <button type=" button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
-            Annulé
+            Annuler
           </button>
           @elseif($appointment->status === 'confirmé')
           <button type=" button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
-            Annulé
+            Annuler
           </button>
           @endif
         </div>

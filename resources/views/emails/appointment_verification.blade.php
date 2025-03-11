@@ -62,7 +62,7 @@
             <div class="code"><strong>{{ $code }}</strong></div>
             <p>⏳ Ce code est valide pendant 10 minutes.</p>
             <p>Si vous n’avez pas initié cette demande, veuillez ignorer ce message.</p>
-            <p>📌 Besoin d’aide ? Contactez notre support à <a href="mailto:email@example.com">email@example.com</a> ou visitez notre <a href="http://FIXI.ma/faq">FAQ</a>.</p>
+            <p>📌 Besoin d’aide ? Contactez notre support à <a href="mailto:contact@fixi.ma">contact@fixi.ma</a>.</p>
         </div>
         <div class="footer">
             <p>Merci d’utiliser FIXI,</p>

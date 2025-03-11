@@ -77,7 +77,7 @@ class MechanicReservationController extends Controller
         $user = Auth::user();
 
         // Fetch the garage associated with the mechanic
-        $garage = Garage::where('id', $user->garage_id)->first();
+        $garage = garage::where('id', $user->garage_id)->first();
 
         // Check if the garage exists
         if (!$garage) {

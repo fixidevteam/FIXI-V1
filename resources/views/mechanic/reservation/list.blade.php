@@ -104,9 +104,6 @@
                                         Nom du client
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Email
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
                                         tel
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -117,6 +114,9 @@
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Heure du rendez-vous
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Date de réception
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         status
@@ -133,9 +133,6 @@
                                         {{ $appointment->user_full_name }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $appointment->user_email ?? "N/A"}}
-                                    </td>
-                                    <td class="px-6 py-4">
                                         {{ $appointment->user_phone }}
                                     </td>
                                     <td class="px-6 py-4">
@@ -151,6 +148,9 @@
                                             </svg>
                                             {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}
                                         </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ \Carbon\Carbon::parse($appointment->created_at)->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-4">
                                         @if($appointment->status === 'en cours')

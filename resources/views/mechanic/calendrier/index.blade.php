@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.calendrier.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Gestion des RDV’s
+                                Calendrier RDV
                             </a>
                         </div>
                     </li>
@@ -148,10 +148,10 @@
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Configuration des plages d’indisponibilité</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Les plages d’indisponibilité</h2>
                 </div>
                 <div class="my-5">
-                    <h2 class="text-xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilité</h2>
+                    {{-- <h2 class="text-xl font-bold leading-9 tracking-tight text-gray-900">Indisponibilité</h2> --}}
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($unavailableTimes->isEmpty())
                         <p class="p-4 text-gray-500 text-center">Aucun Indisponibilité.</p>
@@ -190,16 +190,9 @@
                     </div>
                     @endif
                 </div>
-                {{-- second --}}
-                {{-- table close --}}
-                <!-- </div> -->
-                <!-- </div> -->
-                <!-- <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4"> -->
-                {{-- content (slot on layouts/app.blade.php)--}}
-                <!-- <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg"> -->
 
                 <div class="flex justify-between items-center my-8">
-                    <h2 class="text-xl font-bold leading-9 tracking-tight text-gray-900 ">Jours indisponibiles</h2>
+                    <h2 class="text-xl font-bold leading-9 tracking-tight text-gray-900 ">Jours d’indisponibilité ponctuelle</h2>
                     <a href="{{route('mechanic.jour-indisponible.create')}}">
                         <x-primary-button class="hidden md:block">Ajouter un jour</x-primary-button>
                         <x-primary-button class="sm:hidden">
@@ -216,7 +209,7 @@
                         <p class="p-4 text-gray-500 text-center">Il n'y a pas de jours indisponibles.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Calendrier des Rendez-vous</caption>
+                            <caption class="sr-only">Jours d’indisponibilité ponctuelle</caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">

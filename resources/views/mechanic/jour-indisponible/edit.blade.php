@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.calendrier.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700   ">
-                                Calendrier des rendez-vous
+                                Calendrier RDV
                             </a>
                         </div>
                     </li>

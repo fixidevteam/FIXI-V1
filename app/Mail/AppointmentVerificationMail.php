@@ -28,7 +28,7 @@ class AppointmentVerificationMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('🔑 Vérifiez votre rendez-vous FIXI – Code de confirmation')
+        return $this->subject('🔑 Confirmer votre rendez-vous FIXI')
             ->view('emails.appointment_verification')
             ->with([
                 'code' => $this->verificationCode,

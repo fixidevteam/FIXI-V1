@@ -221,7 +221,7 @@
                         <ul x-show="open" class="pl-4 space-y-1 transition-all duration-300">
                             <li>
                                 <a href="{{ route('mechanic.calendrier.index') }}" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group {{ Route::is('mechanic.calendrier.index', 'mechanic.calendrier.*','mechanic.jour-indisponible.*') ? 'bg-gray-100 text-gray-900' : '' }}">
-                                    <span class="ms-3 first-letter:capitalize">Gestion des RDV’s</span>
+                                    <span class="ms-3 first-letter:capitalize">Calendrier RDV</span>
                                 </a>
                             </li>
                         </ul>
