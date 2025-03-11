@@ -26,7 +26,6 @@ class AdminGestionMechanicController extends Controller
         $mechanic = Mechanic::findOrFail($id);
         $mechanic->status = !$mechanic->status; // Toggle the status
         $mechanic->save();
-
         return redirect()->route('admin.gestionGaragistes.index')->with('success', 'Statut de l\'utilisateur mis à jour avec succès.');
     }
 
@@ -56,7 +55,6 @@ class AdminGestionMechanicController extends Controller
                 'regex:/^(06\d{8}|07\d{8})$/',
             ],
         ]);
-
         Mechanic::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -65,7 +63,6 @@ class AdminGestionMechanicController extends Controller
             'telephone' => $request->telephone,
             'status' => 1,
         ]);
-
         return redirect()->route('admin.gestionGaragistes.index')->with('success', 'Compte mécanicien créé avec succès!');
     }
 

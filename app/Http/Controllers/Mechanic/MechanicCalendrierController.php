@@ -21,7 +21,7 @@ class MechanicCalendrierController extends Controller
         $garage = garage::where('id', $user->garage_id)->first();
 
         if (!$garage) {
-            return redirect()->back()->with('error', 'Garage not found.');
+            return redirect()->back()->with('error', 'Garage non trouvé.');
         }
 
         // Fetch schedules
@@ -80,7 +80,7 @@ class MechanicCalendrierController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $garage = Garage::where('id', $user->garage_id)->first();
+        $garage = garage::where('id', $user->garage_id)->first();
 
         $schedule = GarageSchedule::find($id);
         if (!$schedule || $schedule->garage_ref !== $garage->ref) {

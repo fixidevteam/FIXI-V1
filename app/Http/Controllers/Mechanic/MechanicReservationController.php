@@ -27,7 +27,7 @@ class MechanicReservationController extends Controller
 
         // Check if the garage exists
         if (!$garage) {
-            return redirect()->back()->with('error', 'Garage not found.');
+            return redirect()->back()->with('error', 'Garage non trouvé.');
         }
 
         // Fetch appointments for the garage
@@ -81,7 +81,7 @@ class MechanicReservationController extends Controller
 
         // Check if the garage exists
         if (!$garage) {
-            return redirect()->back()->with('error', 'Garage not found.');
+            return redirect()->back()->with('error', 'Garage non trouvé.');
         }
 
         // Fetch paginated appointments for the garage, ordered by the latest
