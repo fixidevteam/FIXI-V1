@@ -14,26 +14,37 @@ use Illuminate\Support\Facades\Notification;
 
 class ConfirmationRdv extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Get the authenticated user
         $user = Auth::user();
 
-
         // Fetch the garage associated with the mechanic
-        $garage = garage::where('id', $user->garage_id)->first();
+        $garage = Garage::where('id', $user->garage_id)->first();
 
         // Check if the garage exists
         if (!$garage) {
             return redirect()->back()->with('error', 'Garage not found.');
         }
 
-        // Fetch paginated appointments for the garage, ordered by the latest
-        $appointments = Appointment::where('garage_ref', $garage->ref)->where('status', 'en cours')
-            ->latest() // Orders by `created_at` descending
-            ->paginate(10); // Adjust per page as needed
+        // Get the search date from the request
+        // $request->validate([
+        //     'search'=>['required','date']
+        // ]);
 
-        return view('mechanic.reservation.confirmationList', compact('appointments'));
+        $searchDate = $request->input('search');
+
+        // Fetch appointments filtered by selected date
+        $query = Appointment::where('garage_ref', $garage->ref)
+            ->where('status', 'en cours')
+            ->latest(); // Orders by `created_at` descending
+
+        if ($searchDate) {
+            $query->whereDate('appointment_day', $searchDate);
+        }
+
+        $appointments = $query->paginate(10); // Adjust per page as needed
+
+        return view('mechanic.reservation.confirmationList', compact('appointments', 'searchDate'));
     }
     public function  accepter($id)
     {

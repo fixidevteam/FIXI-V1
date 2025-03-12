@@ -67,7 +67,9 @@
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
                     <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des demandes de rendez-vous</h2>
+
                 </div>
+
                 {{-- table --}}
                 <div class="my-5">
                     {{-- alert --}}
@@ -114,7 +116,32 @@
                     @endif
                     @endforeach
                     {{-- table --}}
+
+                    <form action="{{ route('mechanic.confirmation') }}" method="GET" class="space-y-2 mx-auto my-5">
+                        <label for="search" >Choisissez la date du rendez-vous :</label>
+                        <div class="flex items-center w-full">
+                            <input
+                                type="date"
+                                name="search"
+                                id="search"
+                                value="{{ request('search') }}"
+                                class="w-full p-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 bg-gray-50 focus:ring-blue-600 focus:border-blue-500" />
+                            <button type="submit" class="p-2.5 ms-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800">
+                                <svg class="w-4 h-4" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 2.75C6.66751 2.75 2.75 6.66751 2.75 11.5C2.75 16.3325 6.66751 20.25 11.5 20.25C16.3325 20.25 20.25 16.3325 20.25 11.5C20.25 6.66751 16.3325 2.75 11.5 2.75ZM1.25 11.5C1.25 5.83908 5.83908 1.25 11.5 1.25C17.1609 1.25 21.75 5.83908 21.75 11.5C21.75 14.0605 20.8111 16.4017 19.2589 18.1982L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L18.1982 19.2589C16.4017 20.8111 14.0605 21.75 11.5 21.75C5.83908 21.75 1.25 17.1609 1.25 11.5Z" fill="currentColor" />
+                                </svg>
+                                <span class="sr-only">Search</span>
+                            </button>
+                            {{-- Reset Button --}}
+                            <a href="{{ route('mechanic.confirmation') }}" class="p-2.5 ms-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300">
+                                Réinitialiser
+                            </a>
+
+                        </div>
+                    </form>
+
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        {{-- Search Form --}}
                         @if($appointments->isEmpty())
                         <p class="p-4 text-gray-500 text-center">Aucune demande de rendez-vous disponible.</p>
                         @else
@@ -136,6 +163,9 @@
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Heure du rendez-vous
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Date de réception
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         status
@@ -167,6 +197,9 @@
                                             </svg>
                                             {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}
                                         </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ \Carbon\Carbon::parse($appointment->created_at)->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mx-2 px-2.5 py-0.5 rounded-full">
