@@ -56,6 +56,7 @@ class VerificationEmailTest extends TestCase
             'email' => 'youssefelmofid2@gmail.com',
             'ville' => 'marrakech',
             'email_verified_at' => null,
+            'status'=>1
         ]);
 
         $response = $this->actingAs($user)->get('/fixi-plus/verify-email');
@@ -66,7 +67,10 @@ class VerificationEmailTest extends TestCase
     public function test_VerificationEmail_can_be_verified(): void
     {
         $user = User::factory()->create([
+            'email' => 'youssefelmofid2@gmail.com',
             'ville' => 'marrakech',
+            'email_verified_at' => null,
+            'status'=>1,
             'email_verified_at' => null,
         ]);
 
@@ -88,7 +92,10 @@ class VerificationEmailTest extends TestCase
     public function test_is_not_verified_with_invalid_hash(): void
     {
         $user = User::factory()->create([
+            'email' => 'youssefelmofid2@gmail.com',
             'ville' => 'marrakech',
+            'email_verified_at' => null,
+            'status'=>1,
             'email_verified_at' => null,
         ]);
 

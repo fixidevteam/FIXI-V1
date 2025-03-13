@@ -44,7 +44,7 @@ class ConseilsEntretienTest extends TestCase
 
         // Make the fake HTTP request
         $response = Http::get("https://fixi.ma/marques-de-voitures/Dacia");
-        // check if the response status is 200 .
-        dd($response->getStatusCode(),);
+        // check if the response status is 200 
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

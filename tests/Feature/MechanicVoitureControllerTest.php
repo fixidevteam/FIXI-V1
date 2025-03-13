@@ -2,124 +2,171 @@
 
 namespace Tests\Feature;
 
-use App\Models\Garage;
-use App\Models\Mechanic;
-use App\Models\Operation;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\Models\User;
 use App\Models\Voiture;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\MarqueVoiture;
+use App\Models\Operation;
+use App\Models\Garage;
+use App\Models\Mechanic;
+use App\Models\nom_categorie;
+use App\Models\nom_operation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Tests\TestCase;
 
 class MechanicVoitureControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithoutMiddleware;
 
-    /**
-     * Test to get the list of voitures associated with the mechanic's garage.
-     */
-    public function test_get_voitures_for_mechanic(): void
+    protected function setUp(): void
     {
-        // Create a garage
-        $garage = Garage::create([
+        parent::setUp();
+
+        // Create a user
+        $this->user = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
+            'ville' => 'Test City',
+            'telephone' => '0612345678',
+            'status' => 1,
+        ]);
+
+        // Create a garage associated with the user
+        $this->garage = Garage::create([
             'name' => 'Test Garage',
-            'ref' => '1212',
+            'ref' => 'garage1',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'user_id' => $this->user->id, // Use the created user's ID
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'confirmation' => 'automatique',
         ]);
 
         // Create a mechanic associated with the garage
-        $mechanic = Mechanic::create([
-            'name' => 'Test Mechanic',
+        $this->mechanic = Mechanic::create([
+            'name' => 'Mechanic User',
             'email' => 'mechanic@example.com',
             'password' => bcrypt('password'),
-            'status' => 1,
-            'garage_id' => $garage->id, // Mechanic is linked to the garage
+            'garage_id' => $this->garage->id,
+            'telephone' => '0612345678',
+            'status' => true, // Ensure the mechanic is active
         ]);
 
-        // Create a client and their voiture
-        $client = User::create([
-            'name' => 'Test Client',
+        // Create a client user
+        $this->client = User::create([
+            'name' => 'Client User',
             'email' => 'client@example.com',
             'password' => bcrypt('password'),
+            'ville' => 'Test City',
+            'telephone' => '0712345678',
+            'status' => 0,
+            'created_by_mechanic' => 1,
+            'mechanic_id' => $this->mechanic->id,
         ]);
 
-        $voiture = Voiture::create([
+        // Create a voiture for the client
+        $this->voiture = Voiture::create([
+            'user_id' => $this->client->id,
             'marque' => 'Toyota',
             'modele' => 'Corolla',
-            'numero_immatriculation' => '123-أ-45',
-            'user_id' => $client->id,
+            'numero_immatriculation' => '12345-A-67',
+            'photo' => 'photo.jpg',
         ]);
 
-        // Create an operation linked to the garage
-        Operation::create([
+        // Create an operation for the voiture
+        $this->operation = Operation::create([
+            'voiture_id' => $this->voiture->id,
+            'garage_id' => $this->garage->id,
+            'description' => 'Oil Change',
             'categorie' => 'Maintenance',
-            'nom' => 'Oil Change',
-            'description' => 'Routine oil change',
-            'date_operation' => now(),
-            'voiture_id' => $voiture->id,
-            'garage_id' => $garage->id,
+            'date_operation' => now()->format('Y-m-d'),
+            'status' => 'completed',
         ]);
+
+        // Create marques for the create form
+        $this->marque = MarqueVoiture::create(['marque' => 'Toyota']);
+
+        // Create nom_categories and nom_operations for the show form
+        // $this->nom_categorie = nom_categorie::create(['nom_categorie_id'=>0,'nom_categorie' => 'Test Categorie']);
+        // $this->nom_operation = nom_operation::create(['nom_operation' => 'Test Operation']);
 
         // Authenticate as the mechanic
-        $response = $this->actingAs($mechanic, 'mechanic')->get(route('mechanic.voitures.index'));
-
-        // Assert the response
-        $response->assertStatus(200)
-                 ->assertViewIs('mechanic.voitures.index');
-
+        $this->actingAs($this->mechanic, 'mechanic');
     }
 
-    /**
-     * Test to view a specific voiture's details.
-     */
-    public function test_view_voiture_details_for_mechanic(): void
+    /** @test */
+    public function it_displays_a_list_of_voitures()
     {
-        // Create a garage
-        $garage = Garage::create([
-            'name' => 'Test Garage',
-            'ref' => '1212',
-        ]);
+        $response = $this->get('/fixi-pro/voitures');
 
-        // Create a mechanic associated with the garage
-        $mechanic = Mechanic::create([
-            'name' => 'Test Mechanic',
-            'email' => 'mechanic@example.com',
-            'password' => bcrypt('password'),
-            'status' => 1,
-            'garage_id' => $garage->id, // Mechanic is linked to the garage
-        ]);
+        $response->assertStatus(200)
+            ->assertViewIs('mechanic.voitures.index')
+            ->assertViewHas('voitures');
+    }
 
-        // Create a client and their voiture
-        $client = User::create([
-            'name' => 'Test Client',
-            'email' => 'client@example.com',
-            'password' => bcrypt('password'),
-        ]);
+    /** @test */
+    public function it_displays_the_create_voiture_form()
+    {
+        // Set the client in the session
+        Session::put('client', $this->client);
 
-        $voiture = Voiture::create([
+        $response = $this->get('/fixi-pro/voitures/create');
+
+        $response->assertStatus(200)
+            ->assertViewIs('mechanic.voitures.create')
+            ->assertViewHas('marques')
+            ->assertViewHas('client');
+    }
+
+    /** @test */
+    public function it_stores_a_new_voiture()
+    {
+        // Set the client in the session
+        Session::put('client', $this->client);
+
+        $data = [
+            'part1' => '12345',
+            'part2' => 'A',
+            'part3' => '67',
             'marque' => 'Toyota',
             'modele' => 'Corolla',
-            'numero_immatriculation' => '123-أ-45',
-            'user_id' => $client->id,
+            'photo' => null,
+        ];
+
+        $response = $this->post('/fixi-pro/voitures', $data);
+
+        $response->assertRedirect(route('mechanic.clients.show', $this->client))
+            ->assertSessionHas('success', 'voitire ajoutée')
+            ->assertSessionHas('subtitle', 'la voiture  a été ajoutée avec succès à la liste.');
+
+        // Verify the voiture was created
+        $this->assertDatabaseHas('voitures', [
+            'user_id' => $this->client->id,
+            'marque' => 'Toyota',
+            'modele' => 'Corolla',
+            'numero_immatriculation' => '12345-A-67',
         ]);
-
-        // Create an operation linked to the garage
-        Operation::create([
-            'categorie' => 'Maintenance',
-            'nom' => 'Oil Change',
-            'description' => 'Routine oil change',
-            'date_operation' => now(),
-            'voiture_id' => $voiture->id,
-            'garage_id' => $garage->id,
-        ]);
-
-        // Authenticate as the mechanic and view the voiture
-        $response = $this->actingAs($mechanic, 'mechanic')->get(route('mechanic.voitures.show', $voiture->id));
-
-        // Assert the response
-        $response->assertStatus(200);
     }
 
-    /**
-     * Test unauthorized mechanic trying to view a voiture.
-     */
+    /** @test */
+    public function it_displays_a_voiture()
+    {
+        // Set the voiture in the session
+        Session::put('voiture_id', $this->voiture->id);
+
+        $response = $this->get('/fixi-pro/voitures/' . $this->voiture->id);
+
+        $response->assertStatus(200)
+            ->assertViewIs('mechanic.voitures.show')
+            ->assertViewHas('voiture')
+            ->assertViewHas('operations')
+            ->assertViewHas('nom_categories')
+            ->assertViewHas('nom_operations');
+    }
 }

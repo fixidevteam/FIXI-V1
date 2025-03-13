@@ -23,7 +23,6 @@ class Operation extends Model
         'autre_operation',
         'kilometrage',
         'create_by',
-
     ];
     public function voiture(): BelongsTo
     {
