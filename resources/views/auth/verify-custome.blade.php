@@ -86,7 +86,7 @@
         <main>
             <h1>Bienvenue dans la communauté FIXI+ ! 🎉</h1>
             <p>Bonjour, {{ $user->name }}</p>
-            <p>Félicitations et bienvenue dans la communauté FIXI+ et <a href="https://fixi.ma/" target="_blank">FIXI.MA</a> !</p>
+            <p>Félicitations et bienvenue dans la communauté FIXI+ et <a href="https://fixi.ma/" target="_blank" rel="noopener">FIXI.MA</a> !</p>
 
             <h2>Présentation de nos services</h2>
             <ul class="features">
@@ -106,7 +106,7 @@
             <h2>Votre compte FIXI est prêt à l'emploi !</h2>
             <p>Voici comment commencer :</p>
             <ol>
-                <li><strong>Connectez-vous</strong> : <a href="{{ route('dashboard') }}" target="_blank">Lien vers la plateforme FIXI+</a></li>
+                <li><strong>Connectez-vous</strong> : <a href="{{ route('dashboard') }}" target="_blank" rel="noopener">Lien vers la plateforme FIXI+</a></li>
                 <li><strong>Complétez votre profil</strong> : Ajoutez vos véhicules et documents personnels pour une expérience sur mesure.</li>
                 <li><strong>Explorez nos services</strong> : Trouvez les garages partenaires et planifiez vos besoins.</li>
             </ol>
@@ -114,12 +114,12 @@
             <p>Besoin d'aide ? Nous sommes là pour vous :</p>
             <p>
                 📧 Contactez-nous à : <a href="mailto:support@fixi.ma">support@fixi.ma</a><br>
-                🌐 Visitez notre FAQ : <a href="https://fixi.ma/faq" target="_blank">FAQ</a>
+                🌐 Visitez notre FAQ : <a href="https://fixi.ma/faq" target="_blank" rel="noopener">FAQ</a>
             </p>
         </main>
         <footer>
             <p><a href="https://fixi.ma/">Fixi.ma</a> &copy; 2025</p>
-            <p>Suivez-nous sur <a href="https://www.facebook.com/FIXI.MAROC" target="_blank">Facebook</a> | <a href="https://fixi.ma/conditions-generales/" target="_blank">Conditions générales d'utilisation</a></p>
+            <p>Suivez-nous sur <a href="https://www.facebook.com/FIXI.MAROC" target="_blank" rel="noopener">Facebook</a> | <a href="https://fixi.ma/conditions-generales/" target="_blank" rel="noopener">Conditions générales d'utilisation</a></p>
         </footer>
     </div>
 </body>

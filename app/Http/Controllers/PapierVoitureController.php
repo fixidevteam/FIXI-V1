@@ -128,7 +128,7 @@ class PapierVoitureController extends Controller
     {
 
         $papier = VoiturePapier::find($id);
-        if (!$papier || $papier->voiture_id != $papier->voiture_id) {
+        if (!$papier) {
             abort(403);
         }
         // Add the file extension to the view
@@ -149,7 +149,7 @@ class PapierVoitureController extends Controller
     {
         $types = type_papierv::all();
         $papier = VoiturePapier::find($id);
-        if (!$papier || $papier->voiture_id != $papier->voiture_id) {
+        if (!$papier) {
             abort(403);
         }
         return view('userPaiperVoiture.edit', compact('papier', 'types'));

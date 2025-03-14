@@ -109,7 +109,7 @@
         </main>
         <footer>
             <p><a href="https://fixi.ma/">Fixi.ma</a> &copy; {{ date('Y') }}</p>
-            <p>Suivez-nous sur <a href="https://www.facebook.com/FIXI.MAROC" target="_blank">Facebook</a> | <a href="https://fixi.ma/conditions-generales/" target="_blank">Conditions générales d'utilisation</a></p>
+            <p>Suivez-nous sur <a href="https://www.facebook.com/FIXI.MAROC" target="_blank" rel="noopener">Facebook</a> | <a href="https://fixi.ma/conditions-generales/" target="_blank" rel="noopener">Conditions générales d'utilisation</a></p>
         </footer>
     </div>
 </body>

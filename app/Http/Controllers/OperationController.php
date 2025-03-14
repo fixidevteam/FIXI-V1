@@ -187,7 +187,7 @@ class OperationController extends Controller
             $operations = nom_operation::all();
             $categories = nom_categorie::all();
             $sousOperation = nom_sous_operation::all();
-            if (!$operation || $operation->voiture_id != $operation->voiture->id) {
+            if (!$operation) {
                 abort(403);
             }
             return view('userOperations.show', compact('voiture', 'operation', 'operations', 'categories', 'sousOperation'));
@@ -225,7 +225,7 @@ class OperationController extends Controller
         $garages = $userVilleGarages->merge($otherGarages)->groupBy('ville'); // Group garages by 'ville'
         $operation = Operation::find($id);
         $sousOperation = nom_sous_operation::all();
-        if (!$operation || $operation->voiture_id != $operation->voiture_id) {
+        if (!$operation) {
             abort(403);
         }
         return view('userOperations.edit', compact('operation', 'categories', 'garages'));

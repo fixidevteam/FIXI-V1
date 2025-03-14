@@ -116,7 +116,7 @@
               <div>
                 <p class="first-letter:uppercase text-sm font-medium text-gray-900">virtual garage</p>
                 <p class="text-sm text-gray-500">
-                  <a href="{{$garage->virtualGarage}}" class="text-sm text-blue-500 hover:underline" target="_blank">
+                  <a href="{{$garage->virtualGarage}}" class="text-sm text-blue-500 hover:underline" target="_blank" rel="noopener">
                     <span class="flex items-center">
                       {{ $garage->name }}
                       <svg class="ml-2 w-4 h-4" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
