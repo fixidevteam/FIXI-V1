@@ -23,13 +23,8 @@ class ConfirmationRdv extends Controller
 
         // Check if the garage exists
         if (!$garage) {
-            return redirect()->back()->with('error', 'Garage not found.');
+            return redirect()->back()->with('error', 'Garage introuvable.');
         }
-
-        // Get the search date from the request
-        // $request->validate([
-        //     'search'=>['required','date']
-        // ]);
 
         $searchDate = $request->input('search');
 
@@ -57,10 +52,10 @@ class ConfirmationRdv extends Controller
         $appointment = Appointment::where('id', $id)->where('garage_ref', $user->garage->ref)->first();
         $appointment->update(['status' => 'confirmé']);
         Notification::route('mail', $appointment->user_email)
-            ->notify(new GarageAcceptRdv($appointment, 'Une réservation a été confirmée par le garage'));
+            ->notify(new GarageAcceptRdv($appointment, 'Une réservation a été confirmée par le garage.'));
 
         session()->flash('success', 'Rendez-vous');
-        session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès .');
+        session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès.');
         return back();
     }
     public function  annuler($id)
@@ -74,10 +69,10 @@ class ConfirmationRdv extends Controller
         $appointment = Appointment::where('id', $id)->where('garage_ref', $user->garage->ref)->first();
         $appointment->update(['status' => 'annulé']);
         Notification::route('mail', $appointment->user_email)
-            ->notify(new GarageCancelledRdv($appointment, 'Une réservation a été annulée par le garage'));
+            ->notify(new GarageCancelledRdv($appointment, 'Une réservation a été annulée par le garage.'));
 
         session()->flash('success', 'Rendez-vous');
-        session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès .');
+        session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès.');
         return back();
     }
 }

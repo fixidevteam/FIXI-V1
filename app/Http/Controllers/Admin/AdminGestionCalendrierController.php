@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 class AdminGestionCalendrierController extends Controller
 {
+    // Define the constant for repeated messages
+    const GARAGE_NOT_FOUND = 'Garage introuvable';
     /**
      * Display a listing of the resource.
      */
@@ -54,7 +56,7 @@ class AdminGestionCalendrierController extends Controller
         $garage = Garage::findOrFail($garage_id);
 
         if (!$garage) {
-            return back()->with('error', 'Garage non trouvé.');
+            return back()->with('error', self::GARAGE_NOT_FOUND);
         }
 
         $request->validate([
@@ -137,7 +139,7 @@ class AdminGestionCalendrierController extends Controller
         $garage = garage::where('ref', $schedule->garage_ref)->first();
 
         if (!$garage) {
-            return redirect()->route('admin.gestionCalendrier.index')->with('error', 'Garage introuvable.');
+            return redirect()->route('admin.gestionCalendrier.index')->with('error', self::GARAGE_NOT_FOUND);
         }
 
         $unavailableTimes = GarageUnavailableTime::where('garage_ref', $garage->ref)
@@ -167,7 +169,7 @@ class AdminGestionCalendrierController extends Controller
         $garage = garage::where('ref', $schedule->garage_ref)->first();
 
         if (!$garage) {
-            return redirect()->route('admin.gestionCalendrier.index')->with('error', 'Garage introuvable.');
+            return redirect()->route('admin.gestionCalendrier.index')->with('error', self::GARAGE_NOT_FOUND);
         }
 
         $request->validate([
@@ -232,7 +234,7 @@ class AdminGestionCalendrierController extends Controller
         $garage = garage::where('ref', $schedule->garage_ref)->first();
 
         if (!$garage) {
-            return redirect()->route('admin.gestionCalendrier.index')->with('error', 'Garage introuvable.');
+            return redirect()->route('admin.gestionCalendrier.index')->with('error', self::GARAGE_NOT_FOUND);
         }
 
         // Delete associated unavailable times

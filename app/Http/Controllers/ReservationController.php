@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Notification;
 
 class ReservationController extends Controller
 {
-
+    // Define the constant for repeated messages
+    const APPOINTMENT_NOT_FOUND = 'Rendez-vous introuvable.';
     /**
      * 
      * Display a listing of the resource.
@@ -71,7 +72,7 @@ class ReservationController extends Controller
             ->first();
 
         if (!$appointment) {
-            return back()->with('error', 'Rendez-vous introuvable.');
+            return back()->with('error', self::APPOINTMENT_NOT_FOUND);
         }
 
         $garage = garage::where('ref', $appointment->garage_ref)->first();
@@ -90,7 +91,7 @@ class ReservationController extends Controller
             $garage = garage::where('ref', $appointment->garage_ref)->first();
             return view('userRdv.edit', compact('appointment', 'garage'));
         } else {
-            return back()->with('error', 'Rendez-vous introuvable.');
+            return back()->with('error', self::APPOINTMENT_NOT_FOUND);
         }
     }
 
@@ -135,7 +136,7 @@ class ReservationController extends Controller
 
             return redirect()->route('RDV.show', $appointment);
         } else {
-            return back()->with('error', 'Rendez-vous introuvable.');
+            return back()->with('error', self::APPOINTMENT_NOT_FOUND);
         }
     }
 
@@ -183,7 +184,7 @@ class ReservationController extends Controller
 
             return redirect()->route('RDV.show', $appointment);
         } else {
-            return back()->with('error', 'Rendez-vous introuvable.');
+            return back()->with('error', self::APPOINTMENT_NOT_FOUND);
         }
     }
 }

@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Notification;
 
 class MechanicReservationController extends Controller
 {
+    // Define the constant for repeated messages
+    const GARAGE_NOT_FOUND = 'Garage introuvable';
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +29,7 @@ class MechanicReservationController extends Controller
 
         // Check if the garage exists
         if (!$garage) {
-            return redirect()->back()->with('error', 'Garage non trouvé.');
+            return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
         }
 
         // Fetch appointments for the garage
@@ -81,7 +83,7 @@ class MechanicReservationController extends Controller
 
         // Check if the garage exists
         if (!$garage) {
-            return redirect()->back()->with('error', 'Garage non trouvé.');
+            return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
         }
 
         // Fetch paginated appointments for the garage, ordered by the latest

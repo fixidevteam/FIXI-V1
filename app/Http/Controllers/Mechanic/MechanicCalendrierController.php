@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class MechanicCalendrierController extends Controller
 {
+    // Define the constant for repeated messages
+    const GARAGE_NOT_FOUND = 'Garage introuvable';
     /**
      * Display a listing of the resource.
      */
@@ -21,7 +23,7 @@ class MechanicCalendrierController extends Controller
         $garage = garage::where('id', $user->garage_id)->first();
 
         if (!$garage) {
-            return redirect()->back()->with('error', 'Garage non trouvé.');
+            return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
         }
 
         // Fetch schedules
