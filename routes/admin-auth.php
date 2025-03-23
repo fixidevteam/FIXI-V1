@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminGestionCategorieController;
 use App\Http\Controllers\Admin\AdminGestionGarageController;
 use App\Http\Controllers\Admin\AdminGestionMarqueContoller;
 use App\Http\Controllers\Admin\AdminGestionMechanicController;
+use App\Http\Controllers\Admin\AdminGestionModeleController;
 use App\Http\Controllers\Admin\AdminGestionOperationController;
 use App\Http\Controllers\Admin\AdminGestionPapierPersoController;
 use App\Http\Controllers\Admin\AdminGestionPapierVoitureController;
@@ -54,6 +55,7 @@ Route::middleware('auth:admin')->prefix('fp-admin')->name('admin.')->group(funct
     Route::resource('/gestionSousOperation', AdminGestionSousOperationController::class);
     Route::resource('/gestionCategorie', AdminGestionCategorieController::class);
     Route::resource('/gestionMarque', AdminGestionMarqueContoller::class);
+    Route::resource('/gestionModele', AdminGestionModeleController::class);
     Route::resource('/gestionVille', AdminGestionVilleController::class);
     Route::resource('/gestionQuartier', AdminGestionQuartierController::class);
     Route::resource('/gestionPromotions', AdminGestionPromotionsController::class);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MarqueVoiture;
+use App\Models\ModeleVoiture;
 use Database\Seeders\MarqueSeeder;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class AdminGestionMarqueContoller extends Controller
     public function index()
     {
         $marques = MarqueVoiture::all();
-        return view('admin.gestionMarque.index', compact('marques'));
+        $modeles = ModeleVoiture::all();
+        return view('admin.gestionMarque.index', compact('marques', 'modeles'));
     }
 
     /**

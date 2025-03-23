@@ -4,18 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MarqueVoiture extends Model
+class ModeleVoiture extends Model
 {
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-        'marque',
+        'modele',
+        'marque_id',
     ];
-    public function modeles(): HasMany
+    public function marque(): BelongsTo
     {
-        return $this->hasMany(ModeleVoiture::class);
+        return $this->belongsTo(MarqueVoiture::class);
     }
 }
