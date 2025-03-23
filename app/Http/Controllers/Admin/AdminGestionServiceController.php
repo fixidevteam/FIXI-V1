@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Domaine;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminGestionServiceController extends Controller
 {
@@ -34,7 +35,7 @@ class AdminGestionServiceController extends Controller
         // Validation des données
         $request->validate([
             'domaine_id' => 'required|exists:domaines,id',
-            'service' => 'required|string|max:255|unique:services,service',
+            'service' => ['required', 'string', 'max:255',  Rule::unique('services')->whereNull('deleted_at')],
         ]);
 
         // Création du service
@@ -78,8 +79,9 @@ class AdminGestionServiceController extends Controller
     {
         $service = Service::find($id);
         $newservice = $request->validate([
-            'service' => ['required'],
-            'domaine_id' => ['required']
+            'domaine_id' => 'required|exists:domaines,id',
+            'service' => ['required', 'string', 'max:255',  Rule::unique('services')->whereNull('deleted_at')],
+
         ]);
 
         if ($service) {

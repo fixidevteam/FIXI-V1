@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Domaine;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminGestionDomaineController extends Controller
 {
@@ -32,7 +33,14 @@ class AdminGestionDomaineController extends Controller
      */
     public function store(Request $request)
     {
-        $domaine = $request->validate(['domaine' => ['required', 'unique:domaines']]);
+        $domaine = $request->validate(
+            [
+                'domaine' => [
+                    'required',
+                    Rule::unique('domaines')->whereNull('deleted_at'),
+                ],
+            ]
+        );
 
         if ($domaine) {
             Domaine::create($domaine);
@@ -67,7 +75,14 @@ class AdminGestionDomaineController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $domaine = $request->validate(['domaine' => ['required']]);
+        $domaine = $request->validate(
+            [
+                'domaine' => [
+                    'required',
+                    Rule::unique('domaines')->whereNull('deleted_at'),
+                ],
+            ]
+        );
         $targetdomaine = Domaine::find($id);
 
         if ($targetdomaine) {
@@ -84,11 +99,19 @@ class AdminGestionDomaineController extends Controller
     public function destroy(string $id)
     {
         $domaine = Domaine::find($id);
+
         if ($domaine) {
+            // Delete all related services first
+            $domaine->services()->delete();
+            // Then delete the domaine
             $domaine->delete();
+
+            session()->flash('success', 'Domaine supprimée');
+            session()->flash('subtitle', 'Domaine a été supprimée avec succès.');
+        } else {
+            session()->flash('error', 'Domaine introuvable');
         }
-        session()->flash('success', 'Domaine supprimée');
-        session()->flash('subtitle', 'Domaine a été supprimée avec succès.');
+
         return redirect()->route('admin.gestionDomaine.index');
     }
 }

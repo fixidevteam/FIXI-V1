@@ -86,6 +86,7 @@ class AdminGestionMarqueContoller extends Controller
     {
         $marque = MarqueVoiture::find($id);
         if ($marque) {
+            $marque->modeles()->delete();
             $marque->delete();
         }
         session()->flash('success', 'Marque supprimée');

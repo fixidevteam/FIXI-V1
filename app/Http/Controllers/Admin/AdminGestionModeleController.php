@@ -7,6 +7,7 @@ use App\Models\MarqueVoiture;
 use App\Models\ModeleVoiture;
 use Database\Seeders\MarqueSeeder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminGestionModeleController extends Controller
 {
@@ -35,7 +36,12 @@ class AdminGestionModeleController extends Controller
         // Validation des données
         $request->validate([
             'marque_id' => 'required|exists:marque_voitures,id',
-            'modele' => 'required|string|max:255|unique:modele_voitures,modele',
+            'modele' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('modele_voitures', 'modele')->whereNull('deleted_at'),
+            ],
         ]);
 
         // Création du modèle
@@ -80,7 +86,12 @@ class AdminGestionModeleController extends Controller
         $modele = ModeleVoiture::find($id);
         $newmodele = $request->validate([
             'modele' => ['required'],
-            'marque_id' => ['required']
+            'modele' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('modele_voitures', 'modele')->whereNull('deleted_at'),
+            ],
         ]);
 
         if ($modele) {

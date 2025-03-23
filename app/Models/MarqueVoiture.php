@@ -16,6 +16,6 @@ class MarqueVoiture extends Model
     ];
     public function modeles(): HasMany
     {
-        return $this->hasMany(ModeleVoiture::class);
+        return $this->hasMany(ModeleVoiture::class , 'marque_id');
     }
 }
