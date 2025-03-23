@@ -208,7 +208,7 @@
                             <span class="ms-3 first-letter:capitalize">Promotions</span>
                         </a>
                     </li>
-                    @if(\App\Models\Appointment::where('user_email', Auth()->user()->email)->count() > 0)
+                    {{-- @if(\App\Models\Appointment::where('user_email', Auth()->user()->email)->count() > 0) --}}
                     <li>
                         <a href="{{ route('RDV.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group {{ Route::is('RDV.index', 'RDV.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                             <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 {{ Route::is('RDV.index', 'RDV.*') ? 'text-gray-900' : '' }}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -223,7 +223,7 @@
                             <span class="ms-3 first-letter:capitalize">Mes RDV</span>
                         </a>
                     </li>
-                    @endif
+                    {{-- @endif --}}
                     <li>
                         <a href="{{route('voiture.create')}}" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
                             <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminGestionCalendrierController;
 use App\Http\Controllers\Admin\AdminGestionCategorieController;
+use App\Http\Controllers\Admin\AdminGestionDomaineController;
 use App\Http\Controllers\Admin\AdminGestionGarageController;
 use App\Http\Controllers\Admin\AdminGestionMarqueContoller;
 use App\Http\Controllers\Admin\AdminGestionMechanicController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Admin\AdminGestionUserController;
 use App\Http\Controllers\Admin\AdminGestionVilleController;
 use App\Http\Controllers\Admin\AdminGestionPromotionsController;
 use App\Http\Controllers\Admin\AdminGestionReservationsController;
+use App\Http\Controllers\Admin\AdminGestionServiceController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -58,6 +60,8 @@ Route::middleware('auth:admin')->prefix('fp-admin')->name('admin.')->group(funct
     Route::resource('/gestionModele', AdminGestionModeleController::class);
     Route::resource('/gestionVille', AdminGestionVilleController::class);
     Route::resource('/gestionQuartier', AdminGestionQuartierController::class);
+    Route::resource('/gestionDomaine', AdminGestionDomaineController::class);
+    Route::resource('/gestionService', AdminGestionServiceController::class);
     Route::resource('/gestionPromotions', AdminGestionPromotionsController::class);
     Route::resource('/gestionReservations', AdminGestionReservationsController::class);
     Route::patch('/gestionReservations/{id}/update-status', [AdminGestionReservationsController::class, 'updateStatus'])
