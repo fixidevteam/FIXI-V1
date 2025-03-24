@@ -18,6 +18,8 @@ use App\Notifications\GarageAcceptRdv;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
@@ -152,18 +154,59 @@ class AppointmentController extends Controller
 
         // Generate a verification code
         $verificationCode = mt_rand(100000, 999999);
-        $email = $request->email;
+        // $email = $request->email;
+        $fullName = $request->full_name;
+        $phone = $request->phone;
 
         // Store the verification code in cache with an expiration time (e.g., 10 minutes)
-        Cache::put('verification_code_' . $email, $verificationCode, now()->addMinutes(10));
+        // Cache::put('verification_code_' . $email, $verificationCode, now()->addMinutes(10));
+
+        // Store the verification code in cache with an expiration time (e.g., 10 minutes)
+        Cache::put('verification_code_' . $phone, $verificationCode, now()->addMinutes(10));
+
 
         // Send the verification code via email
-        if ($email) {
-            Mail::to($email)->send(new AppointmentVerificationMail($verificationCode, $request->full_name));
-        }
+        // if ($email) {
+        //     Mail::to($email)->send(new AppointmentVerificationMail($verificationCode, $request->full_name));
+        // }
+
+        // Prepare SMS payload
+        $smsPayload = [
+            "defaultRegionCode" => "MA",
+            "messages" => [
+                [
+                    "from" => "SHORTLINK",
+                    "to" => [
+                        [
+                            "messageId" => "appt-verif-" . time(),
+                            "phone" => $phone,
+                            // "fullName" => $fullName,
+                            "verificationCode" => (string)$verificationCode
+                        ]
+                    ],
+                    "content" => "Bonjour " . $fullName . ", votre code de vérification est {{verificationCode}}. Veuillez l'utiliser pour confirmer votre rendez-vous.",
+                    "transliterateMessage" => false,
+                    "messageEncoding" => 0
+                ]
+            ]
+        ];
+
+        // Send SMS via Shortlink API
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'x-shortlink-apikey' => config('services.shortlink.api_key'),
+            'x-shortlink-apitoken' => config('services.shortlink.api_token'),
+        ])->post('https://app.shortlink.pro/api/v1/sms/send/', $smsPayload);
+
+
+
+        // return response()->json([
+        //     'message' => 'Verification code sent to your email. Please enter the code to confirm your appointment.',
+        //     'status' => 'verification_required',
+        // ]);
 
         return response()->json([
-            'message' => 'Verification code sent to your email. Please enter the code to confirm your appointment.',
+            'message' => 'Verification code sent to your phone. Please enter the code to confirm your appointment.',
             'status' => 'verification_required',
         ]);
     }
@@ -185,11 +228,15 @@ class AppointmentController extends Controller
         ]);
 
         $email = $request->email;
+        $phone = $request->phone;
         $verificationCode = trim($request->verification_code);
         $garage = garage::where("ref", $request->garage_ref)->first();
 
         // Retrieve the stored verification code from cache
-        $storedCode = Cache::get('verification_code_' . $email);
+        // $storedCode = Cache::get('verification_code_' . $email);
+
+        // Retrieve the stored verification code from cache using phone number
+        $storedCode = Cache::get('verification_code_' . $phone);
 
         if ($storedCode && strval($storedCode) === strval($verificationCode)) {
             // Verification successful, create the appointment
@@ -212,7 +259,10 @@ class AppointmentController extends Controller
             ]);
 
             // Clear the verification code from cache
-            Cache::forget('verification_code_' . $email);
+            // Cache::forget('verification_code_' . $email);
+
+            // Clear the verification code from cache
+            Cache::forget('verification_code_' . $phone);
 
             $existEmail = User::where('email', $email)->first();
 

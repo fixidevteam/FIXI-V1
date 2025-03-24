@@ -32,9 +32,14 @@ return [
     ],
     // google auth
     'google' => [
-    'client_id' => env('GOOGLE_CLIENT_ID'),
-    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-    'redirect' => '/auth/google/callback',
-],
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => '/auth/google/callback',
+    ],
+    // SMS shortLink 
+    'shortlink' => [
+        'api_key' => env('SHORTLINK_API_KEY'),
+        'api_token' => env('SHORTLINK_API_TOKEN'),
+    ],
 
 ];

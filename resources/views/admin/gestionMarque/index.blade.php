@@ -112,7 +112,7 @@
                                     </tr>
 
                                     <!-- Modal for Deletion -->
-                                    <div id="confirmationModal-{{ $marque->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
+                                    <div id="confirmationModal-{{ $marque->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden z-50">
                                         <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
                                             <h2 class="text-lg font-bold text-gray-800">Confirmation de suppression</h2>
                                             <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer ce marque ? Cette action est irréversible.</p>
@@ -193,7 +193,7 @@
                                     </td>
                                 </tr>
                                 <!-- Modal for Deletion -->
-                                <div id="confirmationModalModele-{{ $modele->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
+                                <div id="confirmationModalModele-{{ $modele->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden z-50">
                                     <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
                                         <h2 class="text-lg font-bold text-gray-800">Confirmation de suppression</h2>
                                         <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer ce modele ? Cette action est irréversible.</p>
