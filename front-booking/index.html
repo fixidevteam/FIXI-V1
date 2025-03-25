@@ -7,6 +7,7 @@
         <title>Prise de rendez-vous au garage || SHADOW007</title>
         <!-- css tailwind -->
         <script src="https://cdn.tailwindcss.com"></script>
+        <!-- <link rel="stylesheet" href="./css/main.css" /> -->
 
         <!-- Flatpickr for date selection -->
         <link
@@ -295,7 +296,7 @@
                         </div>
                         <div class="mb-6">
                             <input
-                                type="text"
+                                type="tel"
                                 id="phone"
                                 class="w-full p-2.5 border border-gray-300 focus:ring-red-500 focus:border-red-500"
                                 placeholder="Votre numéro de téléphone"
@@ -352,10 +353,14 @@
                         <input
                             type="text"
                             id="verificationCode"
-                            class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                            placeholder="Enter verification code"
+                            class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 mb-4"
+                            placeholder="Entrez le code de vérification"
                             required
                         />
+                        <p id="resendNote" class="text-sm text-gray-500 mb-4">
+                            Vous pouvez demander un nouveau code après 60
+                            secondes.
+                        </p>
                     </div>
                     <div class="flex gap-4 mt-6">
                         <button
@@ -364,10 +369,17 @@
                         >
                             Confirmer
                         </button>
+                        <button
+                            id="resendCode"
+                            class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-red-600 border border-red-600 hover:bg-red-50 focus:ring-4 focus:ring-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
+                        >
+                            Renvoyer le code
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="./script.js"></script>
+        <script src="./js/script.js"></script>
     </body>
 </html>
