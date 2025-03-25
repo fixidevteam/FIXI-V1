@@ -158,8 +158,8 @@ class AppointmentController extends Controller
         $fullName = $request->full_name;
         $phone = $request->phone;
 
-        // Store the verification code in cache with an expiration time (e.g., 10 minutes)
-        Cache::put('verification_code_' . $phone, $verificationCode, now()->addMinutes(10));
+        // Store the verification code in cache with an expiration time (e.g., 5 minutes)
+        Cache::put('verification_code_' . $phone, $verificationCode, now()->addMinutes(5));
 
         // Prepare SMS payload
         $smsPayload = [
@@ -308,8 +308,8 @@ class AppointmentController extends Controller
         // Generate a new verification code if none exists or it's expired
         $verificationCode = $existingCode ?: mt_rand(100000, 999999);
 
-        // Store the verification code in cache with an expiration time (10 minutes)
-        Cache::put('verification_code_' . $phone, $verificationCode, now()->addMinutes(10));
+        // Store the verification code in cache with an expiration time (5 minutes)
+        Cache::put('verification_code_' . $phone, $verificationCode, now()->addMinutes(5));
 
         // Prepare SMS payload
         $smsPayload = [
