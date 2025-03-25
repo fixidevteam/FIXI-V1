@@ -537,9 +537,9 @@ document.getElementById("bookingForm").onsubmit = function (e) {
     e.preventDefault();
 
     // Get form values
-    let fullName = document.getElementById("full_name").value;
-    let phone = document.getElementById("phone").value;
-    let email = document.getElementById("email").value;
+    let fullName = document.getElementById("full_name").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let email = document.getElementById("email").value.trim();
     let categorie_de_service = document.getElementById(
         "categorie_de_service"
     ).value;
@@ -547,7 +547,7 @@ document.getElementById("bookingForm").onsubmit = function (e) {
     let objet_du_RDV = document.getElementById("objet_du_RDV").value;
 
     // Validate form fields one by one
-    if (fullName === "") {
+    if (!fullName) {
         showError("Le nom est obligatoire.");
         document.getElementById("full_name").classList.add("border-red-500");
         return;
@@ -555,12 +555,17 @@ document.getElementById("bookingForm").onsubmit = function (e) {
         document.getElementById("full_name").classList.remove("border-red-500");
     }
 
-    // Validate phone number format
-    const phoneRegex = /^\+212[6-7]\d{8}$/;
+    // First check if empty
+    if (!phone) {
+        showError("Veuillez entrer votre numéro de téléphone.");
+        document.getElementById("phone").classList.add("!border-red-500");
+        return;
+    }
+
+    // Then validate Moroccan phone format
+    const phoneRegex = /^(?:\+212|0)([6-7]\d{8})$/;
     if (!phoneRegex.test(phone)) {
-        showError(
-            "Format de téléphone invalide. Utilisez +2126XXXXXXXX ou +2127XXXXXXXX"
-        );
+        showError("Format de téléphone invalide.");
         document.getElementById("phone").classList.add("!border-red-500");
         return;
     } else {
