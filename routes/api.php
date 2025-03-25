@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AppointmentController;
+use App\Models\MarqueVoiture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/operations/{categorieId}', [App\Http\Controllers\DataController::class, 'getOperations']);
 Route::get('/sous-operations/{operationId}', [App\Http\Controllers\DataController::class, 'getSousOperations']);
+Route::get('/modele/{marque}', function ($marque) {
+    $marque = MarqueVoiture::where('marque',$marque)->first();
+    return response()->json($marque->modeles);
+});
 
 // Booking
 

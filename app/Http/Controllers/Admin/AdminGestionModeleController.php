@@ -85,7 +85,7 @@ class AdminGestionModeleController extends Controller
     {
         $modele = ModeleVoiture::find($id);
         $newmodele = $request->validate([
-            'modele' => ['required'],
+            'marque_id' => ['required'],
             'modele' => [
                 'required',
                 'string',

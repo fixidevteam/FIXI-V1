@@ -78,7 +78,7 @@
                         <option value="{{ $marque->id }}" @if(old('marque_id') == $marque->id || $modele->marque->id == $marque->id ) selected @endif >{{ $marque->marque }}</option>
                         @endforeach
                     </select>
-                    <x-input-error :messages="$errors->get('marque')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('marque_id')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="modele" :value="__('Modele')" />

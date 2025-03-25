@@ -105,21 +105,29 @@
                     <div>
                         <x-input-label for="marque" :value="__('Marque')" />
                         <select id="marque" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" name="marque" autofocus>
-                            <option value="">{{ __('Selecter la marque') }}</option>
+                            <option value="">{{ __('Sélectionner la marque') }}</option>
                             @foreach($marques as $marque)
-                                <option value="{{ $marque->marque }}" {{ old('marque') == $marque->marque ? 'selected' : '' }}>
-                                    {{ $marque->marque }}
-                                </option>
+                            <option value="{{ $marque->marque }}" {{ old('marque') == $marque->marque ? 'selected' : '' }}>
+                                {{ $marque->marque }}
+                            </option>
                             @endforeach
                             <option value="autre" {{ old('marque') == 'autre' ? 'selected' : '' }}>{{ __('Autre') }}</option>
                         </select>
                         <x-input-error :messages="$errors->get('marque')" class="mt-2" />
                     </div>
+                    <div id="modeleDev">
+                        <x-input-label for="modele" :value="__('Modele')" />
+                        <select id="modele" name="modele" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option value="">{{ __('Sélectionner le modèle') }}</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('modele')" class="mt-2" />
+                    </div>
+                    <!-- 
                     <div>
                         <x-input-label for="modele" :value="__('Modele')" />
                         <x-text-input id="modele" class="block mt-1 w-full" type="text" name="modele" :value="old('modele')" autofocus autocomplete="modele" />
                         <x-input-error :messages="$errors->get('modele')" class="mt-2" />
-                    </div>
+                    </div> -->
                     <div>
                         <x-input-label for="date_de_première_mise_en_circulation" :value="__('Date de première mise en circulation (Optionnel)')" />
                         <x-text-input id="date_de_première_mise_en_circulation" class="block mt-1 w-full" type="date" name="date_de_première_mise_en_circulation" :value="old('date_de_première_mise_en_circulation')" autofocus autocomplete="date_de_première_mise_en_circulation" />
@@ -165,6 +173,7 @@
             @include('layouts.footer')
         </div>
     </div>
+
     <script>
         var loadFile = function(event) {
             var input = event.target;
@@ -176,5 +185,62 @@
                 URL.revokeObjectURL(output.src) // free memory
             }
         };
+
+
+
+        function fetchAndPopulateModeles(marqueId) {
+            const modeleWrapper = $('#modeleDev');
+            const oldModele = @json(old('modele')); // Safer than Blade in JS string
+
+            if (marqueId && marqueId !== 'autre') {
+                // If input exists, replace it with select again
+                if ($('#modele').is('input')) {
+                    $('#modele').remove();
+                    modeleWrapper.append(`
+                    <select id="modele" name="modele" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <option value="">Sélectionner le modèle</option>
+                    </select>
+                `);
+                }
+
+                let modeleSelect = $('#modele');
+
+                $.ajax({
+                    url: '/api/modele/' + marqueId,
+                    type: 'GET',
+                    success: function(data) {
+                        modeleSelect.empty();
+                        modeleSelect.append('<option value="">Sélectionner le modèle</option>');
+                        $.each(data, function(key, modele) {
+                            const selected = (modele.modele === oldModele) ? 'selected' : '';
+                            modeleSelect.append('<option value="' + modele.modele + '" ' + selected + '>' + modele.modele + '</option>');
+                        });
+
+                        const selectedModele = modeleSelect.data('selected');
+                        if (selectedModele) {
+                            modeleSelect.val(selectedModele);
+                        }
+                    }
+                });
+            } else {
+                // If select exists, replace it with input
+                if ($('#modele').is('select')) {
+                    $('#modele').remove();
+                    modeleWrapper.append(`<x-text-input type="text" id="modele" name="modele" value="${oldModele ?? ''}" class="block mt-1 w-full" placeholder="Entrer le modèle" />`);
+                }
+            }
+        }
+
+        $(document).ready(function() {
+            $('#marque').on('change', function() {
+                const selectedMarqueId = $(this).val();
+                fetchAndPopulateModeles(selectedMarqueId);
+            });
+
+            const initialMarqueId = $('#marque').val();
+            if (initialMarqueId) {
+                fetchAndPopulateModeles(initialMarqueId);
+            }
+        });
     </script>
 </x-app-layout>
