@@ -118,7 +118,7 @@
                     <div id="modeleDev">
                         <x-input-label for="modele" :value="__('Modele')" />
                         <select id="modele" name="modele" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            <option value="">{{ __('Sélectionner le modèle') }}</option>
+                            <option value="">{{ __('Veuillez d`abord sélectionner une marque') }}</option>
                         </select>
                         <x-input-error :messages="$errors->get('modele')" class="mt-2" />
                     </div>
