@@ -24,6 +24,17 @@ function showError(message) {
     const errorMessageDiv = document.getElementById("error-message");
     errorMessageDiv.innerText = message;
     errorMessageDiv.classList.remove("hidden");
+    errorMessageDiv.classList.remove("text-green-600");
+    errorMessageDiv.classList.add("text-red-600");
+}
+
+// Function to show success messages
+function showSuccess(message) {
+    const errorMessageDiv = document.getElementById("error-message");
+    errorMessageDiv.innerText = message;
+    errorMessageDiv.classList.remove("hidden");
+    errorMessageDiv.classList.remove("text-red-600");
+    errorMessageDiv.classList.add("text-green-600");
 }
 
 // Function to clear error messages
@@ -147,10 +158,106 @@ function showStep(stepId) {
     } else if (stepNumber === 2) {
         document.getElementById("nextStep2").classList.remove("hidden");
     }
+    // Enable resend button countdown when showing step 4
+    if (stepNumber === 4) {
+        enableResendButton();
+    }
 }
-// Event listener for the "Prev" button
+
+// Function to handle resending verification code
+function resendVerificationCode() {
+    showLoading();
+
+    const phone = document.getElementById("phone").value;
+    const fullName = document.getElementById("full_name").value;
+
+    fetch("http://localhost:8000/api/resend-verification-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            phone: phone,
+            full_name: fullName,
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.status === "success") {
+                showSuccess("Code de vérification renvoyé avec succès!");
+                setTimeout(() => {
+                    clearError();
+                }, 3000);
+            } else {
+                showError(
+                    data.message || "Échec de l'envoi du code de vérification."
+                );
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            showError("Une erreur s'est produite lors de l'envoi du code.");
+        })
+        .finally(() => {
+            hideLoading();
+        });
+}
+
+// Enable resend button after 60 seconds when reaching step 4
+function enableResendButton() {
+    const resendBtn = document.getElementById("resendCode");
+    const resendNote = document.getElementById("resendNote");
+
+    resendBtn.disabled = true;
+
+    let secondsLeft = 60;
+
+    const countdownInterval = setInterval(() => {
+        const minutes = Math.floor(secondsLeft / 60);
+        const seconds = secondsLeft % 60;
+
+        resendNote.textContent = `Vous pouvez demander un nouveau code dans ${minutes}m ${seconds}s.`;
+        secondsLeft--;
+
+        if (secondsLeft < 0) {
+            clearInterval(countdownInterval);
+            resendBtn.disabled = false;
+            resendNote.textContent =
+                "Vous pouvez maintenant demander un nouveau code.";
+        }
+    }, 1000);
+}
+
+// Event listeners
+document.getElementById("resendCode").addEventListener("click", function () {
+    const resendBtn = document.getElementById("resendCode");
+    resendBtn.disabled = true;
+    resendVerificationCode();
+    enableResendButton();
+});
+
 document.getElementById("prev1").addEventListener("click", () => {
-    showStep("step1"); // Go back to Step 1
+    showStep("step1");
+});
+
+// Rest of your existing event listeners and functions...
+document.getElementById("nextStep1").addEventListener("click", () => {
+    if (!selectedDate) {
+        showError("Veuillez sélectionner une date.");
+        document.getElementById("datePicker").classList.add("border-red-500");
+        return;
+    }
+    document.getElementById("datePicker").classList.remove("border-red-500");
+    document.getElementById("nextStep1").classList.add("hidden");
+    fetchTimeSlots(selectedDate);
+    showStep("step2");
+});
+
+document.getElementById("nextStep2").addEventListener("click", () => {
+    if (!selectedTime) {
+        showError("Veuillez sélectionner un créneau horaire.");
+        return;
+    }
+    document.getElementById("nextStep2").classList.add("hidden");
+    showStep("step3");
 });
 
 // Function to toggle the modal
@@ -430,9 +537,9 @@ document.getElementById("bookingForm").onsubmit = function (e) {
     e.preventDefault();
 
     // Get form values
-    let fullName = document.getElementById("full_name").value;
-    let phone = document.getElementById("phone").value;
-    let email = document.getElementById("email").value;
+    let fullName = document.getElementById("full_name").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let email = document.getElementById("email").value.trim();
     let categorie_de_service = document.getElementById(
         "categorie_de_service"
     ).value;
@@ -440,7 +547,7 @@ document.getElementById("bookingForm").onsubmit = function (e) {
     let objet_du_RDV = document.getElementById("objet_du_RDV").value;
 
     // Validate form fields one by one
-    if (fullName === "") {
+    if (!fullName) {
         showError("Le nom est obligatoire.");
         document.getElementById("full_name").classList.add("border-red-500");
         return;
@@ -448,21 +555,30 @@ document.getElementById("bookingForm").onsubmit = function (e) {
         document.getElementById("full_name").classList.remove("border-red-500");
     }
 
-    if (phone === "") {
-        showError("Le numéro de téléphone est obligatoire.");
-        document.getElementById("phone").classList.add("border-red-500");
+    // First check if empty
+    if (!phone) {
+        showError("Veuillez entrer votre numéro de téléphone.");
+        document.getElementById("phone").classList.add("!border-red-500");
         return;
-    } else {
-        document.getElementById("phone").classList.remove("border-red-500");
     }
 
-    if (email === "") {
-        showError("Adresse e-mail est obligatoire.");
-        document.getElementById("email").classList.add("border-red-500");
+    // Then validate Moroccan phone format
+    const phoneRegex = /^(?:\+212|0)([6-7]\d{8})$/;
+    if (!phoneRegex.test(phone)) {
+        showError("Format de téléphone invalide.");
+        document.getElementById("phone").classList.add("!border-red-500");
         return;
     } else {
-        document.getElementById("email").classList.remove("border-red-500");
+        document.getElementById("phone").classList.remove("!border-red-500");
     }
+
+    // if (email === "") {
+    //   showError("Adresse e-mail est obligatoire.");
+    //   document.getElementById("email").classList.add("border-red-500");
+    //   return;
+    // } else {
+    //   document.getElementById("email").classList.remove("border-red-500");
+    // }
 
     if (categorie_de_service === "") {
         showError("Le domaine est obligatoire.");

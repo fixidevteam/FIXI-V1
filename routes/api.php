@@ -33,3 +33,5 @@ Route::get('/available-dates', [AppointmentController::class, 'getAvailableDates
 Route::get('/time-slots', [AppointmentController::class, 'getTimeSlots']);
 Route::post('/book-appointment', [AppointmentController::class, 'bookAppointment']);
 Route::post('/appointments/verify', [AppointmentController::class, 'verifyAppointment']);
+Route::post('/resend-verification-code', [AppointmentController::class, 'resendVerificationCode'])
+    ->middleware('throttle:3,10'); // 3 requests every 10 minutes
