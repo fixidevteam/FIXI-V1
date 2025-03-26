@@ -297,6 +297,7 @@
                             <input
                                 type="tel"
                                 id="phone"
+                                value="+212"
                                 class="w-full p-2.5 border border-gray-300 focus:ring-red-500 focus:border-red-500"
                                 placeholder="Votre numéro de téléphone"
                             />
@@ -352,10 +353,14 @@
                         <input
                             type="text"
                             id="verificationCode"
-                            class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                            placeholder="Enter verification code"
+                            class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 mb-4"
+                            placeholder="Entrez le code de vérification"
                             required
                         />
+                        <p id="resendNote" class="text-sm text-gray-500 mb-4">
+                            Vous pouvez demander un nouveau code après 60
+                            secondes.
+                        </p>
                     </div>
                     <div class="flex gap-4 mt-6">
                         <button
@@ -363,6 +368,13 @@
                             class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300"
                         >
                             Confirmer
+                        </button>
+                        <button
+                            id="resendCode"
+                            class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium !text-red-600 !border !border-red-600 !bg-white !hover:bg-red-50 !focus:ring-4 !focus:ring-red-300 !disabled:opacity-50 !disabled:cursor-not-allowed"
+                            disabled
+                        >
+                            Renvoyer le code
                         </button>
                     </div>
                 </div>
@@ -473,8 +485,8 @@
                     3: "Saisissez vos informations",
                     4: "Vérification",
                 };
-                const h2Element = document.getElementById("progress-title");
 
+                const h2Element = document.getElementById("progress-title");
                 if (h2Element && stepTitles[step]) {
                     h2Element.textContent = stepTitles[step];
                 }
@@ -551,6 +563,7 @@
                     enableResendButton();
                 }
             }
+
             // Function to handle resending verification code
             function resendVerificationCode() {
                 showLoading();
@@ -577,7 +590,7 @@
                             );
                             setTimeout(() => {
                                 clearError();
-                            }, 5000);
+                            }, 3000);
                         } else {
                             showError(
                                 data.message ||
@@ -1014,6 +1027,7 @@
                         .getElementById("full_name")
                         .classList.remove("border-red-500");
                 }
+
                 // First check if empty
                 if (!phone) {
                     showError("Veuillez entrer votre numéro de téléphone.");
@@ -1081,13 +1095,13 @@
                         } else {
                             showError(
                                 data.message ||
-                                    "An error occurred. Please try again."
+                                    "Une erreur est survenue. Réessayez."
                             );
                         }
                     })
                     .catch((error) => {
                         console.error("Error:", error);
-                        showError("An error occurred. Please try again.");
+                        showError("Une erreur est survenue. Réessayez.");
                     })
                     .finally(() => {
                         hideLoading(); // Hide spinner
@@ -1180,7 +1194,7 @@
                         })
                         .catch((error) => {
                             console.error("Error:", error);
-                            showError("An error occurred. Please try again.");
+                            showError("Code de vérification invalide.");
                         })
                         .finally(() => {
                             hideLoading(); // Hide spinner

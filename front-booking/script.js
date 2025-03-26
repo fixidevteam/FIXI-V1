@@ -615,13 +615,13 @@ document.getElementById("bookingForm").onsubmit = function (e) {
                 showStep("step4");
             } else {
                 showError(
-                    data.message || "An error occurred. Please try again."
+                    data.message || "Une erreur est survenue. Réessayez."
                 );
             }
         })
         .catch((error) => {
             console.error("Error:", error);
-            showError("An error occurred. Please try again.");
+            showError("Une erreur est survenue. Réessayez.");
         })
         .finally(() => {
             hideLoading(); // Hide spinner
@@ -677,7 +677,7 @@ document.getElementById("verifyCode").addEventListener("click", () => {
         })
         .catch((error) => {
             console.error("Error:", error);
-            showError("An error occurred. Please try again.");
+            showError("Code de vérification invalide.");
         })
         .finally(() => {
             hideLoading(); // Hide spinner
