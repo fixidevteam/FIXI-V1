@@ -13,10 +13,23 @@ class AdminGestionMarqueContoller extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        $marques = MarqueVoiture::all();
-        $modeles = ModeleVoiture::all();
+        $marqueQuery = MarqueVoiture::query();
+        $modeleQuery = ModeleVoiture::with('marque');
+
+        if ($request->filled('marque_search')) {
+            $marqueQuery->where('marque', 'like', '%' . $request->marque_search . '%');
+        }
+
+        if ($request->filled('modele_search')) {
+            $modeleQuery->where('modele', 'like', '%' . $request->modele_search . '%');
+        }
+
+        $marques = $marqueQuery->get();
+        $modeles = $modeleQuery->get();
+
         return view('admin.gestionMarque.index', compact('marques', 'modeles'));
     }
 

@@ -13,12 +13,25 @@ class AdminGestionDomaineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $domaines = Domaine::all();
-        $services = Service::all();
+        $domaineQuery = Domaine::query();
+        $serviceQuery = Service::with('domaine');
+
+        if ($request->filled('domaine_search')) {
+            $domaineQuery->where('domaine', 'like', '%' . $request->domaine_search . '%');
+        }
+
+        if ($request->filled('service_search')) {
+            $serviceQuery->where('service', 'like', '%' . $request->service_search . '%');
+        }
+
+        $domaines = $domaineQuery->get();
+        $services = $serviceQuery->get();
+
         return view('admin.gestionDomaine.index', compact('domaines', 'services'));
     }
+
 
     /**
      * Show the form for creating a new resource.
