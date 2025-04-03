@@ -215,7 +215,7 @@ class AppointmentController2 extends Controller
             Cache::forget('verification_code_' . $email);
 
             $existEmail = User::where('email', $email)->first();
-            
+
 
             if ($existEmail) {
                 // sending email:
@@ -257,10 +257,10 @@ class AppointmentController2 extends Controller
                         ->notify(new ClientAddRdvManuelle($appointment));
                     // end
                 }
-                return response()->json(['message' => 'Appointment booked successfully!', 'account' => true, 'ref' => $garage->ref, 'appointment' => $appointment]);
+                return response()->json(['message' => 'Appointment booked successfully!', 'account' => true, 'ref' => $garage->ref, 'appointment' => $appointment, 'garage' => $garage]);
             } else {
                 // sendin email 
-                return response()->json(['message' => 'Appointment booked successfully!', 'account' => false, 'ref' => $garage->ref, 'appointment' => $appointment]);
+                return response()->json(['message' => 'Appointment booked successfully!', 'account' => false, 'ref' => $garage->ref, 'appointment' => $appointment, 'garage' => $garage]);
             }
         } else {
             return response()->json(['message' => 'Invalid verification code.'], 400);
