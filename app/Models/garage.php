@@ -20,7 +20,10 @@ class garage extends Model
         'user_id',
         'virtualGarage',
         'services',
-        'confirmation'
+        'confirmation',
+        'telephone',
+        'fixe',
+        'whatsapp'
     ];
     protected $casts = [
         'services' => 'array',
