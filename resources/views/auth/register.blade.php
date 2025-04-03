@@ -102,9 +102,8 @@
                 <span>Continuer avec google</span>
             </button>
         </a>
-        <a href="https://fixi.ma/" target="_blank">
-            <button class="w-full mt-2 pr-8 py-[6px] border flex justify-center items-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900  hover:shadow transition duration-150">
-                <img src="../images/fixiLogo.svg" alt="FIXI logo" class="w-16">
+        <a href="https://fixi.ma/" target="_blank" class="fixed bottom-4 right-4 z-50" >
+            <button class="w-full mt-2 px-4 py-2 border flex justify-center items-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900  hover:shadow transition duration-150">
                 <span>Revenir à FIXI.MA</span>
             </button>
         </a>

@@ -68,15 +68,8 @@
     </p> --}}
     {{-- Go back to FIXI.MA --}}
     <div class="my-10">
-        <span class="relative flex justify-center">
-            <div
-                class="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
-
-            <span class="relative z-10 bg-white text-xs px-6">Ou</span>
-        </span>
-        <a href="https://fixi.ma/" target="_blank">
-            <button class="w-full mt-1 px-4 py-2 border flex justify-center items-center  gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900  hover:shadow transition duration-150">
-                <img src="../images/fixiLogo.svg" alt="FIXI logo" class="w-16">
+        <a href="https://fixi.ma/" target="_blank" class="fixed bottom-4 right-4 z-50" >
+            <button class="w-full mt-2 px-4 py-2 border flex justify-center items-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900  hover:shadow transition duration-150">
                 <span>Revenir à FIXI.MA</span>
             </button>
         </a>
