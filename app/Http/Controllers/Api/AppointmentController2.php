@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
-class AppointmentController extends Controller
+class AppointmentController2 extends Controller
 {
     public function getAvailableDates(Request $request)
     {
@@ -215,6 +215,7 @@ class AppointmentController extends Controller
             Cache::forget('verification_code_' . $email);
 
             $existEmail = User::where('email', $email)->first();
+            
 
             if ($existEmail) {
                 // sending email:
