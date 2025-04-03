@@ -166,7 +166,7 @@ class MechanicVoitureController extends Controller
                         });
                 });
         })
-            ->with('voitures.operations') // Eager load voitures and operations
+            ->with(['voitures.operations', 'voitures.user']) // Eager load voitures and operations
             ->get()
             ->pluck('voitures')
             ->flatten()
@@ -179,7 +179,8 @@ class MechanicVoitureController extends Controller
                 ->get();
             $nom_categories = nom_categorie::all();
             $nom_operations = nom_operation::all();
-            return view('mechanic.voitures.show', compact('voiture', 'operations', 'nom_categories', 'nom_operations'));
+            $client = $voiture->user;
+            return view('mechanic.voitures.show', compact('voiture', 'operations', 'nom_categories', 'nom_operations', 'client'));
         }
         return back();
     }

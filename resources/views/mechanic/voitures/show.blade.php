@@ -1,4 +1,4 @@
-<x-mechanic-app-layout :subtitle="'Détails du voiture'">
+<x-mechanic-app-layout :subtitle="'Détails du véhicule'">
   <div class="p-4 sm:ml-64">
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
       {{-- content (slot on layouts/app.blade.php)--}}
@@ -53,7 +53,7 @@
               </svg>
               <a
                 href=""
-                class="inline-flex items-center text-sm font-medium text-gray-700   ">
+                class="inline-flex items-center text-sm font-medium text-gray-700">
                 Détails du voiture
               </a>
             </div>
@@ -67,7 +67,7 @@
       {{-- content (slot on layouts/app.blade.php)--}}
       <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="flex justify-between items-center my-6">
-          <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Détails du voiture</h2>
+          <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Détails du véhicule</h2>
         </div>
         {{-- Détails of cars --}}
         <div class="flex flex-col md:flex-row gap-10 items-center">
@@ -135,7 +135,6 @@
                 <p class="first-letter:capitalize text-sm font-medium text-gray-900">Date de dédouanement</p>
                 <p class="text-sm text-gray-500">
                   {{$voiture->date_de_dédouanement ?? 'N/A' }}
-
                 </p>
               </div>
             </div>
@@ -144,6 +143,22 @@
         {{-- Détails of cars close --}}
       </div>
     </div>
+    {{-- client --}}
+    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
+      <div class="px-5 py-3 bg-white shadow-sm sm:rounded-lg">
+        <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900 mb-4">Informations du client</h2>
+        @if($client)
+        <div class="space-y-2">
+          <p><span class="font-semibold">Nom complet :</span> {{ $client->name }}</p>
+          <p><span class="font-semibold">Téléphone :</span> {{ $client->telephone ?? 'Non renseigné' }}</p>
+          <a href="{{ route('mechanic.clients.show', $client->id) }}" class="text-blue-600 hover:underline">Voir plus de détails</a>
+        </div>
+        @else
+        <p class="text-gray-500">Aucun client associé à ce véhicule.</p>
+        @endif
+      </div>
+    </div>    
+    {{-- client close --}}
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
       {{-- content (slot on layouts/app.blade.php)--}}
       <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
