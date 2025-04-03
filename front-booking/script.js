@@ -664,12 +664,47 @@ document.getElementById("verifyCode").addEventListener("click", () => {
         .then((data) => {
             if (data.message === "Appointment booked successfully!") {
                 if (data.account) {
-                    // Redirect to a success page
-                    window.location.href =
-                        "https://fixidev.com/success-page?ejkn2=hzne2";
+                    let form = document.createElement("form");
+                    form.method = "POST";
+                    form.action = `https://fixidev.com/success-page/?ejkn2=hzne2&garage_ref=${data.ref}`;
+
+                    // Add appointment data
+                    let appointmentInput = document.createElement("input");
+                    appointmentInput.type = "hidden";
+                    appointmentInput.name = "appointment";
+                    appointmentInput.value = JSON.stringify(data.appointment);
+
+                    // Add garage data
+                    let garageInput = document.createElement("input");
+                    garageInput.type = "hidden";
+                    garageInput.name = "garage";
+                    garageInput.value = JSON.stringify(data.garage);
+
+                    form.appendChild(appointmentInput);
+                    form.appendChild(garageInput);
+                    document.body.appendChild(form);
+                    form.submit();
                 } else {
-                    window.location.href =
-                        "https://fixidev.com/success-page?ejkn2=kmal4";
+                    let form = document.createElement("form");
+                    form.method = "POST";
+                    form.action = `https://fixidev.com/success-page/?ejkn2=kmal4&garage_ref=${data.ref}`;
+
+                    // Add appointment data
+                    let appointmentInput = document.createElement("input");
+                    appointmentInput.type = "hidden";
+                    appointmentInput.name = "appointment";
+                    appointmentInput.value = JSON.stringify(data.appointment);
+
+                    // Add garage data
+                    let garageInput = document.createElement("input");
+                    garageInput.type = "hidden";
+                    garageInput.name = "garage";
+                    garageInput.value = JSON.stringify(data.garage);
+
+                    form.appendChild(appointmentInput);
+                    form.appendChild(garageInput);
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             } else {
                 showError(data.message || "Code de vérification invalide.");

@@ -1159,14 +1159,26 @@
                                     form.method = "POST";
                                     form.action = `https://fixidev.com/success-page/?ejkn2=hzne2&garage_ref=${data.ref}`;
 
-                                    let input = document.createElement("input");
-                                    input.type = "hidden";
-                                    input.name = "appointment";
-                                    input.value = JSON.stringify(
+                                    // Add appointment data
+                                    let appointmentInput =
+                                        document.createElement("input");
+                                    appointmentInput.type = "hidden";
+                                    appointmentInput.name = "appointment";
+                                    appointmentInput.value = JSON.stringify(
                                         data.appointment
-                                    ); // Convert to JSON
+                                    );
 
-                                    form.appendChild(input);
+                                    // Add garage data
+                                    let garageInput =
+                                        document.createElement("input");
+                                    garageInput.type = "hidden";
+                                    garageInput.name = "garage";
+                                    garageInput.value = JSON.stringify(
+                                        data.garage
+                                    );
+
+                                    form.appendChild(appointmentInput);
+                                    form.appendChild(garageInput);
                                     document.body.appendChild(form);
                                     form.submit();
                                 } else {
@@ -1174,14 +1186,26 @@
                                     form.method = "POST";
                                     form.action = `https://fixidev.com/success-page/?ejkn2=kmal4&garage_ref=${data.ref}`;
 
-                                    let input = document.createElement("input");
-                                    input.type = "hidden";
-                                    input.name = "appointment";
-                                    input.value = JSON.stringify(
+                                    // Add appointment data
+                                    let appointmentInput =
+                                        document.createElement("input");
+                                    appointmentInput.type = "hidden";
+                                    appointmentInput.name = "appointment";
+                                    appointmentInput.value = JSON.stringify(
                                         data.appointment
-                                    ); // Convert to JSON
+                                    );
 
-                                    form.appendChild(input);
+                                    // Add garage data
+                                    let garageInput =
+                                        document.createElement("input");
+                                    garageInput.type = "hidden";
+                                    garageInput.name = "garage";
+                                    garageInput.value = JSON.stringify(
+                                        data.garage
+                                    );
+
+                                    form.appendChild(appointmentInput);
+                                    form.appendChild(garageInput);
                                     document.body.appendChild(form);
                                     form.submit();
                                 }
