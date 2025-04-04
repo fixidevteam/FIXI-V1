@@ -223,7 +223,7 @@ class MechanicReservationController extends Controller
             // end sending email
             session()->flash('success', 'Rendez-vous');
             session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
-            return redirect()->route('mechanic.reservation.list');
+            return redirect()->route('mechanic.reservation.show',$appointment);
         }
     }
     /**
