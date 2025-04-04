@@ -132,12 +132,15 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('mechanic.reservation.cloturer') }}" class="block p-2 text-gray-700 rounded-lg hover:bg-gray-100 {{ Route::is('mechanic.reservation.cloturer') ? 'bg-gray-100 text-gray-900' : '' }}">
+                                    RDV’s clôturé
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('mechanic.reservation.index') }}" class="block p-2 text-gray-700 rounded-lg hover:bg-gray-100 {{ Route::is('mechanic.reservation.index') ? 'bg-gray-100 text-gray-900' : '' }}">
                                     Calendrier des RDV’s
                                 </a>
                             </li>
-
-
                         </ul>
                     </li>
                         <!-- ============== -->
