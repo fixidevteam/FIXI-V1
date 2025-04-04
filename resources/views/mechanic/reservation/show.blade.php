@@ -166,18 +166,29 @@
         </div>
         {{-- models for status --}}
         <div class="flex space-x-4 mt-6">
-          @if($appointment->status === 'en cours')
-          <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModal('modal-confirmed', true)"">
-            Confirmer
-          </button>
-          <button type=" button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
-            Annuler
-          </button>
-          @elseif($appointment->status === 'confirmé')
-          <button type=" button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
-            Annuler
-          </button>
-          @endif
+          {{-- Clôturer le RDV --}}
+            @php
+            $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment_day.' '.$appointment->appointment_time);
+            $now = \Carbon\Carbon::now();
+            $isPast = $appointmentDateTime->lt($now); // lt() means "less than" (in the past)
+            @endphp
+            @if($isPast && in_array($appointment->status, ['en cours']))
+            <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded" onclick="toggleModal('modal-cloturer', true)"">
+              Clôturer le RDV
+            </button>
+            @elseif($appointment->status === 'en cours')
+            <button type="button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModal('modal-confirmed', true)"">
+              Confirmer
+            </button>
+            <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
+              Annuler
+            </button>
+            @elseif($appointment->status === 'confirmé')
+            <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
+              Annuler
+            </button>
+            @endif
+          {{-- Clôturer le RDV close --}}
         </div>
 
         <div id="modal-en_cour" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
@@ -221,6 +232,43 @@
                 @csrf
                 @method('PATCH')
                 <button type="submit" name="status" value="annulé" class="px-4 py-2 bg-red-500 text-white rounded">Confirmer</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {{-- modele Clôturer le RDV --}}
+        <div id="modal-cloturer" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+          <div class="bg-white p-6 rounded shadow-lg">
+            <h2 class="text-lg font-bold text-gray-800">Clôturer le rendez-vous</h2>
+            <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "Clôturer" ? Cette action est irréversible.</p>
+            <div class="mt-4">
+              <form action="{{ route('mechanic.reservation.close', $appointment->id) }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Le client s'est-il présenté ?</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input class="mr-2 w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2" 
+                                   type="radio" name="presence" id="present" value="present" required>
+                            <label class="text-gray-700" for="present">
+                                <span class="mr-1">✅</span> Présent
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input class="mr-2 w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2" 
+                                   type="radio" name="presence" id="absent" value="absent" required>
+                            <label class="text-gray-700" for="absent">
+                                <span class="mr-1">❌</span> Absent
+                            </label>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="flex justify-end">
+                    <button type="button" onclick="toggleModal('modal-cloturer', false)" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">Annuler</button>
+                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                        Clôturer le RDV
+                    </button>
+                  </div>
               </form>
             </div>
           </div>

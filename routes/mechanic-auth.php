@@ -50,6 +50,8 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
         ->name('reservation.list');
     Route::patch('/reservation/{id}/update-status', [MechanicReservationController::class, 'updateStatus'])
         ->name('reservation.updateStatus');
+    Route::post('/reservation/{id}/close', [MechanicReservationController::class, 'close'])
+        ->name('reservation.close');
     Route::get('/analytics-data', [getAnalyticsDataController::class, 'getAnalyticsData'])->name('analytics.data');
     Route::get('/chart', [ChartContoller::class, 'index'])->name('chart');
     Route::get('/mechanic/voitures/export/{voitureId}', [ExportController::class, 'exportOperations'])->name('voitures.export');
@@ -64,9 +66,10 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
     Route::get('/test', function () {
         return view('mechanic.test1');
     });
-    Route::get('/confirmation',[ConfirmationRdv::class,'index'])->name('confirmation');
-    Route::put('/confirmation/{id}/accepter',[ConfirmationRdv::class,'accepter'])->name('confirmation.accepter');
-    Route::put('/confirmation/{id}/annuler',[ConfirmationRdv::class,'annuler'])->name('confirmation.annuler');
+    Route::get('/confirmation', [ConfirmationRdv::class, 'index'])->name('confirmation');
+    Route::put('/confirmation/{id}/accepter', [ConfirmationRdv::class, 'accepter'])->name('confirmation.accepter');
+    Route::put('/confirmation/{id}/annuler', [ConfirmationRdv::class, 'annuler'])->name('confirmation.annuler');
+
 
     // Route::get('/api/reservations/{year}/{month}', [RendezVousController::class, 'index']);
 });
