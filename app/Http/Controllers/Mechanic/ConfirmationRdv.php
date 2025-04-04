@@ -31,7 +31,7 @@ class ConfirmationRdv extends Controller
         // Fetch appointments filtered by selected date
         $query = Appointment::where('garage_ref', $garage->ref)
             ->where('status', 'en cours')
-            ->latest(); // Orders by `created_at` descending
+            ->orderBy('updated_at', 'desc'); // Orders by `created_at` descending
 
         if ($searchDate) {
             $query->whereDate('appointment_day', $searchDate);

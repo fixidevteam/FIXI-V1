@@ -8,6 +8,7 @@ use App\Models\garage;
 use App\Models\jour_indisponible;
 use App\Notifications\GarageAcceptRdv;
 use App\Notifications\GarageCancelledRdv;
+use App\Notifications\GarageUpdateRdv;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
@@ -86,9 +87,8 @@ class MechanicReservationController extends Controller
             return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
         }
 
-        // Fetch paginated appointments for the garage, ordered by the latest
         $appointments = Appointment::where('garage_ref', $garage->ref)
-            ->latest() // Orders by `created_at` descending
+            ->orderBy('updated_at', 'desc') // Orders by `updated_at` descending
             ->paginate(10); // Adjust per page as needed
 
         return view('mechanic.reservation.list', compact('appointments'));
@@ -145,7 +145,16 @@ class MechanicReservationController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        $user = Auth::user();
+        // Fetch the garage associated with the mechanic
+        $garage = Garage::where('id', $user->garage_id)->first();
+        $appointment = Appointment::where('id', $id)->where('garage_ref', $garage->ref)->first();
+        if ($appointment) {
+            return view('mechanic.reservation.edit', compact('appointment', 'garage'));
+        } else {
+            return back();
+        }
     }
 
     /**
@@ -153,7 +162,26 @@ class MechanicReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'appointment_day' => 'required|date',
+            'appointment_time' => 'required',
+        ]);
+
+        $user = Auth::user();
+        // Fetch the garage associated with the mechanic
+        $garage = Garage::where('id', $user->garage_id)->first();
+        $appointment = Appointment::where('id', $id)->where('garage_ref', $garage->ref)->first();
+        if ($appointment) {
+            $data['status'] = 'en cours';
+            $appointment->update($data);
+            Notification::route('mail',$appointment->user_email)->notify(
+                new GarageUpdateRdv($appointment, 'Une réservation a été modifée par le garage.')
+            );
+            // end sending email
+            session()->flash('success', 'Rendez-vous');
+            session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
+            return redirect()->route('mechanic.reservation.list');
+        }
     }
     /**
      * Update the status of appointment.
