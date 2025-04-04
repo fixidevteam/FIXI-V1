@@ -19,22 +19,34 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <!-- flatpickr -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+        
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <style>
         @media (max-width: 768px) {
             .fc-toolbar-chunk .fc-today-button {
-                margin-left: 6px !important;  /* Add left margin */
-                margin-top: 0 !important;    /* Remove top margin */
+                margin-left: 6px !important;
+                /* Add left margin */
+                margin-top: 0 !important;
+                /* Remove top margin */
             }
+
             /* Hide the Liste button */
             .fc-toolbar-chunk .fc-listWeek-button {
                 display: none !important;
             }
         }
+
         @media (max-width: 320px) {
             .fc-toolbar-chunk .fc-today-button {
-                margin-left: 0 !important;  /* Add left margin */
-                margin-top: 6px !important;    /* Remove top margin */
+                margin-left: 0 !important;
+                /* Add left margin */
+                margin-top: 6px !important;
+                /* Remove top margin */
             }
         }
     </style>
@@ -187,26 +199,27 @@
         }
         // copy garage ref logique
         document.getElementById('garage-ref').addEventListener('click', function() {
-                    const refText = this.textContent.trim(); // Get the text content
-                    const copyIcon = document.getElementById('copy-icon');
-                    const checkIcon = document.getElementById('check-icon');
+            const refText = this.textContent.trim(); // Get the text content
+            const copyIcon = document.getElementById('copy-icon');
+            const checkIcon = document.getElementById('check-icon');
 
-                    navigator.clipboard.writeText(refText) // Copy to clipboard
-                        .then(() => {
-                            // Toggle icons
-                            copyIcon.classList.add('hidden');
-                            checkIcon.classList.remove('hidden');
+            navigator.clipboard.writeText(refText) // Copy to clipboard
+                .then(() => {
+                    // Toggle icons
+                    copyIcon.classList.add('hidden');
+                    checkIcon.classList.remove('hidden');
 
-                            // Revert back to copy icon after 3 seconds
-                            setTimeout(() => {
-                                copyIcon.classList.remove('hidden');
-                                checkIcon.classList.add('hidden');
-                            }, 3000);
-                        })
-                        .catch(err => {
-                            console.error('Error copying text: ', err);
-                        });
+                    // Revert back to copy icon after 3 seconds
+                    setTimeout(() => {
+                        copyIcon.classList.remove('hidden');
+                        checkIcon.classList.add('hidden');
+                    }, 3000);
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
                 });
+        });
     </script>
 </body>
+
 </html>
