@@ -8,6 +8,7 @@ use App\Models\garage;
 use App\Models\jour_indisponible;
 use App\Notifications\GarageAcceptRdv;
 use App\Notifications\GarageCancelledRdv;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
@@ -73,26 +74,67 @@ class MechanicReservationController extends Controller
     /**
      * index as list of appointments.
      */
-    public function list()
-    {
-        // Get the authenticated user
-        $user = Auth::user();
+    // public function list()
+    // {
+    //     // Get the authenticated user
+    //     $user = Auth::user();
 
-        // Fetch the garage associated with the mechanic
+    //     // Fetch the garage associated with the mechanic
+    //     $garage = garage::where('id', $user->garage_id)->first();
+
+    //     // Check if the garage exists
+    //     if (!$garage) {
+    //         return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
+    //     }
+
+    //     // Fetch paginated appointments for the garage, ordered by the latest
+    //     $appointments = Appointment::where('garage_ref', $garage->ref)
+    //         ->latest() // Orders by `created_at` descending
+    //         ->paginate(10); // Adjust per page as needed
+
+    //     return view('mechanic.reservation.list', compact('appointments'));
+    // }
+
+    public function list(Request $request)
+    {
+        $user = Auth::user();
         $garage = garage::where('id', $user->garage_id)->first();
 
-        // Check if the garage exists
         if (!$garage) {
             return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
         }
 
-        // Fetch paginated appointments for the garage, ordered by the latest
-        $appointments = Appointment::where('garage_ref', $garage->ref)
-            ->latest() // Orders by `created_at` descending
-            ->paginate(10); // Adjust per page as needed
+        $query = Appointment::where('garage_ref', $garage->ref);
+
+        // Filter for past appointments to close
+        if ($request->has('filter') && $request->filter == 'to_close') {
+            $now = Carbon::now();
+            $query->where(function ($q) use ($now) {
+                $q->where('appointment_day', '<', $now->format('Y-m-d'))
+                    ->orWhere(function ($q2) use ($now) {
+                        $q2->where('appointment_day', $now->format('Y-m-d'))
+                            ->where('appointment_time', '<', $now->format('H:i:s'));
+                    });
+            })
+                ->whereIn('status', ['en cours']);
+        } else {
+            // Default: show active appointments
+            $now = Carbon::now();
+            $query->where(function ($q) use ($now) {
+                $q->where('appointment_day', '>', $now->format('Y-m-d'))
+                    ->orWhere(function ($q2) use ($now) {
+                        $q2->where('appointment_day', $now->format('Y-m-d'))
+                            ->where('appointment_time', '>=', $now->format('H:i:s'));
+                    });
+            })
+                ->whereIn('status', ['en cours', 'confirmé', 'annulé']);
+        }
+
+        $appointments = $query->latest()->paginate(10);
 
         return view('mechanic.reservation.list', compact('appointments'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -186,5 +228,34 @@ class MechanicReservationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    /**
+     * Close a past appointment
+     */
+    public function close(Request $request, $id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $now = Carbon::now();
+        $appointmentDateTime = Carbon::parse($appointment->appointment_day . ' ' . $appointment->appointment_time);
+
+        // Verify the appointment is in the past
+        if ($appointmentDateTime->gt($now)) {
+            return redirect()->back()->with('error', 'Vous ne pouvez clôturer que les rendez-vous passés.');
+        }
+
+        // Validate the request
+        $request->validate([
+            'presence' => 'required|in:present,absent'
+        ]);
+
+        // Update appointment
+        $appointment->status = 'clôturé';
+        $appointment->presence_status = $request->presence == 'present' ? 'present' : 'absent';
+        $appointment->closed_at = $now;
+        $appointment->save();
+
+        return redirect()->route('mechanic.reservation.list', ['filter' => 'to_close'])
+            ->with('success', 'Le rendez-vous a été clôturé avec le statut: ' .
+                ($request->presence == 'present' ? '✅ Présent' : '❌ Absent'));
     }
 }

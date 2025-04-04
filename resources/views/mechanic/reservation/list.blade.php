@@ -46,6 +46,38 @@
                 <div class="flex justify-between items-center my-6">
                     <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">List des rendez-vous</h2>
                 </div>
+                <form method="GET" action="{{ route('mechanic.reservation.list') }}" class="mb-4">
+                    <div class="flex items-center space-x-2">
+                        <!-- Select Dropdown for Appointment Filter -->
+                        <select 
+                            name="filter" 
+                            class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            onchange="this.form.submit()"
+                        >
+                            <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>RDV actifs</option>
+                            <option value="to_close" {{ request('filter') == 'to_close' ? 'selected' : '' }}>RDV à clôturer</option>
+                        </select>
+                        
+                        <!-- Search Button (optional) -->
+                        <button type="submit" class="p-2.5 ms-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800">
+                            <svg class="w-4 h-4" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 2.75C6.66751 2.75 2.75 6.66751 2.75 11.5C2.75 16.3325 6.66751 20.25 11.5 20.25C16.3325 20.25 20.25 16.3325 20.25 11.5C20.25 6.66751 16.3325 2.75 11.5 2.75ZM1.25 11.5C1.25 5.83908 5.83908 1.25 11.5 1.25C17.1609 1.25 21.75 5.83908 21.75 11.5C21.75 14.0605 20.8111 16.4017 19.2589 18.1982L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L18.1982 19.2589C16.4017 20.8111 14.0605 21.75 11.5 21.75C5.83908 21.75 1.25 17.1609 1.25 11.5Z" fill="currentColor"/>
+                            </svg>                            
+                            <span class="sr-only">Filtrer</span>
+                        </button>
+                        
+                        <!-- Reset Button -->
+                        <a href="{{ route('mechanic.reservation.list') }}" class="hidden md:block p-2.5 ms-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300">
+                            Réinitialiser
+                        </a>
+                        <a href="{{ route('mechanic.reservation.list') }}" class="md:hidden p-2.5 ms-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 font-semibold">
+                            <svg class="w-4 h-4" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 2.75C6.66751 2.75 2.75 6.66751 2.75 11.5C2.75 16.3325 6.66751 20.25 11.5 20.25C16.3325 20.25 20.25 16.3325 20.25 11.5C20.25 6.66751 16.3325 2.75 11.5 2.75ZM1.25 11.5C1.25 5.83908 5.83908 1.25 11.5 1.25C17.1609 1.25 21.75 5.83908 21.75 11.5C21.75 14.0605 20.8111 16.4017 19.2589 18.1982L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L18.1982 19.2589C16.4017 20.8111 14.0605 21.75 11.5 21.75C5.83908 21.75 1.25 17.1609 1.25 11.5ZM8.25 11.5C8.25 11.0858 8.58579 10.75 9 10.75H14C14.4142 10.75 14.75 11.0858 14.75 11.5C14.75 11.9142 14.4142 12.25 14 12.25H9C8.58579 12.25 8.25 11.9142 8.25 11.5Z" fill="currentColor"/>
+                            </svg>                            
+                            <span class="sr-only">Réinitialiser</span>
+                        </a>
+                    </div>
+                </form>
                 {{-- table --}}
                 <div class="my-5">
                     {{-- alert --}}

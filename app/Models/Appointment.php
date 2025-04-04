@@ -20,5 +20,7 @@ class Appointment extends Model
         'appointment_day',
         'appointment_time',
         'status',
+        'presence_status',
+        'closed_at'
     ];
 }
