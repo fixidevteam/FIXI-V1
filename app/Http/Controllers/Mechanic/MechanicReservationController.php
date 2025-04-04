@@ -287,4 +287,20 @@ class MechanicReservationController extends Controller
             ->with('success', 'Le rendez-vous a été clôturé avec le statut: ' .
                 ($request->presence == 'present' ? '✅ Présent' : '❌ Absent'));
     }
+    public function cloturer(Request $request)
+    {
+        $user = Auth::user();
+        $garage = garage::where('id', $user->garage_id)->first();
+
+        if (!$garage) {
+            return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
+        }
+
+        $appointments = Appointment::where('garage_ref', $garage->ref)
+            ->where('status', 'clôturé')
+            ->latest()
+            ->paginate(10);
+
+        return view('mechanic.reservation.cloturer', compact('appointments'));
+    }
 }

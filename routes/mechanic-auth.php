@@ -52,6 +52,8 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
         ->name('reservation.updateStatus');
     Route::post('/reservation/{id}/close', [MechanicReservationController::class, 'close'])
         ->name('reservation.close');
+    Route::get('/cloturer', [MechanicReservationController::class, 'cloturer'])
+        ->name('reservation.cloturer');
     Route::get('/analytics-data', [getAnalyticsDataController::class, 'getAnalyticsData'])->name('analytics.data');
     Route::get('/chart', [ChartContoller::class, 'index'])->name('chart');
     Route::get('/mechanic/voitures/export/{voitureId}', [ExportController::class, 'exportOperations'])->name('voitures.export');
