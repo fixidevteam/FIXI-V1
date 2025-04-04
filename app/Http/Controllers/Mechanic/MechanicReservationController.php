@@ -8,6 +8,7 @@ use App\Models\garage;
 use App\Models\jour_indisponible;
 use App\Notifications\GarageAcceptRdv;
 use App\Notifications\GarageCancelledRdv;
+use App\Notifications\GarageUpdateRdv;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
