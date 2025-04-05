@@ -10,6 +10,7 @@ use App\Http\Controllers\Mechanic\ExportController;
 use App\Http\Controllers\Mechanic\JourIndisponibleController;
 use App\Http\Controllers\Mechanic\MechanicCalendrierController;
 use App\Http\Controllers\Mechanic\MechanicClientController;
+use App\Http\Controllers\Mechanic\MechanicConvertRdvToOperation;
 use App\Http\Controllers\Mechanic\MechanicOperatioController;
 use App\Http\Controllers\Mechanic\MechanicVoitureController;
 use App\Http\Controllers\Mechanic\ProfileController;
@@ -54,6 +55,10 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
         ->name('reservation.close');
     Route::get('/cloturer', [MechanicReservationController::class, 'cloturer'])
         ->name('reservation.cloturer');
+    // convert Rdv to operation 
+    Route::get('/conversion/{id}', [MechanicConvertRdvToOperation::class, 'showForm'])->name('reservation.convertForm');
+    Route::post('/conversion', [MechanicConvertRdvToOperation::class, 'convert'])->name('reservation.convert');
+
     Route::get('/analytics-data', [getAnalyticsDataController::class, 'getAnalyticsData'])->name('analytics.data');
     Route::get('/chart', [ChartContoller::class, 'index'])->name('chart');
     Route::get('/mechanic/voitures/export/{voitureId}', [ExportController::class, 'exportOperations'])->name('voitures.export');

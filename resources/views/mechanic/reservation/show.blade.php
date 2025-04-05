@@ -182,7 +182,7 @@
           @if($isPast && in_array($appointment->status, ['en cours']))
           <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded" onclick="toggleModal('modal-cloturer', true)"">
               Clôturer le RDV
-            </button>
+          </button>
             @elseif($appointment->status === 'en cours')
             <button type=" button" class="px-4 py-2 bg-green-500 text-white rounded" onclick="toggleModal('modal-confirmed', true)"">
               Confirmer
@@ -194,23 +194,27 @@
             <button type=" button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="toggleModal('modal-cancelled', true)"">
               Annuler
             </button>
+            @elseif($appointment->status === 'clôturé')
+            <a href='{{route("mechanic.reservation.convertForm",$appointment)}}' type=" button" class="px-4 py-2 bg-orange-500 text-white rounded">
+            Conversion en opération
+            </a>
             @endif
-          {{-- Clôturer le RDV close --}}
+            {{-- Clôturer le RDV close --}}
         </div>
 
         <div id=" modal-en_cour" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-            <div class="bg-white p-6 rounded shadow-lg">
-              <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
-              <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "En attente" ?</p>
-              <div class="flex justify-end mt-4">
-                <button onclick="toggleModal('modal-en_cour', false)" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">Annuler</button>
-                <form method="POST" action="{{ route('mechanic.reservation.updateStatus', $appointment->id) }}">
-                  @csrf
-                  @method('PATCH')
-                  <button type="submit" name="status" value="en cours" class="px-4 py-2 bg-yellow-500 text-white rounded">Confirmer </button>
-                </form>
-              </div>
+          <div class="bg-white p-6 rounded shadow-lg">
+            <h2 class="text-lg font-bold text-gray-800">Confirmation de mise à jour</h2>
+            <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir marquer cette réservation comme "En attente" ?</p>
+            <div class="flex justify-end mt-4">
+              <button onclick="toggleModal('modal-en_cour', false)" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">Annuler</button>
+              <form method="POST" action="{{ route('mechanic.reservation.updateStatus', $appointment->id) }}">
+                @csrf
+                @method('PATCH')
+                <button type="submit" name="status" value="en cours" class="px-4 py-2 bg-yellow-500 text-white rounded">Confirmer </button>
+              </form>
             </div>
+          </div>
         </div>
 
 

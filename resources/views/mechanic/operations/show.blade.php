@@ -84,7 +84,7 @@
               <div>
                 <p class="capitalize text-sm font-medium text-gray-900">Categorie</p>
                 <p class="text-sm text-gray-500">
-                  {{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? 'N/A' }}
+                  {{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? $operation->categorie }}
                 </p>
               </div>
               <div>
