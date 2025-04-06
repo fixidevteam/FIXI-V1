@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Garages avec créneaux</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 p-6">
+        <div class="max-w-6xl mx-auto space-y-8">
+            <!-- Example garage cards -->
+            <div
+                class="bg-white rounded-xl shadow-md p-6"
+                data-garage-ref="GAR-00001"
+            >
+                <div class="flex items-center gap-4 mb-4">
+                    <img
+                        src="./fixiRepair.jpg"
+                        class="w-20 h-20 rounded-full object-cover"
+                        alt="Garage 1 Logo"
+                    />
+                    <div>
+                        <h2 class="text-xl font-semibold">Garage AutoPro</h2>
+                        <p class="text-gray-500">Casablanca</p>
+                    </div>
+                </div>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-3 gap-4 slot-days"
+                ></div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div
+            id="bookingModal"
+            class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden"
+        >
+            <div class="bg-white rounded-xl p-6 w-full max-w-2xl relative">
+                <button
+                    id="closeModal"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl"
+                >
+                    &times;
+                </button>
+
+                <!-- Step 3 -->
+                <div id="step3">
+                    <form id="bookingForm" class="mt-6">
+                        <div class="mb-2 text-sm text-gray-600">
+                            Date choisie : <span id="selectedDate"></span>
+                        </div>
+                        <div class="mb-2 text-sm text-gray-600">
+                            Heure choisie : <span id="selectedTime"></span>
+                        </div>
+                        <input
+                            type="hidden"
+                            id="garageRefHidden"
+                            name="garage_ref"
+                        />
+                        <input
+                            type="hidden"
+                            id="formattedDate"
+                            name="appointment_day"
+                        />
+
+                        <input
+                            type="text"
+                            id="full_name"
+                            class="w-full p-2.5 border mb-4"
+                            placeholder="Votre nom"
+                            required
+                        />
+                        <input
+                            type="tel"
+                            id="phone"
+                            class="w-full p-2.5 border mb-4"
+                            placeholder="Votre numéro de téléphone"
+                            required
+                        />
+                        <input
+                            type="email"
+                            id="email"
+                            class="w-full p-2.5 border mb-4"
+                            placeholder="Adresse E-mail"
+                        />
+                        <select
+                            id="categorie_de_service"
+                            class="w-full p-2.5 border mb-4"
+                            required
+                        >
+                            <option value="">Choisir un service</option>
+                            <option value="Entretien">Entretien</option>
+                        </select>
+                        <select id="modele" class="w-full p-2.5 border mb-4">
+                            <option value="">Choisir un modèle</option>
+                            <option value="Peugeot 208">Peugeot 208</option>
+                        </select>
+                        <input
+                            type="text"
+                            id="objet_du_RDV"
+                            class="w-full p-2.5 border mb-4"
+                            placeholder="Message (optionnel)"
+                        />
+                        <button
+                            type="submit"
+                            class="px-5 py-2.5 rounded-[20px] text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+                        >
+                            Suivant
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Step 4 -->
+                <div id="step4" class="hidden">
+                    <p class="text-sm text-gray-600 mb-4">
+                        Entrez le code de confirmation :
+                    </p>
+                    <input
+                        type="text"
+                        id="verificationCode"
+                        class="w-full p-2.5 border mb-4"
+                        placeholder="Code de vérification"
+                    />
+                    <p id="resendNote" class="text-sm text-gray-500 mb-4">
+                        Nouveau code dans
+                        <span id="countdown">60</span> secondes.
+                    </p>
+                    <div class="flex gap-4">
+                        <button
+                            id="verifyCode"
+                            class="px-5 py-2.5 rounded-[20px] text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+                        >
+                            Confirmer
+                        </button>
+                        <button
+                            id="resendCode"
+                            class="w-full sm:w-auto px-5 py-2.5 rounded-[20px] text-sm font-medium text-red-600 border border-red-600 hover:bg-red-50 focus:ring-4 focus:ring-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
+                        >
+                            Renvoyer le code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div
+            id="loadingSpinner"
+            class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 hidden"
+        >
+            <div
+                class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600"
+            ></div>
+        </div>
+
+        <!-- Error Message -->
+        <div
+            id="errorMessage"
+            class="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50 hidden"
+        ></div>
+
+        <!-- Success Message -->
+        <div
+            id="successMessage"
+            class="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50 hidden"
+        ></div>
+
+        <!-- Script -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const dayNames = [
+                    "Dimanche",
+                    "Lundi",
+                    "Mardi",
+                    "Mercredi",
+                    "Jeudi",
+                    "Vendredi",
+                    "Samedi",
+                ];
+
+                // Store selected date/time for verification
+                let selectedDate = "";
+                let selectedTime = "";
+                let garageRef = "";
+                let countdownInterval;
+
+                function showLoading() {
+                    document
+                        .getElementById("loadingSpinner")
+                        .classList.remove("hidden");
+                }
+
+                function hideLoading() {
+                    document
+                        .getElementById("loadingSpinner")
+                        .classList.add("hidden");
+                }
+
+                function showError(message) {
+                    const errorDiv = document.getElementById("errorMessage");
+                    errorDiv.textContent = message;
+                    errorDiv.classList.remove("hidden");
+                    setTimeout(() => {
+                        errorDiv.classList.add("hidden");
+                    }, 5000);
+                }
+
+                function showSuccess(message) {
+                    const successDiv =
+                        document.getElementById("successMessage");
+                    successDiv.textContent = message;
+                    successDiv.classList.remove("hidden");
+                    setTimeout(() => {
+                        successDiv.classList.add("hidden");
+                    }, 5000);
+                }
+
+                function clearError() {
+                    document
+                        .getElementById("errorMessage")
+                        .classList.add("hidden");
+                }
+
+                function startCountdown() {
+                    let seconds = 60;
+                    document.getElementById("countdown").textContent = seconds;
+                    document.getElementById("resendCode").disabled = true;
+
+                    clearInterval(countdownInterval);
+                    countdownInterval = setInterval(() => {
+                        seconds--;
+                        document.getElementById("countdown").textContent =
+                            seconds;
+
+                        if (seconds <= 0) {
+                            clearInterval(countdownInterval);
+                            document.getElementById(
+                                "resendCode"
+                            ).disabled = false;
+                            document.getElementById("resendNote").textContent =
+                                "Vous pouvez maintenant demander un nouveau code.";
+                        }
+                    }, 1000);
+                }
+
+                function resendVerificationCode() {
+                    showLoading();
+
+                    const phone = document.getElementById("phone").value;
+                    const fullName = document.getElementById("full_name").value;
+                    const [day, month, year] = selectedDate.split("-");
+                    const mysqlDate = `${year}-${month}-${day}`;
+
+                    fetch(
+                        "http://localhost:8000/api/resend-verification-code2",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                phone: phone,
+                                full_name: fullName,
+                                garage_ref: garageRef,
+                                appointment_day: mysqlDate,
+                                appointment_time: selectedTime + ":00",
+                            }),
+                        }
+                    )
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.status === "success") {
+                                showSuccess(
+                                    "Code de vérification renvoyé avec succès!"
+                                );
+                                startCountdown();
+                            } else {
+                                showError(
+                                    data.message ||
+                                        "Échec de l'envoi du code de vérification."
+                                );
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            showError(
+                                "Une erreur s'est produite lors de l'envoi du code."
+                            );
+                        })
+                        .finally(() => {
+                            hideLoading();
+                        });
+                }
+
+                function loadGarageSlots(garageRef, container) {
+                    for (let i = 1; i <= 3; i++) {
+                        const date = new Date();
+                        date.setDate(date.getDate() + i);
+                        const dateString = date.toISOString().split("T")[0];
+                        const displayDate = date
+                            .toLocaleDateString("fr-FR", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                            })
+                            .replace(/\//g, "-");
+
+                        const dayName = dayNames[date.getDay()];
+
+                        const col = document.createElement("div");
+                        col.classList.add("bg-gray-50", "rounded-lg", "p-4");
+                        col.innerHTML = `
+                            <div class="text-center font-semibold text-gray-700">${dayName}</div>
+                            <div class="text-center text-sm text-gray-500">${displayDate}</div>
+                            <div class="mt-4 flex flex-col items-center gap-2" id="slotBox-${i}">Chargement...</div>
+                        `;
+
+                        container.appendChild(col);
+
+                        fetch(
+                            `http://localhost:8000/api/time-slots2?garage_ref=${garageRef}&date=${dateString}`
+                        )
+                            .then((res) => res.json())
+                            .then((data) => {
+                                const slotBox = col.querySelector(
+                                    `#slotBox-${i}`
+                                );
+                                slotBox.innerHTML = "";
+                                if (data.time_slots?.length) {
+                                    const visibleSlots = data.time_slots.slice(
+                                        0,
+                                        3
+                                    );
+                                    visibleSlots.forEach((time) => {
+                                        const formatted = time.slice(0, 5);
+                                        const btn =
+                                            document.createElement("button");
+                                        btn.innerText = formatted;
+                                        btn.className =
+                                            "p-2.5 text-sm font-medium text-center !bg-white border rounded-[20px] cursor-pointer !text-red-600 !border-red-600 !hover:text-white !hover:bg-red-600";
+                                        btn.onclick = () =>
+                                            openBookingModal(
+                                                displayDate,
+                                                formatted,
+                                                garageRef,
+                                                dateString
+                                            );
+                                        slotBox.appendChild(btn);
+                                    });
+                                } else {
+                                    slotBox.innerHTML = `<p class='text-sm text-gray-400'>Aucun créneau.</p>`;
+                                }
+                            });
+                    }
+                }
+
+                function openBookingModal(date, time, garageRefValue, apiDate) {
+                    document
+                        .getElementById("bookingModal")
+                        .classList.remove("hidden");
+                    document.getElementById("selectedDate").innerText = date;
+                    document.getElementById("selectedTime").innerText = time;
+                    document.getElementById("garageRefHidden").value =
+                        garageRefValue;
+                    document.getElementById("formattedDate").value = date;
+                    document.getElementById("step3").classList.remove("hidden");
+                    document.getElementById("step4").classList.add("hidden");
+
+                    selectedDate = date;
+                    selectedTime = time;
+                    garageRef = garageRefValue;
+                }
+
+                document.getElementById("closeModal").onclick = () => {
+                    document
+                        .getElementById("bookingModal")
+                        .classList.add("hidden");
+                    clearInterval(countdownInterval);
+                };
+
+                document
+                    .getElementById("resendCode")
+                    .addEventListener("click", resendVerificationCode);
+
+                document
+                    .getElementById("bookingForm")
+                    .addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        showLoading();
+
+                        const [day, month, year] = document
+                            .getElementById("formattedDate")
+                            .value.split("-");
+                        const mysqlDate = `${year}-${month}-${day}`;
+
+                        const payload = {
+                            full_name: document
+                                .getElementById("full_name")
+                                .value.trim(),
+                            phone: document
+                                .getElementById("phone")
+                                .value.trim(),
+                            email: document
+                                .getElementById("email")
+                                .value.trim(),
+                            categorie_de_service: document.getElementById(
+                                "categorie_de_service"
+                            ).value,
+                            modele: document.getElementById("modele").value,
+                            objet_du_RDV:
+                                document.getElementById("objet_du_RDV").value,
+                            garage_ref:
+                                document.getElementById("garageRefHidden")
+                                    .value,
+                            appointment_day: mysqlDate,
+                            appointment_time:
+                                document.getElementById("selectedTime")
+                                    .innerText + ":00",
+                        };
+
+                        fetch("http://localhost:8000/api/book-appointment2", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload),
+                        })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                if (data.status === "verification_required") {
+                                    document
+                                        .getElementById("step3")
+                                        .classList.add("hidden");
+                                    document
+                                        .getElementById("step4")
+                                        .classList.remove("hidden");
+                                    startCountdown();
+                                } else {
+                                    showError(
+                                        data.message ||
+                                            "Une erreur est survenue."
+                                    );
+                                }
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                                showError("Erreur lors de la soumission.");
+                            })
+                            .finally(() => {
+                                hideLoading();
+                            });
+                    });
+
+                document
+                    .getElementById("verifyCode")
+                    .addEventListener("click", () => {
+                        showLoading();
+
+                        const verificationCode = document
+                            .getElementById("verificationCode")
+                            .value.trim();
+                        const [day, month, year] = selectedDate.split("-");
+                        const mysqlDate = `${year}-${month}-${day}`;
+
+                        if (!verificationCode) {
+                            showError(
+                                "Veuillez entrer le code de vérification."
+                            );
+                            hideLoading();
+                            return;
+                        }
+
+                        const payload = {
+                            email: document.getElementById("email").value,
+                            verification_code: verificationCode,
+                            full_name:
+                                document.getElementById("full_name").value,
+                            phone: document.getElementById("phone").value,
+                            categorie_de_service: document.getElementById(
+                                "categorie_de_service"
+                            ).value,
+                            modele: document.getElementById("modele").value,
+                            objet_du_RDV:
+                                document.getElementById("objet_du_RDV").value,
+                            garage_ref: garageRef,
+                            appointment_day: mysqlDate,
+                            appointment_time: selectedTime + ":00",
+                        };
+
+                        fetch(
+                            "http://localhost:8000/api/appointments/verify2",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Accept: "application/json",
+                                },
+                                body: JSON.stringify(payload),
+                            }
+                        )
+                            .then((response) => {
+                                if (!response.ok) {
+                                    return response.json().then((err) => {
+                                        throw err;
+                                    });
+                                }
+                                return response.json();
+                            })
+                            .then((data) => {
+                                if (
+                                    data.message ===
+                                    "Appointment booked successfully!"
+                                ) {
+                                    const queryParam = data.account
+                                        ? "hzne2"
+                                        : "kmal4";
+                                    const url = `https://fixidev.com/success-page/?ejkn2=${queryParam}&garage_ref=${data.ref}`;
+
+                                    const form = document.createElement("form");
+                                    form.method = "POST";
+                                    form.action = url;
+
+                                    const appointmentInput =
+                                        document.createElement("input");
+                                    appointmentInput.type = "hidden";
+                                    appointmentInput.name = "appointment";
+                                    appointmentInput.value = JSON.stringify(
+                                        data.appointment
+                                    );
+
+                                    const garageInput =
+                                        document.createElement("input");
+                                    garageInput.type = "hidden";
+                                    garageInput.name = "garage";
+                                    garageInput.value = JSON.stringify(
+                                        data.garage
+                                    );
+
+                                    form.appendChild(appointmentInput);
+                                    form.appendChild(garageInput);
+                                    document.body.appendChild(form);
+                                    form.submit();
+                                } else {
+                                    showError(
+                                        data.message ||
+                                            "Code de vérification invalide."
+                                    );
+                                }
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                                showError(
+                                    error.message ||
+                                        "Une erreur est survenue lors de la vérification."
+                                );
+                            })
+                            .finally(() => {
+                                hideLoading();
+                            });
+                    });
+
+                document
+                    .querySelectorAll("[data-garage-ref]")
+                    .forEach((card) => {
+                        const ref = card.getAttribute("data-garage-ref");
+                        const container = card.querySelector(".slot-days");
+                        loadGarageSlots(ref, container);
+                    });
+            });
+        </script>
+    </body>
+</html>
