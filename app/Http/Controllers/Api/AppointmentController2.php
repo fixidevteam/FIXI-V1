@@ -124,6 +124,116 @@ class AppointmentController2 extends Controller
         ]);
     }
 
+    // new method :
+    public function getAvailableDatesShort2(Request $request)
+    {
+        $garage_ref = $request->query('garage_ref');
+
+        // Fetch all schedules for this garage
+        $schedules = GarageSchedule::where('garage_ref', $garage_ref)->get();
+
+        $availability = [];
+        foreach ($schedules as $schedule) {
+            $dayOfWeek = $schedule->available_day;
+            $availability[$dayOfWeek] = true;
+        }
+
+        // Generate available dates for the next 7 days (like in the screenshot)
+        $dates = [];
+        $today = Carbon::today();
+        for ($i = 0; $i < 7; $i++) {
+            $date = $today->copy()->addDays($i);
+            $dayOfWeek = $date->dayOfWeek;
+
+            if (isset($availability[$dayOfWeek])) {
+                $dates[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'day_name' => $date->shortDayName, // "dim", "lun", etc.
+                    'day_number' => $date->day,
+                    'month_short' => $date->shortMonthName, // "avr", "mai", etc.
+                ];
+            }
+        }
+
+        // Fetch unavailable days
+        $disabledDates = jour_indisponible::where('garage_ref', $garage_ref)
+            ->pluck('date')
+            ->toArray();
+
+        // Fetch services from the garages table (stored as JSON)
+        $garage = Garage::where('ref', $garage_ref)->first();
+        $services =  $garage ? $garage->services : [];
+
+        // Fetch marques from the marque_voitures table
+        $marques = MarqueVoiture::pluck('marque')->toArray();
+
+
+        return response()->json([
+            'available_dates' => $dates,
+            'unavailable_dates' => $disabledDates,
+            'services' => $services,
+            'marques' => $marques,
+        ]);
+    }
+
+    public function getTimeSlotsShort2(Request $request)
+    {
+        $garage_ref = $request->query('garage_ref');
+        $selectedDate = $request->query('date');
+
+        // Get the day of the week for the selected date
+        $dayOfWeek = Carbon::parse($selectedDate)->dayOfWeek;
+
+        // Fetch the garage's schedule for the selected day
+        $schedule = GarageSchedule::where('garage_ref', $garage_ref)
+            ->where('available_day', $dayOfWeek)
+            ->first();
+
+        if (!$schedule) {
+            return response()->json([
+                'time_slots' => [],
+            ]);
+        }
+
+        // Fetch unavailable periods for the selected date
+        $unavailableTimes = GarageUnavailableTime::where('garage_ref', $garage_ref)
+            ->where('unavailable_day', $dayOfWeek)
+            ->get();
+
+        // Generate available time slots (every 20 minutes like in the screenshot)
+        $fromTime = Carbon::createFromFormat('H:i:s', $schedule->available_from);
+        $toTime = Carbon::createFromFormat('H:i:s', $schedule->available_to);
+        $slots = [];
+
+        while ($fromTime->lessThan($toTime)) {
+            $timeSlot = $fromTime->format('H:i:s');
+            $displayTime = $fromTime->format('H:i'); // Format without seconds
+
+            // Check if the slot falls within an unavailable period
+            $isUnavailable = $unavailableTimes->contains(function ($unavailable) use ($timeSlot) {
+                return $timeSlot >= $unavailable->unavailable_from && $timeSlot < $unavailable->unavailable_to;
+            });
+
+            // Check if the slot is already booked and is not cancelled
+            $isBooked = Appointment::where('garage_ref', $garage_ref)
+                ->where('appointment_day', $selectedDate)
+                ->where('appointment_time', $timeSlot)
+                ->where('status', '!=', 'annulé')
+                ->exists();
+
+            if (!$isUnavailable && !$isBooked) {
+                $slots[] = $displayTime;
+            }
+
+            $fromTime->addHour(); // 60-minute intervals 
+        }
+
+        return response()->json([
+            'time_slots' => $slots,
+        ]);
+    }
+    // close new method
+
     public function bookAppointment(Request $request)
     {
         // Validate the request
