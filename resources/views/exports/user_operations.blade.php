@@ -58,7 +58,7 @@
             @foreach ($operations as $operation)
                 <tr>
                     <td>{{ $operation->voiture->numero_immatriculation }}</td>
-                    <td>{{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? 'N/A' }}</td>
+                    <td>{{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? $operation->categorie }}</td>
                     <td>{{ $operation->nom === 'Autre' ? $operation->autre_operation : ($operationsAll->where('id', $operation->nom)->first()->nom_operation ?? 'N/A') }}</td>
                     <td>{{ $garages->where('id', $operation->garage_id)->first()->name ?? 'N/A' }}</td>
                     <td>{{ $operation->date_operation ?? 'N/A' }}</td>

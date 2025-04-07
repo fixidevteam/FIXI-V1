@@ -408,7 +408,7 @@
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                   <a href="{{ route('operation.show',$operation->id) }}">
                     {{
-                      $categories->where('id',$operation->categorie)->first()->nom_categorie ;
+                      $categories->where('id',$operation->categorie)->first()->nom_categorie ?? $operation->categorie;
                     }}
                   </a>
                 </th>

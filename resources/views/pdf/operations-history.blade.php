@@ -178,7 +178,7 @@
             <tr>
                 <td>{{ $operation->voiture->marque }} {{ $operation->voiture->modele }}</td>
                 <td>{{ $operation->voiture->numero_immatriculation }}</td>
-                <td>{{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? 'N/A' }}</td>
+                <td>{{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? $operation->categorie }}</td>
                 <td>
                     {{
                         $operation->nom === 'Autre' 

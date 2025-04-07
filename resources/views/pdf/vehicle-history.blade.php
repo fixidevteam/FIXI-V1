@@ -142,7 +142,7 @@
             <tr>
                 <!-- Catégorie -->
                 <td>
-                    {{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? 'N/A' }}
+                    {{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? $operation->categorie }}
                 </td>
 
                 <!-- Opération -->

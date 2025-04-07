@@ -158,7 +158,7 @@
         <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Details d'operation</h2>
         {{-- details of operation --}}
         <div class="flex justify-between items-center my-6">
-          <h3 class="text-xl font-medium leading-9 tracking-tight text-gray-900">{{$categories->where('id',$operation->categorie)->first()->nom_categorie ; }}</h3>
+          <h3 class="text-xl font-medium leading-9 tracking-tight text-gray-900">{{$categories->where('id',$operation->categorie)->first()->nom_categorie ?? $operation->categorie; }}</h3>
           <div class="flex items-center">
             <a href="{{route('operation.edit',$operation)}}">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
