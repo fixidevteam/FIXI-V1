@@ -183,7 +183,7 @@
                           @php
                           $categorie = App\Models\nom_categorie::find($operation->categorie);
                           @endphp
-                          {{$categorie->nom_categorie}}
+                          {{$categorie->nom_categorie ??  $operation->categorie}}
                         </p>
                         <p class="text-sm text-gray-500 truncate">
                           @php

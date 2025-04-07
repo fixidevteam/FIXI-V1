@@ -40,10 +40,9 @@ class MechanicConvertRdvToOperation extends Controller
                 'marque' => ['required', 'max:30'],
                 'modele' => ['required', 'max:30'],
             ]);
-        }else{
+        } else {
             $data = $request->validate([
                 'voiture_id' => ['required'], // 1 to 6 digits
-                
             ]);
         }
 

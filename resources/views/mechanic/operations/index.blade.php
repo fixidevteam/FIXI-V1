@@ -85,7 +85,7 @@
                                             </a>
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? 'N/A' }}
+                                            {{ $categories->where('id', $operation->categorie)->first()->nom_categorie ?? $operation->categorie }}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ 
