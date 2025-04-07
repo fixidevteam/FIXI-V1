@@ -14,8 +14,8 @@
                 theme: {
                     extend: {
                         colors: {
-                            primary: "#EF4444",
-                            secondary: "#EF4456",
+                            primary: "#BB0102",
+                            secondary: "#BB0105",
                         },
                     },
                 },
@@ -216,8 +216,13 @@
                     Un code de vérification a été envoyé à votre téléphone.
                     Veuillez le saisir ci-dessous :
                 </p>
+                <!-- Error Message Container -->
+                <div
+                    id="error-message"
+                    class="hidden p-4 mb-2 text-sm text-red-600 bg-red-50 rounded-lg"
+                ></div>
 
-                <form id="verificationForm" method="POST">
+                <form id="verificationForm">
                     <div class="mb-4">
                         <label
                             for="verificationCode"
@@ -342,6 +347,26 @@
                         document.getElementById("error-message");
                     errorMessageDiv.innerText = message;
                     errorMessageDiv.classList.remove("hidden");
+                    errorMessageDiv.classList.remove("text-green-600");
+                    errorMessageDiv.classList.add("text-red-600");
+                }
+
+                // Function to show success messages
+                function showSuccess(message) {
+                    const errorMessageDiv =
+                        document.getElementById("error-message");
+                    errorMessageDiv.innerText = message;
+                    errorMessageDiv.classList.remove("hidden");
+                    errorMessageDiv.classList.remove("text-red-600");
+                    errorMessageDiv.classList.add("text-green-600");
+                }
+
+                // Function to clear error messages
+                function clearError() {
+                    const errorMessageDiv =
+                        document.getElementById("error-message");
+                    errorMessageDiv.innerText = "";
+                    errorMessageDiv.classList.add("hidden");
                 }
 
                 // Initialize the app
@@ -772,7 +797,7 @@
                         }
                     } catch (error) {
                         console.error("Error booking appointment:", error);
-                        alert(
+                        showError(
                             "Une erreur est survenue lors de la réservation. Veuillez réessayer."
                         );
                     } finally {
@@ -789,6 +814,11 @@
                     let verificationCode = document
                         .getElementById("verificationCode")
                         .value.trim();
+
+                    if (!verificationCode) {
+                        showError("Veuillez entrer le code de vérification.");
+                        return;
+                    }
 
                     // Show loading state
                     verifyText.classList.add("hidden");
@@ -841,14 +871,65 @@
                             stopCountdown();
                             verificationModal.classList.add("hidden");
                             successModal.classList.remove("hidden");
+                            if (data.account) {
+                                let form = document.createElement("form");
+                                form.method = "POST";
+                                form.action = `https://fixidev.com/success-page/?ejkn2=hzne2&garage_ref=${data.ref}`;
+
+                                // Add appointment data
+                                let appointmentInput =
+                                    document.createElement("input");
+                                appointmentInput.type = "hidden";
+                                appointmentInput.name = "appointment";
+                                appointmentInput.value = JSON.stringify(
+                                    data.appointment
+                                );
+
+                                // Add garage data
+                                let garageInput =
+                                    document.createElement("input");
+                                garageInput.type = "hidden";
+                                garageInput.name = "garage";
+                                garageInput.value = JSON.stringify(data.garage);
+
+                                form.appendChild(appointmentInput);
+                                form.appendChild(garageInput);
+                                document.body.appendChild(form);
+                                form.submit();
+                            } else {
+                                let form = document.createElement("form");
+                                form.method = "POST";
+                                form.action = `https://fixidev.com/success-page/?ejkn2=kmal4&garage_ref=${data.ref}`;
+
+                                // Add appointment data
+                                let appointmentInput =
+                                    document.createElement("input");
+                                appointmentInput.type = "hidden";
+                                appointmentInput.name = "appointment";
+                                appointmentInput.value = JSON.stringify(
+                                    data.appointment
+                                );
+
+                                // Add garage data
+                                let garageInput =
+                                    document.createElement("input");
+                                garageInput.type = "hidden";
+                                garageInput.name = "garage";
+                                garageInput.value = JSON.stringify(data.garage);
+
+                                form.appendChild(appointmentInput);
+                                form.appendChild(garageInput);
+                                document.body.appendChild(form);
+                                form.submit();
+                            }
                         } else {
-                            alert(
+                            showError(
                                 "Code de vérification incorrect. Veuillez réessayer."
                             );
                         }
                     } catch (error) {
                         console.error("Error verifying appointment:", error);
-                        alert(
+                        showError(
                             "Une erreur est survenue lors de la vérification. Veuillez réessayer."
                         );
                     } finally {
@@ -888,13 +969,18 @@
                         countdownSeconds = 60;
                         startCountdown();
 
-                        alert("Code de vérification renvoyé avec succès!");
+                        showSuccess(
+                            "Code de vérification renvoyé avec succès!"
+                        );
+                        setTimeout(() => {
+                            clearError();
+                        }, 3000);
                     } catch (error) {
                         console.error(
                             "Error resending verification code:",
                             error
                         );
-                        alert(
+                        showError(
                             "Une erreur est survenue lors de l'envoi du code. Veuillez réessayer."
                         );
                     }

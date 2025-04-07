@@ -1,0 +1,876 @@
+<?php
+$acf_link = get_field('garage_ref'); // Replace with your actual ACF field name
+if (!empty($acf_link)) {
+?>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prendre Rendez-vous</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: "#BB0102",
+          secondary: "#BB0105",
+        },
+      },
+    },
+  };
+  </script>
+</head>
+
+<body class="bg-gray-50">
+  <!-- Main Container -->
+  <div class="max-w-md mx-auto  bg-white shadow-md rounded-lg overflow-hidden my-8">
+    <!-- Date Selection Section -->
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">
+        Choisir une date
+      </h2>
+
+      <div class="flex justify-between space-x-2 mb-6 overflow-x-auto pb-2" id="dateSelector">
+        <!-- Loading state -->
+        <div class="animate-pulse flex space-x-2">
+          <div class="h-16 w-16 bg-gray-200 rounded-lg"></div>
+          <div class="h-16 w-16 bg-gray-200 rounded-lg"></div>
+          <div class="h-16 w-16 bg-gray-200 rounded-lg"></div>
+          <div class="h-16 w-16 bg-gray-200 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200"></div>
+
+    <!-- Time Slots Section -->
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">
+        Choisir un créneau
+      </h2>
+
+      <div class="grid grid-cols-3 gap-3" id="timeSlots">
+        <!-- Loading state -->
+        <div class="animate-pulse space-y-2 col-span-3">
+          <div class="h-10 bg-gray-200 rounded-lg"></div>
+          <div class="h-10 bg-gray-200 rounded-lg"></div>
+          <div class="h-10 bg-gray-200 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal (hidden by default) -->
+  <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-gray-800">
+          Confirmer le rendez-vous
+        </h3>
+        <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="mb-4">
+        <p class="font-medium">
+          Date: <span id="modalDate" class="font-normal"></span>
+        </p>
+        <p class="font-medium">
+          Heure: <span id="modalTime" class="font-normal"></span>
+        </p>
+      </div>
+
+      <!-- Error Message Container -->
+      <div id="error-message" class="hidden p-4 mb-2 text-sm text-red-600 bg-red-50 rounded-lg"></div>
+      <!-- Error Message Container close -->
+      <form id="bookingForm">
+        <div class="mb-4">
+          <input type="text" id="fullName" name="fullName" placeholder="Votre nom"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+        </div>
+
+        <div class="mb-4">
+          <input type="tel" id="phone" name="phone" placeholder="Votre numéro de téléphone"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+        </div>
+
+        <div class="mb-4">
+          <input type="email" id="email" name="email" placeholder="Adresse E-mail"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+        </div>
+
+        <div class="mb-4">
+          <select id="categorie_de_service" name="categorie_de_service"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></select>
+        </div>
+
+        <div class="mb-4">
+          <select id="modele" name="modele"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></select>
+        </div>
+
+        <div class="mb-4">
+          <input type="text" id="objet_du_RDV" name="objet_du_RDV" placeholder="Message (optionnel)"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+        </div>
+
+        <div class="flex justify-end space-x-3 mt-6">
+          <button type="button" id="cancelBooking"
+            class="px-4 py-2 !border !border-gray-300 !bg-white rounded-md !text-gray-700 !hover:bg-gray-100">
+            Annuler
+          </button>
+          <button type="submit" id="confirmBtn"
+            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition flex items-center justify-center">
+            <span id="confirmText">Confirmer</span>
+            <span id="confirmSpinner" class="hidden ml-2">
+              <i class="fas fa-spinner fa-spin"></i>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Verification Modal -->
+  <div id="verificationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Vérification</h3>
+
+      <p class="mb-4">
+        Un code de vérification a été envoyé à votre téléphone. Veuillez le
+        saisir ci-dessous :
+      </p>
+      <!-- Error Message Container -->
+      <div id="error-message-verification" class="hidden p-4 mb-4 text-sm text-red-600 bg-red-50 rounded-lg"></div>
+
+      <form id="verificationForm">
+        <div class="mb-4">
+          <label for="verificationCode" class="block text-gray-700 mb-2">Code de vérification</label>
+          <input type="text" id="verificationCode" required maxlength="6"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md text-center text-xl font-mono focus:outline-none focus:ring-2 focus:ring-primary" />
+        </div>
+
+        <div class="flex justify-between items-center mb-6">
+          <button type="button" id="resendCode" class="!text-primary text-sm !hover:underline !bg-transparent">
+            Renvoyer le code
+          </button>
+          <span id="countdown" class="text-sm text-gray-500">1:00</span>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <button type="button" id="cancelVerification"
+            class="px-4 py-2 !border !border-gray-300 !bg-white rounded-md !text-gray-700 !hover:bg-gray-100">
+            Annuler
+          </button>
+          <button type="submit" id="verifyBtn"
+            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition flex items-center justify-center">
+            <span id="verifyText">Vérifier</span>
+            <span id="verifySpinner" class="hidden ml-2">
+              <i class="fas fa-spinner fa-spin"></i>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4 text-center">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check text-green-500 text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-800 mb-2">
+        Rendez-vous confirmé!
+      </h3>
+      <p class="text-gray-600 mb-6">
+        Votre rendez-vous a été enregistré avec succès.
+      </p>
+      <button id="closeSuccessModal" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary transition">
+        Fermer
+      </button>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // DOM Elements
+    const dateSelector = document.getElementById("dateSelector");
+    const timeSlots = document.getElementById("timeSlots");
+    const bookingModal = document.getElementById("bookingModal");
+    const verificationModal = document.getElementById("verificationModal");
+    const successModal = document.getElementById("successModal");
+    const closeModal = document.getElementById("closeModal");
+    const cancelBooking = document.getElementById("cancelBooking");
+    const bookingForm = document.getElementById("bookingForm");
+    const verificationForm = document.getElementById("verificationForm");
+    const resendCode = document.getElementById("resendCode");
+    const cancelVerification =
+      document.getElementById("cancelVerification");
+    const closeSuccessModal = document.getElementById("closeSuccessModal");
+    const modalDate = document.getElementById("modalDate");
+    const modalTime = document.getElementById("modalTime");
+    const countdown = document.getElementById("countdown");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const confirmText = document.getElementById("confirmText");
+    const confirmSpinner = document.getElementById("confirmSpinner");
+    const verifyBtn = document.getElementById("verifyBtn");
+    const verifyText = document.getElementById("verifyText");
+    const verifySpinner = document.getElementById("verifySpinner");
+
+    // State variables
+    let selectedDate = null;
+    let selectedTime = null;
+    let verificationTimer = null;
+    let countdownSeconds = 60;
+    let garageRef = "<?php echo $acf_link; ?>";
+    let allTimeSlots = [];
+    let showingAllSlots = false;
+
+    // Function to show error messages
+    function showError(message) {
+      const errorMessageDiv = document.getElementById("error-message");
+      errorMessageDiv.innerText = message;
+      errorMessageDiv.classList.remove("hidden");
+      errorMessageDiv.classList.remove("text-green-600");
+      errorMessageDiv.classList.add("text-red-600");
+    }
+
+    function showErrorVerification(message) {
+      const errorMessageDiv = document.getElementById(
+        "error-message-verification"
+      );
+      errorMessageDiv.innerText = message;
+      errorMessageDiv.classList.remove("hidden");
+      errorMessageDiv.classList.remove("text-green-600");
+      errorMessageDiv.classList.add("text-red-600");
+    }
+
+    // Function to show success messages
+    function showSuccess(message) {
+      const errorMessageDiv = document.getElementById("error-message");
+      errorMessageDiv.innerText = message;
+      errorMessageDiv.classList.remove("hidden");
+      errorMessageDiv.classList.remove("text-red-600");
+      errorMessageDiv.classList.add("text-green-600");
+    }
+
+    // Function to clear error messages
+    function clearError() {
+      const errorMessageDiv = document.getElementById("error-message");
+      errorMessageDiv.innerText = "";
+      errorMessageDiv.classList.add("hidden");
+    }
+
+    // Initialize the app
+    fetchAvailableDates();
+
+    // Event Listeners
+    closeModal.addEventListener("click", () =>
+      bookingModal.classList.add("hidden")
+    );
+    cancelBooking.addEventListener("click", () =>
+      bookingModal.classList.add("hidden")
+    );
+    closeSuccessModal.addEventListener("click", () =>
+      successModal.classList.add("hidden")
+    );
+    cancelVerification.addEventListener("click", () => {
+      verificationModal.classList.add("hidden");
+      stopCountdown();
+    });
+
+    bookingForm.addEventListener("submit", handleBookingSubmit);
+    verificationForm.addEventListener("submit", handleVerificationSubmit);
+    resendCode.addEventListener("click", handleResendCode);
+
+    // Functions
+    async function fetchAvailableDates() {
+      try {
+        dateSelector.innerHTML = `
+                        <div class="animate-pulse flex space-x-2">
+                            ${Array(7)
+                              .fill()
+                              .map(
+                                () =>
+                                  '<div class="h-16 w-16 bg-gray-200 rounded-lg"></div>'
+                              )
+                              .join("")}
+                        </div>
+                    `;
+
+        const response = await fetch(
+          `https://fixidev.com/fixiapp/api/available-datesShort2?garage_ref=${garageRef}`
+        );
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        const data = await response.json();
+        console.log(data);
+
+        renderDates(data.available_dates, data.unavailable_dates);
+
+        // Select first available date by default
+        if (data.available_dates.length > 0) {
+          selectDate(data.available_dates[0].date);
+        }
+        // Populate services dropdown
+        if (data.services && data.services.length > 0) {
+          populateServicesDropdown(data.services);
+        }
+
+        // Populate marques input with datalist
+        if (data.marques && data.marques.length > 0) {
+          populateMarquesInput(data.marques);
+        }
+      } catch (error) {
+        console.error("Error fetching dates:", error);
+        dateSelector.innerHTML = `
+                        <div class="text-center py-4 text-red-500">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            Erreur lors du chargement des dates. Veuillez réessayer.
+                        </div>
+                    `;
+      }
+    }
+
+    // Function to populate the services dropdown
+    function populateServicesDropdown(services) {
+      const serviceMapping = {
+        Mécanique: "Services d'un garage mécanique",
+        Lavage: "Services d'un garage de lavage",
+        Carrosserie: "Services d'un garage de carrosserie",
+        Pneumatique: "Services d'un garage pneumatique",
+        Dépannage: "Services d'un garage dépannage",
+      };
+      const servicesSelect = document.getElementById(
+        "categorie_de_service"
+      );
+      servicesSelect.innerHTML = ""; // Clear existing options
+
+      // Add a default option
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Choisir le domaine";
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      servicesSelect.appendChild(defaultOption);
+
+      services.forEach((service) => {
+        const fullServiceName = serviceMapping[service] || service;
+        const option = document.createElement("option");
+        option.value = fullServiceName;
+        option.textContent = fullServiceName;
+        servicesSelect.appendChild(option);
+      });
+    }
+
+    // Function to populate the marques input with a datalist
+    function populateMarquesInput(marques) {
+      const marquesInput = document.getElementById("modele");
+      marquesInput.innerHTML = ""; // Clear existing options
+
+      // Add a default option
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Sélectionnez une marque";
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      marquesInput.appendChild(defaultOption);
+
+      // Add marques as options
+      marques.forEach((marque) => {
+        const option = document.createElement("option");
+        option.value = marque;
+        option.textContent = marque;
+        marquesInput.appendChild(option);
+      });
+    }
+
+    async function fetchTimeSlots(date) {
+      try {
+        timeSlots.innerHTML = `
+                        <div class="animate-pulse space-y-2 col-span-3">
+                            ${Array(6)
+                              .fill()
+                              .map(
+                                () =>
+                                  '<div class="h-10 bg-gray-200 rounded-lg"></div>'
+                              )
+                              .join("")}
+                        </div>
+                    `;
+
+        const response = await fetch(
+          `https://fixidev.com/fixiapp/api/time-slotsShort2?garage_ref=${garageRef}&date=${date}`
+        );
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        const data = await response.json();
+        allTimeSlots = data.time_slots;
+        showingAllSlots = false;
+        renderTimeSlots();
+      } catch (error) {
+        console.error("Error fetching time slots:", error);
+        timeSlots.innerHTML = `
+                        <div class="text-center py-4 text-red-500 col-span-3">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            Erreur lors du chargement des créneaux. Veuillez réessayer.
+                        </div>
+                    `;
+      }
+    }
+
+    function renderTimeSlots() {
+      timeSlots.innerHTML = "";
+
+      if (allTimeSlots.length === 0) {
+        timeSlots.innerHTML = `
+                        <div class="text-center py-4 text-gray-500 col-span-3">
+                            Aucun créneau disponible pour cette date.
+                        </div>
+                    `;
+        return;
+      }
+
+      // Show only first 6 slots if not showing all
+      const slotsToShow = showingAllSlots ?
+        allTimeSlots :
+        allTimeSlots.slice(0, 6);
+
+      slotsToShow.forEach((slot) => {
+        const slotElement = document.createElement("div");
+        slotElement.className =
+          "text-center py-2 border rounded-lg cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition";
+        slotElement.textContent = slot;
+        slotElement.addEventListener("click", () => selectTimeSlot(slot));
+        timeSlots.appendChild(slotElement);
+      });
+
+      // Add toggle button if there are more than 6 slots
+      if (allTimeSlots.length > 6) {
+        const toggleButton = document.createElement("div");
+        toggleButton.className =
+          "text-center py-2 text-primary cursor-pointer hover:underline col-span-3";
+        toggleButton.textContent = showingAllSlots ?
+          "Voir moins" :
+          "Voir plus...";
+        toggleButton.addEventListener("click", () => {
+          showingAllSlots = !showingAllSlots;
+          renderTimeSlots();
+        });
+        timeSlots.appendChild(toggleButton);
+      }
+    }
+
+    function renderDates(dates, unavailableDates) {
+      dateSelector.innerHTML = "";
+
+      dates.forEach((date) => {
+        const dateObj = new Date(date.date);
+        const isUnavailable = unavailableDates.includes(date.date);
+
+        const dateElement = document.createElement("div");
+        dateElement.className = `flex-shrink-0 w-16 text-center py-2 border rounded-lg transition ${
+              isUnavailable
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "cursor-pointer hover:bg-primary hover:text-white hover:border-primary"
+            }`;
+
+        dateElement.innerHTML = `
+                        <div class="font-medium">${getShortDayName(
+                          dateObj
+                        )}</div>
+                        <div class="text-sm">${dateObj.getDate()} ${getShortMonthName(
+              dateObj
+            )}</div>
+                    `;
+
+        if (!isUnavailable) {
+          dateElement.addEventListener("click", () =>
+            selectDate(date.date)
+          );
+        }
+
+        dateSelector.appendChild(dateElement);
+      });
+    }
+
+    function selectDate(date) {
+      selectedDate = date;
+
+      // Update UI
+      const dateElements = dateSelector.querySelectorAll("div");
+      const dateObj = new Date(date);
+
+      dateElements.forEach((el) => {
+        const elDate = el.textContent.match(/\d+/)?. [0];
+        if (elDate && parseInt(elDate) === dateObj.getDate()) {
+          el.classList.add("bg-primary", "text-white", "border-primary");
+          el.classList.remove(
+            "hover:bg-primary",
+            "hover:text-white",
+            "hover:border-primary"
+          );
+        } else {
+          el.classList.remove("bg-primary", "text-white", "border-primary");
+          if (!el.classList.contains("bg-gray-100")) {
+            el.classList.add(
+              "hover:bg-primary",
+              "hover:text-white",
+              "hover:border-primary"
+            );
+          }
+        }
+      });
+
+      fetchTimeSlots(date);
+    }
+
+    function selectTimeSlot(time) {
+      selectedTime = time;
+
+      // Update UI
+      const slotElements = timeSlots.querySelectorAll("div");
+      slotElements.forEach((el) => {
+        if (el.textContent === time) {
+          el.classList.add("bg-primary", "text-white", "border-primary");
+        } else {
+          el.classList.remove("bg-primary", "text-white", "border-primary");
+          if (
+            !el.classList.contains("text-primary") &&
+            !el.classList.contains("text-gray-400")
+          ) {
+            el.classList.add(
+              "hover:bg-primary",
+              "hover:text-white",
+              "hover:border-primary"
+            );
+          }
+        }
+      });
+
+      // Show booking modal
+      modalDate.textContent = formatDateForDisplay(selectedDate);
+      modalTime.textContent = selectedTime;
+      bookingModal.classList.remove("hidden");
+    }
+
+    async function handleBookingSubmit(e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      let categorie_de_service = document.getElementById(
+        "categorie_de_service"
+      ).value;
+      let modele = document.getElementById("modele").value;
+      let objet_du_RDV = document
+        .getElementById("objet_du_RDV")
+        .value.trim();
+
+      // Validate form fields one by one
+      if (!fullName) {
+        showError("Le nom est obligatoire.");
+        document.getElementById("fullName").classList.add("border-red-500");
+        return;
+      } else {
+        document
+          .getElementById("fullName")
+          .classList.remove("border-red-500");
+      }
+      // First check if empty
+      if (!phone) {
+        showError("Veuillez entrer votre numéro de téléphone.");
+        document.getElementById("phone").classList.add("!border-red-500");
+        return;
+      }
+
+      // Then validate Moroccan phone format
+      const phoneRegex = /^(?:\+212|0)([6-7]\d{8})$/;
+      if (!phoneRegex.test(phone)) {
+        showError("Format de téléphone invalide.");
+        document.getElementById("phone").classList.add("!border-red-500");
+        return;
+      } else {
+        document
+          .getElementById("phone")
+          .classList.remove("!border-red-500");
+      }
+
+      if (categorie_de_service === "") {
+        showError("Le domaine est obligatoire.");
+        document
+          .getElementById("categorie_de_service")
+          .classList.add("border-red-500");
+        return;
+      } else {
+        document
+          .getElementById("categorie_de_service")
+          .classList.remove("border-red-500");
+      }
+
+      // Show loading state
+      confirmText.classList.add("hidden");
+      confirmSpinner.classList.remove("hidden");
+      confirmBtn.disabled = true;
+
+      try {
+        const response = await fetch(
+          "https://fixidev.com/fixiapp/api/book-appointment2", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              full_name: fullName,
+              phone: phone,
+              email: email,
+              categorie_de_service: categorie_de_service,
+              modele: modele,
+              objet_du_RDV: objet_du_RDV,
+              garage_ref: garageRef,
+              appointment_day: selectedDate,
+              appointment_time: selectedTime + ":00",
+            }),
+          }
+        );
+
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        const data = await response.json();
+
+        if (data.status === "verification_required") {
+          bookingModal.classList.add("hidden");
+          startCountdown();
+          verificationModal.classList.remove("hidden");
+        } else {
+          bookingModal.classList.add("hidden");
+          successModal.classList.remove("hidden");
+        }
+      } catch (error) {
+        console.error("Error booking appointment:", error);
+        showError(
+          "Une erreur est survenue lors de la réservation. Veuillez réessayer."
+        );
+      } finally {
+        // Reset button state
+        confirmText.classList.remove("hidden");
+        confirmSpinner.classList.add("hidden");
+        confirmBtn.disabled = false;
+      }
+    }
+
+    async function handleVerificationSubmit(e) {
+      e.preventDefault();
+
+      let verificationCode = document
+        .getElementById("verificationCode")
+        .value.trim();
+
+      if (!verificationCode) {
+        showError("Veuillez entrer le code de vérification.");
+        return;
+      }
+
+      // Show loading state
+      verifyText.classList.add("hidden");
+      verifySpinner.classList.remove("hidden");
+      verifyBtn.disabled = true;
+
+      try {
+        const response = await fetch(
+          "https://fixidev.com/fixiapp/api/appointments/verify2", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              email: document.getElementById("email").value,
+              verification_code: verificationCode.toString(),
+              full_name: document.getElementById("fullName").value,
+              phone: document.getElementById("phone").value,
+              categorie_de_service: document.getElementById(
+                "categorie_de_service"
+              ).value,
+              modele: document.getElementById("modele").value,
+              objet_du_RDV: document.getElementById("objet_du_RDV").value,
+              garage_ref: garageRef,
+              appointment_day: selectedDate,
+              appointment_time: selectedTime + ":00",
+            }),
+          }
+        );
+
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        const data = await response.json();
+
+        if (data.message === "Appointment booked successfully!") {
+          stopCountdown();
+          verificationModal.classList.add("hidden");
+          successModal.classList.remove("hidden");
+          if (data.account) {
+            let form = document.createElement("form");
+            form.method = "POST";
+            form.action = `https://fixidev.com/success-page/?ejkn2=hzne2&garage_ref=${data.ref}`;
+
+            // Add appointment data
+            let appointmentInput = document.createElement("input");
+            appointmentInput.type = "hidden";
+            appointmentInput.name = "appointment";
+            appointmentInput.value = JSON.stringify(data.appointment);
+
+            // Add garage data
+            let garageInput = document.createElement("input");
+            garageInput.type = "hidden";
+            garageInput.name = "garage";
+            garageInput.value = JSON.stringify(data.garage);
+
+            form.appendChild(appointmentInput);
+            form.appendChild(garageInput);
+            document.body.appendChild(form);
+            form.submit();
+          } else {
+            let form = document.createElement("form");
+            form.method = "POST";
+            form.action = `https://fixidev.com/success-page/?ejkn2=kmal4&garage_ref=${data.ref}`;
+
+            // Add appointment data
+            let appointmentInput = document.createElement("input");
+            appointmentInput.type = "hidden";
+            appointmentInput.name = "appointment";
+            appointmentInput.value = JSON.stringify(data.appointment);
+
+            // Add garage data
+            let garageInput = document.createElement("input");
+            garageInput.type = "hidden";
+            garageInput.name = "garage";
+            garageInput.value = JSON.stringify(data.garage);
+
+            form.appendChild(appointmentInput);
+            form.appendChild(garageInput);
+            document.body.appendChild(form);
+            form.submit();
+          }
+        } else {
+          showErrorVerification("Code de vérification incorrect. Veuillez réessayer.");
+        }
+      } catch (error) {
+        console.error("Error verifying appointment:", error);
+        showErrorVerification(
+          "Code de vérification incorrect. Veuillez réessayer."
+        );
+      } finally {
+        // Reset button state
+        verifyText.classList.remove("hidden");
+        verifySpinner.classList.add("hidden");
+        verifyBtn.disabled = false;
+      }
+    }
+
+    async function handleResendCode() {
+      try {
+        const phone = document.getElementById("phone").value;
+        const fullName = document.getElementById("fullName").value;
+
+        const response = await fetch(
+          "https://fixidev.com/fixiapp/api/resend-verification-code", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              phone: phone,
+              full_name: fullName,
+            }),
+          }
+        );
+
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        // Reset countdown
+        stopCountdown();
+        countdownSeconds = 60;
+        startCountdown();
+
+        showSuccess("Code de vérification renvoyé avec succès!");
+        setTimeout(() => {
+          clearError();
+        }, 3000);
+      } catch (error) {
+        console.error("Error resending verification code:", error);
+        showError(
+          "Une erreur est survenue lors de l'envoi du code. Veuillez réessayer."
+        );
+      }
+    }
+
+    function startCountdown() {
+      updateCountdownDisplay();
+      verificationTimer = setInterval(() => {
+        countdownSeconds--;
+        updateCountdownDisplay();
+
+        if (countdownSeconds <= 0) {
+          stopCountdown();
+        }
+      }, 1000);
+    }
+
+    function stopCountdown() {
+      clearInterval(verificationTimer);
+    }
+
+    function updateCountdownDisplay() {
+      const minutes = Math.floor(countdownSeconds / 60);
+      const seconds = countdownSeconds % 60;
+      countdown.textContent = `${minutes}:${seconds
+            .toString()
+            .padStart(2, "0")}`;
+    }
+
+    // Helper functions
+    function getShortDayName(date) {
+      const days = ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"];
+      return days[date.getDay()];
+    }
+
+    function getShortMonthName(date) {
+      const months = [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc.",
+      ];
+      return months[date.getMonth()];
+    }
+
+    function formatDateForDisplay(dateString) {
+      const date = new Date(dateString);
+      return `${date.getDate()} ${getShortMonthName(date)} ${date.getFullYear()}`;
+    }
+  });
+  </script>
+</body>
+
+</html>
+<?php
+} // Correctly close the if block inside PHP tags
+?>
