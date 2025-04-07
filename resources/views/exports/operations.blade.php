@@ -72,7 +72,7 @@
             @foreach ($operations as $operation)
                 <tr>
                     <td>{{ $operation->date_operation }}</td>
-                    <td>{{ $nom_categories->where('id', $operation->categorie)->first()->nom_categorie ?? 'N/A' }}</td>
+                    <td>{{ $nom_categories->where('id', $operation->categorie)->first()->nom_categorie ?? $operation->categorie }}</td>
                     <td>{{ $operation->nom === 'Autre' ? $operation->autre_operation : ($nom_operations->where('id', $operation->nom)->first()->nom_operation ?? 'N/A') }}</td>
                     <td>{{ $operation->kilometrage ? $operation->kilometrage . ' KM' : 'N/A' }}</td>
                     <td>{{ $operation->description ?? 'N/A' }}</td>
