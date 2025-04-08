@@ -140,7 +140,7 @@
               id="garageImage">
           </div>
 
-          {{-- Car Details in Two Columns --}}
+          {{-- garage Details in 3 Columns --}}
           <div class="flex flex-col md:flex-row gap-5 w-full justify-center md:justify-start">
             {{-- Column 1 --}}
             <div class="flex-1 space-y-4">
@@ -155,11 +155,21 @@
                 <p class="text-sm text-gray-500">{{$garage->ref}}</p>
               </div>
               <div>
-                <p class="capitalize text-sm font-medium text-gray-900"> Localisation</p>
+                <p class="capitalize text-sm font-medium text-gray-900"> Adresse</p>
                 <p class="text-sm text-gray-500">{{$garage->localisation ?? 'N/A'}}</p>
               </div>
               <div>
                 <p class="capitalize text-sm font-medium text-gray-900">Domaines</p>
+                <p class="text-sm text-gray-500">
+                  @if($garage->domaines)
+                  {{ implode(' / ', $garage->domaines) }}
+                  @else
+                  <span class="text-sm text-gray-500">N/A</span>
+                  @endif
+                </p>
+              </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">Services</p>
                 <p class="text-sm text-gray-500">
                   @if($garage->services)
                   {{ implode(' / ', $garage->services) }}
@@ -168,6 +178,19 @@
                   @endif
                 </p>
               </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">tiktok</p>
+                <p class="text-sm text-gray-500">
+                  {!!
+                  $garage->tiktok
+                  ? '<a href="'.$garage->tiktok.'" target="_blank" rel="noopener"><svg class="w-5 h-5 text-gray-500 transition duration-75 hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M8.88558 3.36262C11.8283 0.545795 16.5864 0.545795 19.5291 3.36262C22.4903 6.19714 22.4903 10.807 19.5291 13.6415L11.581 21.2495C9.49097 23.2502 6.11532 23.2502 4.02525 21.2495C1.91669 19.2312 1.91669 15.9446 4.02525 13.9263L11.859 6.42771C13.0964 5.24324 15.0896 5.24325 16.327 6.42771C17.5829 7.62989 17.5829 9.59316 16.327 10.7953L8.43612 18.3486C8.13689 18.635 7.66213 18.6247 7.37571 18.3254C7.08929 18.0262 7.09967 17.5515 7.39889 17.265L15.2898 9.71175C15.9286 9.10021 15.9286 8.12285 15.2898 7.5113C14.6324 6.88205 13.5536 6.88205 12.8962 7.5113L5.06248 15.0098C3.57095 16.4376 3.57095 18.7382 5.06248 20.1659C6.57251 21.6114 9.03377 21.6114 10.5438 20.1659L18.4919 12.5579C20.836 10.314 20.836 6.6901 18.4919 4.4462C16.1292 2.1846 12.2855 2.1846 9.9228 4.4462L3.51861 10.5764C3.21939 10.8628 2.74463 10.8524 2.45821 10.5532C2.17179 10.254 2.18216 9.77924 2.48139 9.49281L8.88558 3.36262Z" fill="currentColor" />
+                    </svg></a>'
+                  : 'N/A'
+                  !!}
+                </p>
+              </div>
+
             </div>
 
             {{-- Column 2 --}}
@@ -186,7 +209,7 @@
                 <p class="text-sm text-gray-500">
                   {!!
                   $garage->virtualGarage
-                  ? '<a href="'.$garage->virtualGarage.'" target="_blank" rel="noopener" ><svg class="w-5 h-5 text-gray-500 transition duration-75 hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  ? '<a href="'.$garage->virtualGarage.'" target="_blank" rel="noopener"><svg class="w-5 h-5 text-gray-500 transition duration-75 hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M8.88558 3.36262C11.8283 0.545795 16.5864 0.545795 19.5291 3.36262C22.4903 6.19714 22.4903 10.807 19.5291 13.6415L11.581 21.2495C9.49097 23.2502 6.11532 23.2502 4.02525 21.2495C1.91669 19.2312 1.91669 15.9446 4.02525 13.9263L11.859 6.42771C13.0964 5.24324 15.0896 5.24325 16.327 6.42771C17.5829 7.62989 17.5829 9.59316 16.327 10.7953L8.43612 18.3486C8.13689 18.635 7.66213 18.6247 7.37571 18.3254C7.08929 18.0262 7.09967 17.5515 7.39889 17.265L15.2898 9.71175C15.9286 9.10021 15.9286 8.12285 15.2898 7.5113C14.6324 6.88205 13.5536 6.88205 12.8962 7.5113L5.06248 15.0098C3.57095 16.4376 3.57095 18.7382 5.06248 20.1659C6.57251 21.6114 9.03377 21.6114 10.5438 20.1659L18.4919 12.5579C20.836 10.314 20.836 6.6901 18.4919 4.4462C16.1292 2.1846 12.2855 2.1846 9.9228 4.4462L3.51861 10.5764C3.21939 10.8628 2.74463 10.8524 2.45821 10.5532C2.17179 10.254 2.18216 9.77924 2.48139 9.49281L8.88558 3.36262Z" fill="currentColor" />
                     </svg></a>'
                   : 'N/A'
@@ -199,10 +222,71 @@
                   {{ $garage->confirmation ?? 'N/A'}}
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">linkedin</p>
+                <p class="text-sm text-gray-500">
+                  {!!
+                  $garage->linkedin
+                  ? '<a href="'.$garage->linkedin.'" target="_blank" rel="noopener"><svg class="w-5 h-5 text-gray-500 transition duration-75 hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M8.88558 3.36262C11.8283 0.545795 16.5864 0.545795 19.5291 3.36262C22.4903 6.19714 22.4903 10.807 19.5291 13.6415L11.581 21.2495C9.49097 23.2502 6.11532 23.2502 4.02525 21.2495C1.91669 19.2312 1.91669 15.9446 4.02525 13.9263L11.859 6.42771C13.0964 5.24324 15.0896 5.24325 16.327 6.42771C17.5829 7.62989 17.5829 9.59316 16.327 10.7953L8.43612 18.3486C8.13689 18.635 7.66213 18.6247 7.37571 18.3254C7.08929 18.0262 7.09967 17.5515 7.39889 17.265L15.2898 9.71175C15.9286 9.10021 15.9286 8.12285 15.2898 7.5113C14.6324 6.88205 13.5536 6.88205 12.8962 7.5113L5.06248 15.0098C3.57095 16.4376 3.57095 18.7382 5.06248 20.1659C6.57251 21.6114 9.03377 21.6114 10.5438 20.1659L18.4919 12.5579C20.836 10.314 20.836 6.6901 18.4919 4.4462C16.1292 2.1846 12.2855 2.1846 9.9228 4.4462L3.51861 10.5764C3.21939 10.8628 2.74463 10.8524 2.45821 10.5532C2.17179 10.254 2.18216 9.77924 2.48139 9.49281L8.88558 3.36262Z" fill="currentColor" />
+                    </svg></a>'
+                  : 'N/A'
+                  !!}
+                </p>
+              </div>
 
+            </div>
+            {{-- Column 3 --}}
+            <div class="flex-1 space-y-4">
+              {{-- location --}}
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">telephone</p>
+                <p class="text-sm text-gray-500">{{$garage->telephone ?? 'N/A'}}</p>
+              </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">fixe</p>
+                <p class="text-sm text-gray-500">{{$garage->fixe ?? 'N/A'}}</p>
+              </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">whatsapp</p>
+                <p class="text-sm text-gray-500">{{$garage->whatsapp ?? 'N/A'}}</p>
+              </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">instagram</p>
+                <p class="text-sm text-gray-500">
+                  {!!
+                  $garage->instagram
+                  ? '<a href="'.$garage->instagram.'" target="_blank" rel="noopener"><svg class="w-5 h-5 text-gray-500 transition duration-75 hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M8.88558 3.36262C11.8283 0.545795 16.5864 0.545795 19.5291 3.36262C22.4903 6.19714 22.4903 10.807 19.5291 13.6415L11.581 21.2495C9.49097 23.2502 6.11532 23.2502 4.02525 21.2495C1.91669 19.2312 1.91669 15.9446 4.02525 13.9263L11.859 6.42771C13.0964 5.24324 15.0896 5.24325 16.327 6.42771C17.5829 7.62989 17.5829 9.59316 16.327 10.7953L8.43612 18.3486C8.13689 18.635 7.66213 18.6247 7.37571 18.3254C7.08929 18.0262 7.09967 17.5515 7.39889 17.265L15.2898 9.71175C15.9286 9.10021 15.9286 8.12285 15.2898 7.5113C14.6324 6.88205 13.5536 6.88205 12.8962 7.5113L5.06248 15.0098C3.57095 16.4376 3.57095 18.7382 5.06248 20.1659C6.57251 21.6114 9.03377 21.6114 10.5438 20.1659L18.4919 12.5579C20.836 10.314 20.836 6.6901 18.4919 4.4462C16.1292 2.1846 12.2855 2.1846 9.9228 4.4462L3.51861 10.5764C3.21939 10.8628 2.74463 10.8524 2.45821 10.5532C2.17179 10.254 2.18216 9.77924 2.48139 9.49281L8.88558 3.36262Z" fill="currentColor" />
+                    </svg></a>'
+                  : 'N/A'
+                  !!}
+                </p>
+              </div>
+              <div>
+                <p class="capitalize text-sm font-medium text-gray-900">facebook</p>
+                <p class="text-sm text-gray-500">
+                  {!!
+                  $garage->facebook
+                  ? '<a href="'.$garage->facebook.'" target="_blank" rel="noopener"><svg class="w-5 h-5 text-gray-500 transition duration-75 hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M8.88558 3.36262C11.8283 0.545795 16.5864 0.545795 19.5291 3.36262C22.4903 6.19714 22.4903 10.807 19.5291 13.6415L11.581 21.2495C9.49097 23.2502 6.11532 23.2502 4.02525 21.2495C1.91669 19.2312 1.91669 15.9446 4.02525 13.9263L11.859 6.42771C13.0964 5.24324 15.0896 5.24325 16.327 6.42771C17.5829 7.62989 17.5829 9.59316 16.327 10.7953L8.43612 18.3486C8.13689 18.635 7.66213 18.6247 7.37571 18.3254C7.08929 18.0262 7.09967 17.5515 7.39889 17.265L15.2898 9.71175C15.9286 9.10021 15.9286 8.12285 15.2898 7.5113C14.6324 6.88205 13.5536 6.88205 12.8962 7.5113L5.06248 15.0098C3.57095 16.4376 3.57095 18.7382 5.06248 20.1659C6.57251 21.6114 9.03377 21.6114 10.5438 20.1659L18.4919 12.5579C20.836 10.314 20.836 6.6901 18.4919 4.4462C16.1292 2.1846 12.2855 2.1846 9.9228 4.4462L3.51861 10.5764C3.21939 10.8628 2.74463 10.8524 2.45821 10.5532C2.17179 10.254 2.18216 9.77924 2.48139 9.49281L8.88558 3.36262Z" fill="currentColor" />
+                    </svg></a>'
+                  : 'N/A'
+                  !!}
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        {{-- presentation --}}
+        <div class="w-full">
+          <p class="capitalize text-sm font-medium text-gray-900">presentation</p>
+          <p class="text-sm text-gray-500 break-words whitespace-normal w-full">
+            {{$garage->presentation ?? 'N/A'}}
+          </p>
+        </div>
       </div>
     </div>
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">

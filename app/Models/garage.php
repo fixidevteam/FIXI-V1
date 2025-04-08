@@ -20,13 +20,22 @@ class garage extends Model
         'user_id',
         'virtualGarage',
         'services',
+        'domaines',
         'confirmation',
+        'presentation',
         'telephone',
         'fixe',
-        'whatsapp'
+        'whatsapp',
+        'instagram',
+        'facebook',
+        'tiktok',
+        'linkedin',
+        'latitude',
+        'longitude',
     ];
     protected $casts = [
         'services' => 'array',
+        'domaines'=>'array'
     ];
     public function mechanics(): HasMany
     {

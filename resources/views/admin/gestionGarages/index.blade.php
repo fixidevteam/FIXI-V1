@@ -127,7 +127,7 @@
                                         quartier
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        localisation
+                                        Adresse
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Créé par

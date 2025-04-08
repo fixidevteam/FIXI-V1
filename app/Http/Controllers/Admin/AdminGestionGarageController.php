@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Domaine;
 use App\Models\garage;
 use App\Models\Quartier;
 use App\Models\Ville;
@@ -30,7 +31,8 @@ class AdminGestionGarageController extends Controller
         $villes = Ville::all();
         $selectedVille = old('ville');
         $quartiers = $selectedVille ? Quartier::where('ville_id', $selectedVille)->get() : collect();
-        return view('admin.gestionGarages.create', compact('villes', 'quartiers'));
+        $domains = Domaine::all();
+        return view('admin.gestionGarages.create', compact('villes', 'quartiers', 'domains'));
     }
 
     /**
@@ -38,14 +40,29 @@ class AdminGestionGarageController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->services);
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'localisation' => ['nullable', 'string'],
             'quartier' => ['nullable', 'string'],
             'ville' => ['required', 'string'],
+
             'virtualGarage' => ['nullable', 'string'],
+            'instagram' => ['nullable', 'string'],
+            'facebook' => ['nullable', 'string'],
+            'tiktok' => ['nullable', 'string'],
+            'linkedin' => ['nullable', 'string'],
+
+            'domaines' => ['nullable', 'array'],
             'services' => ['nullable', 'array'],
             'confirmation' => ['required', 'string'], // Expecting an array for services
+
+            'presentation' => ['required', 'string', 'max:1000'],
+            'telephone' => ['required', 'string'],
+            'fixe' => ['required', 'string'],
+            'whatsapp' => ['required', 'string'],
+            'latitude' => ['required', 'numeric'],
+            'longitude' => ['required', 'numeric'],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
         ]);
 
@@ -93,9 +110,11 @@ class AdminGestionGarageController extends Controller
         $selectedVille = old('ville');
         $quartiers = $selectedVille ? Quartier::where('ville_id', $selectedVille)->get() : collect();
         $garage = garage::find($id);
+        $domains = Domaine::all();
+
 
         if ($garage) {
-            return view('admin.gestionGarages.edit', compact('garage', 'villes', 'quartiers'));
+            return view('admin.gestionGarages.edit', compact('garage', 'villes', 'quartiers', 'domains'));
         }
         return back()->with('error', self::GARAGE_NOT_FOUND);
     }
@@ -107,20 +126,33 @@ class AdminGestionGarageController extends Controller
     {
         $garage = garage::findOrFail($id);
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
             'ref' => [
                 'required',
                 // Ensure the ref is unique, excluding the current garage being updated
                 Rule::unique('garages')->ignore($garage->id)
             ],
+            'name' => ['required', 'string', 'max:255'],
             'localisation' => ['nullable', 'string'],
             'quartier' => ['nullable', 'string'],
             'ville' => ['required', 'string'],
+
             'virtualGarage' => ['nullable', 'string'],
+            'instagram' => ['nullable', 'string'],
+            'facebook' => ['nullable', 'string'],
+            'tiktok' => ['nullable', 'string'],
+            'linkedin' => ['nullable', 'string'],
+
+            'domaines' => ['nullable', 'array'],
+            'services' => ['nullable', 'array'],
             'confirmation' => ['required', 'string'], // Expecting an array for services
-            'services' => ['nullable', 'array'], // Expecting an array for services
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120']
-        ]);
+
+            'presentation' => ['required', 'string', 'max:1000'],
+            'telephone' => ['required', 'string'],
+            'fixe' => ['required', 'string'],
+            'whatsapp' => ['required', 'string'],
+            'latitude' => ['required', 'numeric'],
+            'longitude' => ['required', 'numeric'],
+            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],        ]);
         // Fetch the ville name based on the ID
         $ville = Ville::findOrFail($request->ville); // Ensure the ville ID is valid
 
