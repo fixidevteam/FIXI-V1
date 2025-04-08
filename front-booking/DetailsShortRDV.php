@@ -27,7 +27,7 @@ if (!empty($acf_link)) {
 
 <body class="bg-gray-50">
   <!-- Main Container -->
-  <div class="max-w-md mx-auto  bg-white shadow-md rounded-lg overflow-hidden my-8">
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
     <!-- Date Selection Section -->
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-800 mb-4">
@@ -71,7 +71,7 @@ if (!empty($acf_link)) {
         <h3 class="text-xl font-bold text-gray-800">
           Confirmer le rendez-vous
         </h3>
-        <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+        <button id="closeModal" class="!text-gray-500 !hover:text-gray-700 !bg-transparent !border-none !shadow-none">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -720,7 +720,7 @@ if (!empty($acf_link)) {
           if (data.account) {
             let form = document.createElement("form");
             form.method = "POST";
-            form.action = `https://fixidev.com/success-page/?ejkn2=hzne2&garage_ref=${data.ref}`;
+            form.action = `https://fixidev.com/confirmation-rdv/?ejkn2=hzne2&garage_ref=${data.ref}`;
 
             // Add appointment data
             let appointmentInput = document.createElement("input");
@@ -741,7 +741,7 @@ if (!empty($acf_link)) {
           } else {
             let form = document.createElement("form");
             form.method = "POST";
-            form.action = `https://fixidev.com/success-page/?ejkn2=kmal4&garage_ref=${data.ref}`;
+            form.action = `https://fixidev.com/confirmation-rdv/?ejkn2=kmal4&garage_ref=${data.ref}`;
 
             // Add appointment data
             let appointmentInput = document.createElement("input");
@@ -873,4 +873,3 @@ if (!empty($acf_link)) {
 </html>
 <?php
 } // Correctly close the if block inside PHP tags
-?>

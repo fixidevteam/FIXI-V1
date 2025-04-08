@@ -153,7 +153,7 @@
           {{-- box 3 --}}
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
             <div>
-              <h3 class="mb-1 text-gray-500 md:text-lg">Domaine de service</h3>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Domaine</h3>
               <p class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</p>
             </div>
             <div>

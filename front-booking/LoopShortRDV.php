@@ -1,3 +1,4 @@
+<?php
 $garage_ref = get_field('garage_ref'); // Get the garage reference from ACF
 if (!empty($garage_ref)) {
 ?>
@@ -659,7 +660,7 @@ if (!empty($garage_ref)) {
           if (data.account) {
             let form = document.createElement("form");
             form.method = "POST";
-            form.action = `https://fixidev.com/success-page/?ejkn2=hzne2&garage_ref=${data.ref}`;
+            form.action = `https://fixidev.com/confirmation-rdv/?ejkn2=hzne2&garage_ref=${data.ref}`;
 
             // Add appointment data
             let appointmentInput = document.createElement("input");
@@ -680,7 +681,7 @@ if (!empty($garage_ref)) {
           } else {
             let form = document.createElement("form");
             form.method = "POST";
-            form.action = `https://fixidev.com/success-page/?ejkn2=kmal4&garage_ref=${data.ref}`;
+            form.action = `https://fixidev.com/confirmation-rdv/?ejkn2=kmal4&garage_ref=${data.ref}`;
 
             // Add appointment data
             let appointmentInput = document.createElement("input");
