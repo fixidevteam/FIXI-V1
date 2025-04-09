@@ -92,7 +92,7 @@
                                 {{ __('Sélectionnez une Ville') }}
                             </option>
                             @foreach($villes as $ville)
-                            <option value="{{ $ville->id }}" {{ old('ville', $garage->ville) == $ville->ville ? 'selected' : '' }}>
+                            <option value="{{ $ville->id }}" @if(old('ville', $garage->ville) == $ville->id || old('ville', $garage->ville) == $ville->ville) selected @endif>
                                 {{ $ville->ville }}
                             </option>
                             @endforeach
@@ -136,7 +136,7 @@
                                         name="domaines[]"
                                         value="{{ $domain->domaine }}"
                                         class="domain-checkbox w-4 h-4 text-black border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                        {{ in_array($domain->domaine, old('domaines', $garage->domaines )) ? 'checked' : '' }} />
+                                        {{ in_array($domain->domaine, old('domaines', $garage->domaines ?? [])) ? 'checked' : '' }} />
                                     <span class="ml-2 text-sm text-gray-600 font-medium">{{ $domain->domaine }}</span>
                                 </label>
 
@@ -246,45 +246,49 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const villeSelect = document.getElementById('ville');
-            const quartierSelect = document.getElementById('quartier');
+    document.addEventListener('DOMContentLoaded', () => {
+    const villeSelect = document.getElementById('ville');
+    const quartierSelect = document.getElementById('quartier');
 
-            function fetchQuartiers(villeId, preSelectedQuartier = null) {
-                quartierSelect.innerHTML = '<option value="" selected>{{ __("Chargement...") }}</option>';
+    function fetchQuartiers(villeId, preSelectedQuartier = null) {
+        if (!villeId) {
+            quartierSelect.innerHTML = '<option value="">{{ __("Sélectionnez un Quartier (Optionnel)") }}</option>';
+            return;
+        }
 
-                fetch(`/quartiers?ville_id=${villeId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        quartierSelect.innerHTML = '<option value="" selected>{{ __("Sélectionnez un quartier (Optionnel)") }}</option>';
-                        data.forEach(quartier => {
-                            const selected = preSelectedQuartier === quartier.quartier ? 'selected' : '';
-                            quartierSelect.innerHTML += `<option value="${quartier.quartier}" ${selected}>${quartier.quartier}</option>`;
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching quartiers:', error);
-                        quartierSelect.innerHTML = '<option value="" disabled>{{ __("Erreur de chargement") }}</option>';
-                    });
-            }
+        quartierSelect.innerHTML = '<option value="">{{ __("Chargement...") }}</option>';
 
-            // Fetch quartiers when a new ville is selected
-            villeSelect.addEventListener('change', function() {
-                const villeId = this.value;
-                if (villeId) {
-                    fetchQuartiers(villeId);
-                } else {
-                    quartierSelect.innerHTML = '<option value="" selected>{{ __("Sélectionnez un Quartier (Optionnel)") }}</option>';
-                }
+        fetch(`/quartiers?ville_id=${villeId}`)
+            .then(response => response.json())
+            .then(data => {
+                quartierSelect.innerHTML = '<option value="">{{ __("Sélectionnez un quartier (Optionnel)") }}</option>';
+                data.forEach(quartier => {
+                    const option = new Option(quartier.quartier, quartier.quartier);
+                    if (preSelectedQuartier && quartier.quartier === preSelectedQuartier) {
+                        option.selected = true;
+                    }
+                    quartierSelect.add(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching quartiers:', error);
+                quartierSelect.innerHTML = '<option value="">{{ __("Erreur de chargement") }}</option>';
             });
+    }
 
-            // Preload quartiers if a ville is pre-selected
-            const preSelectedVille = "{{ old('ville', $garage->ville) }}";
-            const preSelectedQuartier = "{{ old('quartier', $garage->quartier) }}";
-            if (preSelectedVille) {
-                fetchQuartiers(preSelectedVille, preSelectedQuartier);
-            }
-        });
+    // Handle ville selection change
+    villeSelect.addEventListener('change', function() {
+        fetchQuartiers(this.value);
+    });
+
+    // Initialize on page load
+    const initialVilleId = villeSelect.value;
+    const initialQuartier = "{{ old('quartier', $garage->quartier) }}";
+    
+    if (initialVilleId) {
+        fetchQuartiers(initialVilleId, initialQuartier);
+        }
+    });
 
         // ------------
         document.addEventListener('DOMContentLoaded', function() {
