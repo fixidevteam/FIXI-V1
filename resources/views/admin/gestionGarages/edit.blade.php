@@ -147,7 +147,7 @@
                                             name="services[]"
                                             value="{{ $service->service }}"
                                             class="service-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                            {{ in_array($service->service, old('services', $garage->services)) ? 'checked' : '' }} />
+                                            {{ in_array($service->service, old('services', $garage->services ?? [])) ? 'checked' : '' }} />
                                         <span class="ml-2 text-sm text-gray-600">{{ $service->service }}</span>
                                     </label>
                                     @endforeach
