@@ -49,4 +49,9 @@ class garage extends Model
     {
         return $this->belongsTo(User::class);
     }
+    // Garage.php
+public function photos()
+{
+    return $this->hasMany(PhotoGarage::class);
+}
 }
