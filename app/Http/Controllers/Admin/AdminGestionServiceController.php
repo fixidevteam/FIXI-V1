@@ -35,7 +35,14 @@ class AdminGestionServiceController extends Controller
         // Validation des données
         $request->validate([
             'domaine_id' => 'required|exists:domaines,id',
-            'service' => ['required', 'string', 'max:255',  Rule::unique('services')->whereNull('deleted_at')],
+            'service' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('services')
+                    ->where('domaine_id', $request->domaine_id) // Unique per domaine_id
+                    ->whereNull('deleted_at') // Ignore soft-deleted records
+            ],
         ]);
 
         // Création du service
@@ -45,8 +52,8 @@ class AdminGestionServiceController extends Controller
         ]);
 
         // Redirection avec un message de succès
-        session()->flash('success', 'service ajouté');
-        session()->flash('subtitle', 'service a été ajouté avec succès.');
+        session()->flash('success', 'Service ajouté');
+        session()->flash('subtitle', 'Le service a été ajouté avec succès.');
         return redirect()->route('admin.gestionDomaine.index');
     }
 
@@ -78,17 +85,26 @@ class AdminGestionServiceController extends Controller
     public function update(Request $request, string $id)
     {
         $service = Service::find($id);
+
         $newservice = $request->validate([
             'domaine_id' => 'required|exists:domaines,id',
-            'service' => ['required', 'string', 'max:255',  Rule::unique('services')->whereNull('deleted_at')],
-
+            'service' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('services')
+                    ->where('domaine_id', $request->domaine_id)
+                    ->ignore($id) // Ignore the current record when updating
+                    ->whereNull('deleted_at')
+            ],
         ]);
 
         if ($service) {
             $service->update($newservice);
-            session()->flash('success', 'Service ajouté');
-            session()->flash('subtitle', 'Service a été ajouté avec succès.');
+            session()->flash('success', 'Service modifié');
+            session()->flash('subtitle', 'Le service a été modifié avec succès.');
         }
+
         return redirect()->route('admin.gestionDomaine.index');
     }
 

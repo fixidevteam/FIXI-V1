@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MarqueVoiture;
 use App\Models\ModeleVoiture;
+use App\Models\ReferenceTechnique;
 use Database\Seeders\MarqueSeeder;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,7 @@ class AdminGestionMarqueContoller extends Controller
 
     public function index(Request $request)
     {
+        $referenceTechniques = ReferenceTechnique::all();
         $marqueQuery = MarqueVoiture::query();
         $modeleQuery = ModeleVoiture::with('marque');
 
@@ -30,7 +32,7 @@ class AdminGestionMarqueContoller extends Controller
         $marques = $marqueQuery->get();
         $modeles = $modeleQuery->get();
 
-        return view('admin.gestionMarque.index', compact('marques', 'modeles'));
+        return view('admin.gestionMarque.index', compact('marques', 'modeles','referenceTechniques'));
     }
 
     /**

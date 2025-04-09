@@ -73,7 +73,7 @@
                 @method('PUT')
                 <div>
                     <x-input-label for="type" :value="__('Type')" />
-                    <x-text-input id="type" class="block mt-1 w-full" type="text" name="type" :value="old('type') ?? $type->type " autofocus autocomplete="type" />
+                    <x-text-input id="type" class="block mt-1 w-full" type="text" name="type" :value="old('type') ?? $type->type" autofocus autocomplete="type" />
                     <x-input-error :messages="$errors->get('type')" class="mt-2" />
                 </div>
             

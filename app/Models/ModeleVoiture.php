@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ModeleVoiture extends Model
@@ -18,5 +19,9 @@ class ModeleVoiture extends Model
     public function marque(): BelongsTo
     {
         return $this->belongsTo(MarqueVoiture::class);
+    }
+    public function referenceTechniques(): HasMany
+    {
+        return $this->hasMany(ReferenceTechnique::class, 'modele_id');
     }
 }
