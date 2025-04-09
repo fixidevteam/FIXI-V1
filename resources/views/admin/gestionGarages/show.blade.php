@@ -276,16 +276,16 @@
                 </p>
               </div>
             </div>
-
           </div>
-
         </div>
         {{-- presentation --}}
-        <div class="w-full">
-          <p class="capitalize text-sm font-medium text-gray-900">presentation</p>
-          <p class="text-sm text-gray-500 break-words whitespace-normal w-full">
-            {{$garage->presentation ?? 'N/A'}}
-          </p>
+        <div class="my-4">
+          <div class="w-full">
+            <p class="capitalize text-sm font-medium text-gray-900">presentation</p>
+            <p class="text-sm text-gray-500 break-words whitespace-normal w-full">
+              {{$garage->presentation ?? 'N/A'}}
+            </p>
+          </div>
         </div>
       </div>
     </div>

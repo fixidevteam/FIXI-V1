@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminGestionSousOperationController;
 use App\Http\Controllers\Admin\AdminGestionUserController;
 use App\Http\Controllers\Admin\AdminGestionVilleController;
 use App\Http\Controllers\Admin\AdminGestionPromotionsController;
+use App\Http\Controllers\Admin\AdminGestionReferenceTechniqueController;
 use App\Http\Controllers\Admin\AdminGestionReservationsController;
 use App\Http\Controllers\Admin\AdminGestionServiceController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
@@ -58,6 +59,7 @@ Route::middleware('auth:admin')->prefix('fp-admin')->name('admin.')->group(funct
     Route::resource('/gestionCategorie', AdminGestionCategorieController::class);
     Route::resource('/gestionMarque', AdminGestionMarqueContoller::class);
     Route::resource('/gestionModele', AdminGestionModeleController::class);
+    Route::resource('/gestionReferenceTechnique', AdminGestionReferenceTechniqueController::class);
     Route::resource('/gestionVille', AdminGestionVilleController::class);
     Route::resource('/gestionQuartier', AdminGestionQuartierController::class);
     Route::resource('/gestionDomaine', AdminGestionDomaineController::class);
