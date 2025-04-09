@@ -90,8 +90,8 @@
               <div>
                 <p class="capitalize text-sm font-medium text-gray-900">Domaines</p>
                 <p class="text-sm text-red-700 font-bold"> 
-                    @if($garage->services)
-                        {{ implode(' / ', $garage->services) }}
+                    @if($garage->domaines)
+                        {{ implode(' / ', $garage->domaines) }}
                     @else
                         <span class="text-sm text-gray-500">N/A</span>
                     @endif
