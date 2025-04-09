@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Domaine;
 use App\Models\garage;
+use App\Models\PhotoGarage;
 use App\Models\Quartier;
 use App\Models\Ville;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AdminGestionGarageController extends Controller
@@ -40,7 +42,7 @@ class AdminGestionGarageController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->services);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'localisation' => ['nullable', 'string'],
@@ -63,16 +65,14 @@ class AdminGestionGarageController extends Controller
             'whatsapp' => ['required', 'string'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
+            'photos' => 'required|array|max:10',
+            'photos.*' => 'image|mimes:jpeg,png,jpg|max:5120'
         ]);
 
         // Fetch the ville name based on the ID
         $ville = Ville::findOrFail($request->ville); // Ensure the ID is valid
 
-        if ($request->hasFile('photo')) {
-            $imagePath = $request->file('photo')->store('garage', 'public');
-            $data['photo'] = $imagePath;
-        }
+
 
         // Assign the ville name to the data array
         $data['ville'] = $ville->ville; // Replace 'name' with the actual column for the ville name
@@ -81,7 +81,16 @@ class AdminGestionGarageController extends Controller
         $lastId = $lastGarage ? $lastGarage->id : 0; // Get the last ID or start from 0
         $data['ref'] = 'GAR-' . str_pad($lastId + 1, 5, '0', STR_PAD_LEFT); // Format as GAR-00001, GAR-00002, etc.
 
-        garage::create($data);
+        $garage = garage::create($data);
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $imagePath = $photo->store('garage', 'public');
+                PhotoGarage::create([
+                    'photo'=>$imagePath,
+                    'garage_id'=> $garage->id
+                ]);
+            }
+        }
         // Flash message to the session
         session()->flash('success', 'Garage ajoutée');
         session()->flash('subtitle', 'Garage a été ajoutée avec succès à la liste.');
@@ -152,7 +161,8 @@ class AdminGestionGarageController extends Controller
             'whatsapp' => ['required', 'string'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],        ]);
+            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
+        ]);
         // Fetch the ville name based on the ID
         $ville = Ville::findOrFail($request->ville); // Ensure the ville ID is valid
 

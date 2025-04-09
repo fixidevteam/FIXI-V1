@@ -35,7 +35,7 @@ class garage extends Model
     ];
     protected $casts = [
         'services' => 'array',
-        'domaines'=>'array'
+        'domaines' => 'array'
     ];
     public function mechanics(): HasMany
     {
@@ -50,8 +50,8 @@ class garage extends Model
         return $this->belongsTo(User::class);
     }
     // Garage.php
-public function photos()
-{
-    return $this->hasMany(PhotoGarage::class);
-}
+    public function photos()
+    {
+        return $this->hasMany(PhotoGarage::class);
+    }
 }
