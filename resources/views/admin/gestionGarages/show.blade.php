@@ -352,6 +352,16 @@
         {{-- table close --}}
       </div>
     </div>
+    <!-- map -->
+    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
+      <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="flex justify-between items-center my-6">
+          <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Localisation </h2>
+        </div>
+        <div id="map" class="h-[400px] w-[100%] md:w-[80%] m-auto z-0"></div>
+      </div>
+    </div>
+
     {{-- Modal --}}
     <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center">
       <div class="relzzative max-w-4xl w-full mx-auto">
@@ -388,18 +398,17 @@
     </div>
     {{-- contet close colse --}}
     {{-- footer --}}
-    @foreach($garage->photos as $photo)
-    <img
-      class="w-[200px] h-full object-cover cursor-pointer hover:scale-105 transition-all duration-300 ease-in"
-      src="{{ $photo->photo ? asset('storage/'.$photo->photo) : asset('/images/defaultimage.jpg') }}"
-      alt="{{ $photo->photo ? 'Garage Image' : 'Default Image' }}"
-      id="garageImage">
-    @endforeach
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
       @include('layouts.footer')
     </div>
   </div>
   <script>
+    var map = L.map('map').setView([{{$garage->latitude}},{{$garage->longitude}}], 13);
+    var marker = L.marker([{{$garage->latitude}},{{$garage->longitude}}]).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
     const modal = document.getElementById('imageModal');
     const garageImage = document.getElementById('garageImage');
 

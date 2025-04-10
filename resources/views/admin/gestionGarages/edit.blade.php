@@ -219,6 +219,18 @@
                         </x-text-textarea>
                         <x-input-error :messages="$errors->get('presentation')" class="mt-2" />
                     </div>
+                    <div>
+                        <x-input-label for="file_input" :value="__('Photo')" />
+                        <x-file-input id="file_input" class="block mt-1 w-full" type="file" name="photo" :value="old('photo')" autofocus autocomplete="photo" accept="image/jpeg,png" />
+                        @if($garage->photo)
+                        <div class="mt-2">
+                            <span class="text-sm text-gray-500">Photo actuelle :</span>
+                            <img src="{{ asset('storage/' . $garage->photo) }}" alt="Photo du garage" class="h-20 mt-1">
+                        </div>
+                        @endif
+                        <x-input-error :messages="$errors->get('photo')" class="mt-2" />
+                    </div>
+
                     <div class="flex items-center justify-end mt-4">
                         <x-primary-button class="flex justify-center rounded-[20px] bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
                             {{ __('Modifier le garage') }}

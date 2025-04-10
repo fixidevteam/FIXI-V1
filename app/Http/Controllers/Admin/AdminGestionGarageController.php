@@ -60,11 +60,12 @@ class AdminGestionGarageController extends Controller
             'confirmation' => ['required', 'string'], // Expecting an array for services
 
             'presentation' => ['required', 'string', 'max:1000'],
-            'telephone' => ['required', 'string'],
-            'fixe' => ['required', 'string'],
-            'whatsapp' => ['required', 'string'],
+            'telephone' => ['required', 'string', 'min:10'],
+            'fixe' => ['required', 'string', 'min:10'],
+            'whatsapp' => ['required', 'string', 'min:10'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
+            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
         ]);
 
         // Fetch the ville name based on the ID
@@ -78,17 +79,11 @@ class AdminGestionGarageController extends Controller
         $lastGarage = Garage::latest()->first(); // Get the last created garage
         $lastId = $lastGarage ? $lastGarage->id : 0; // Get the last ID or start from 0
         $data['ref'] = 'GAR-' . str_pad($lastId + 1, 5, '0', STR_PAD_LEFT); // Format as GAR-00001, GAR-00002, etc.
-
-        $garage = garage::create($data);
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $imagePath = $photo->store('garage', 'public');
-                PhotoGarage::create([
-                    'photo' => $imagePath,
-                    'garage_id' => $garage->id
-                ]);
-            }
+        if ($request->hasFile('photo')) {
+            $imagePath = $request->file('photo')->store('garage', 'public');
+            $data['photo'] = $imagePath;
         }
+        garage::create($data);
         // Flash message to the session
         session()->flash('success', 'Garage ajoutée');
         session()->flash('subtitle', 'Garage a été ajoutée avec succès à la liste.');
@@ -154,9 +149,9 @@ class AdminGestionGarageController extends Controller
             'confirmation' => ['required', 'string'], // Expecting an array for services
 
             'presentation' => ['required', 'string', 'max:1000'],
-            'telephone' => ['required', 'string'],
-            'fixe' => ['required', 'string'],
-            'whatsapp' => ['required', 'string'],
+            'telephone' => ['required', 'string', 'min:10'],
+            'fixe' => ['required', 'string', 'min:10'],
+            'whatsapp' => ['required', 'string', 'min:10'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
