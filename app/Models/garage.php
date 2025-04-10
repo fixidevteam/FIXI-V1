@@ -35,7 +35,8 @@ class garage extends Model
     ];
     protected $casts = [
         'services' => 'array',
-        'domaines' => 'array'
+        'domaines' => 'array',
+        'domaines' => 'array',
     ];
     public function mechanics(): HasMany
     {

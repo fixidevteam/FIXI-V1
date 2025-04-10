@@ -226,6 +226,30 @@
                         <x-file-input id="file_input" class="block mt-1 w-full" type="file" name="photo" :value="old('photo')" autofocus autocomplete="photo" accept="image/jpeg,png" />
                         <x-input-error :messages="$errors->get('photo')" class="mt-2" />
                     </div>
+                    <h1>-----------------------</h1>
+                    <div class="image-upload-container">
+                        <!-- File Input -->
+                        <div class="mb-4">
+                            <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-1">Upload Garage Photos (Max 10)</label>
+                            <input type="file"
+                                id="fileInput"
+                                name="photos[]"
+                                multiple
+                                accept="image/*"
+                                class="block w-full text-sm text-gray-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-md file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-blue-50 file:text-blue-700
+                  hover:file:bg-blue-100">
+
+                            <div id="uploadError" class="text-red-500 text-sm mt-2"></div>
+                        </div>
+
+                        <!-- Image Previews Container -->
+                        <div id="imagePreviews" class="flex flex-wrap gap-3 mt-3"></div>
+                    </div>
+                    <!-- multi image -->
                     <div class="flex items-center justify-end mt-4">
                         <x-primary-button class="flex justify-center rounded-[20px] bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
                             {{ __('Ajouter le garage') }}
@@ -280,7 +304,7 @@
                 fetchQuartiers(preSelectedVille, preSelectedQuartier);
             }
         });
-//  -------------
+        //  -------------
         document.addEventListener('DOMContentLoaded', function() {
             // Handle domain checkbox changes
             document.querySelectorAll('.domain-checkbox').forEach(checkbox => {
@@ -315,6 +339,79 @@
                         domainCheckbox.dispatchEvent(new Event('change'));
                     }
                 });
+            });
+        });
+
+
+        // image script 
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const imagePreviews = document.getElementById('imagePreviews');
+            const form = document.querySelector('form');
+            const errorElement = document.getElementById('uploadError');
+            const maxFiles = 3;
+            let dataTransfer = new DataTransfer();
+
+            fileInput.addEventListener('change', function(e) {
+                errorElement.textContent = '';
+                const files = e.target.files;
+
+                // 1. Check total file count
+
+
+                // 2. Validate each file
+                Array.from(files).forEach(file => {
+                    if (dataTransfer.files.length + files.length > maxFiles) {
+                        errorElement.textContent = `Maximum ${maxFiles} images autorisées.`;
+                        return;
+                    }
+                    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                        errorElement.textContent = 'Seuls les JPEG et PNG sont acceptés.';
+                        return;
+                    }
+                    if (file.size > 5 * 1024 * 1024) {
+                        errorElement.textContent = 'La taille maximale est de 5MB par image.';
+                        return;
+                    }
+                    dataTransfer.items.add(file);
+                });
+
+                // 3. Update the file input
+                fileInput.files = dataTransfer.files;
+                updatePreviews();
+            });
+
+            function updatePreviews() {
+                imagePreviews.innerHTML = '';
+                Array.from(dataTransfer.files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.createElement('div');
+                        preview.className = 'relative w-28 h-28';
+                        preview.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-full object-cover rounded border border-gray-200">
+                    <button type="button" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors" 
+                            onclick="removeImage(${index})">
+                        ×
+                    </button>
+                `;
+                        imagePreviews.appendChild(preview);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Handle image removal
+            window.removeImage = function(index) {
+                dataTransfer.items.remove(index);
+                fileInput.files = dataTransfer.files;
+                updatePreviews();
+            };
+
+            // Ensure files are properly submitted
+            form.addEventListener('submit', function(e) {
+                // No need to modify anything - the file input already has the correct files
+                console.log('Submitting files:', fileInput.files);
             });
         });
     </script>

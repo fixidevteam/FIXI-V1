@@ -354,7 +354,7 @@
     </div>
     {{-- Modal --}}
     <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 flex items-center justify-center">
-      <div class="relative max-w-4xl w-full mx-auto">
+      <div class="relzzative max-w-4xl w-full mx-auto">
         <img
           id="modalImage"
           src="{{ $garage->photo !== NULL ? asset('storage/'.$garage->photo) : asset('/images/defaultimage.jpg') }}"
@@ -388,6 +388,13 @@
     </div>
     {{-- contet close colse --}}
     {{-- footer --}}
+    @foreach($garage->photos as $photo)
+    <img
+      class="w-[200px] h-full object-cover cursor-pointer hover:scale-105 transition-all duration-300 ease-in"
+      src="{{ $photo->photo ? asset('storage/'.$photo->photo) : asset('/images/defaultimage.jpg') }}"
+      alt="{{ $photo->photo ? 'Garage Image' : 'Default Image' }}"
+      id="garageImage">
+    @endforeach
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
       @include('layouts.footer')
     </div>
