@@ -293,6 +293,7 @@
         </div>
       </div>
     </div>
+
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
       {{-- content (slot on layouts/app.blade.php)--}}
       <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -352,6 +353,7 @@
         {{-- table close --}}
       </div>
     </div>
+    
     <!-- map -->
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
       <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
