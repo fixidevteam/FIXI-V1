@@ -65,8 +65,6 @@ class AdminGestionGarageController extends Controller
             'whatsapp' => ['required', 'string'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
-            'photos' => 'required|array|max:10',
-            'photos.*' => 'image|mimes:jpeg,png,jpg|max:5120'
         ]);
 
         // Fetch the ville name based on the ID
@@ -86,8 +84,8 @@ class AdminGestionGarageController extends Controller
             foreach ($request->file('photos') as $photo) {
                 $imagePath = $photo->store('garage', 'public');
                 PhotoGarage::create([
-                    'photo'=>$imagePath,
-                    'garage_id'=> $garage->id
+                    'photo' => $imagePath,
+                    'garage_id' => $garage->id
                 ]);
             }
         }
@@ -203,6 +201,10 @@ class AdminGestionGarageController extends Controller
             }
 
             // Delete the garage if it has no mechanics
+            foreach ($garage->photos as $image) {
+                Storage::disk('public')->delete($image->photo);
+            }
+            $garage->photos()->delete();
             $garage->delete();
             session()->flash('success', 'Garage supprimé');
             session()->flash('subtitle', 'Garage a été supprimé avec succès.');
