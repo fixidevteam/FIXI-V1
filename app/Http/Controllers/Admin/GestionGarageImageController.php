@@ -39,7 +39,7 @@ class GestionGarageImageController extends Controller
             $garage->photos()->create(['photo' => $path]);
         }
 
-        return back()->with('success', 'Images uploaded successfully');
+        return back()->with('success', 'Images téléchargées avec succès');
     }
 
     // Delete an image
@@ -53,6 +53,6 @@ class GestionGarageImageController extends Controller
         // Delete from database
         $image->delete();
 
-        return back()->with('success', 'Image deleted successfully');
+        return back()->with('success', 'Image supprimée avec succès');
     }
 }
