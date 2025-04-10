@@ -126,48 +126,103 @@ class AppointmentController extends Controller
         ]);
     }
     // new method :
-    public function getAvailableDatesShort(Request $request)
+    // public function getAvailableDatesShort2(Request $request)
+    // {
+    //     $garage_ref = $request->query('garage_ref');
+
+    //     // Fetch all schedules for this garage
+    //     $schedules = GarageSchedule::where('garage_ref', $garage_ref)->get();
+
+    //     $availability = [];
+    //     foreach ($schedules as $schedule) {
+    //         $dayOfWeek = $schedule->available_day;
+    //         $availability[$dayOfWeek] = true;
+    //     }
+
+    //     // Generate available dates for the next 7 days (like in the screenshot)
+    //     $dates = [];
+    //     $today = Carbon::today();
+    //     for ($i = 0; $i < 7; $i++) {
+    //         $date = $today->copy()->addDays($i);
+    //         $dayOfWeek = $date->dayOfWeek;
+
+    //         if (isset($availability[$dayOfWeek])) {
+    //             $dates[] = [
+    //                 'date' => $date->format('Y-m-d'),
+    //                 'day_name' => $date->shortDayName, // "dim", "lun", etc.
+    //                 'day_number' => $date->day,
+    //                 'month_short' => $date->shortMonthName, // "avr", "mai", etc.
+    //             ];
+    //         }
+    //     }
+
+    //     // Fetch unavailable days
+    //     $disabledDates = jour_indisponible::where('garage_ref', $garage_ref)
+    //         ->pluck('date')
+    //         ->toArray();
+
+    //     // Fetch services from the garages table (stored as JSON)
+    //     $garage = Garage::where('ref', $garage_ref)->first();
+    //     $services =  $garage ? $garage->services : [];
+
+    //     // Fetch marques from the marque_voitures table
+    //     $marques = MarqueVoiture::pluck('marque')->toArray();
+
+
+    //     return response()->json([
+    //         'available_dates' => $dates,
+    //         'unavailable_dates' => $disabledDates,
+    //         'services' => $services,
+    //         'marques' => $marques,
+    //     ]);
+    // }
+
+    public function getAvailableDatesShort2(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
 
         // Fetch all schedules for this garage
         $schedules = GarageSchedule::where('garage_ref', $garage_ref)->get();
 
-        $availability = [];
+        // Create array of available days (0=Sunday, 6=Saturday)
+        $availableDays = [];
         foreach ($schedules as $schedule) {
-            $dayOfWeek = $schedule->available_day;
-            $availability[$dayOfWeek] = true;
+            $availableDays[] = $schedule->available_day;
         }
 
-        // Generate available dates for the next 7 days (like in the screenshot)
+        // Fetch unavailable specific dates
+        $disabledDates = jour_indisponible::where('garage_ref', $garage_ref)
+            ->pluck('date')
+            ->toArray();
+
+        // Generate available dates for the next 7 days
         $dates = [];
         $today = Carbon::today();
         for ($i = 0; $i < 7; $i++) {
             $date = $today->copy()->addDays($i);
             $dayOfWeek = $date->dayOfWeek;
+            $dateString = $date->format('Y-m-d');
 
-            if (isset($availability[$dayOfWeek])) {
-                $dates[] = [
-                    'date' => $date->format('Y-m-d'),
-                    'day_name' => $date->shortDayName, // "dim", "lun", etc.
-                    'day_number' => $date->day,
-                    'month_short' => $date->shortMonthName, // "avr", "mai", etc.
-                ];
+            // Check if day of week is available and date is not disabled
+            if (in_array($dayOfWeek, $availableDays)) {
+                // Only add if date is not in disabled dates
+                if (!in_array($dateString, $disabledDates)) {
+                    $dates[] = [
+                        'date' => $dateString,
+                        'day_name' => $date->shortDayName,
+                        'day_number' => $date->day,
+                        'month_short' => $date->shortMonthName,
+                    ];
+                }
             }
         }
 
-        // Fetch unavailable days
-        $disabledDates = jour_indisponible::where('garage_ref', $garage_ref)
-            ->pluck('date')
-            ->toArray();
-
-        // Fetch services from the garages table (stored as JSON)
+        // Fetch services from the garages table
         $garage = Garage::where('ref', $garage_ref)->first();
-        $services =  $garage ? $garage->services : [];
+        $services = $garage ? $garage->services : [];
 
         // Fetch marques from the marque_voitures table
         $marques = MarqueVoiture::pluck('marque')->toArray();
-
 
         return response()->json([
             'available_dates' => $dates,
