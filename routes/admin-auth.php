@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AdminGestionReservationsController;
 use App\Http\Controllers\Admin\AdminGestionServiceController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
+use App\Http\Controllers\Admin\GestionGarageImageController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Models\Admin;
@@ -75,6 +76,9 @@ Route::middleware('auth:admin')->prefix('fp-admin')->name('admin.')->group(funct
     Route::get('/gestionCalendrier/{id}/edit', [AdminGestionCalendrierController::class, 'edit'])->name('gestionCalendrier.edit');
     Route::patch('/gestionCalendrier/update/{id}', [AdminGestionCalendrierController::class, 'update'])->name('gestionCalendrier.update');
     Route::delete('/gestionCalendrier/destroy/{id}', [AdminGestionCalendrierController::class, 'destroy'])->name('gestionCalendrier.destroy');
+    Route::get('/gestionGarageImage/{garage}/images', [GestionGarageImageController::class, 'index'])->name('gestionGarageImage.index');
+    Route::post('/gestionGarageImage/{garage}/images', [GestionGarageImageController::class, 'store'])->name('gestionGarageImage.store');
+    Route::delete('/gestionGarageImage/{garage}/images/{photo}', [GestionGarageImageController::class, 'destroy'])->name('gestionGarageImage.destroy');
 
 
 

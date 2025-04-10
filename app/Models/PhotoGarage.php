@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PhotoGarage extends Model
 {
@@ -12,7 +13,7 @@ class PhotoGarage extends Model
         'photo',
         'garage_id'
     ];
-    public function garage()
+    public function garage(): BelongsTo
     {
         return $this->belongsTo(Garage::class);
     }

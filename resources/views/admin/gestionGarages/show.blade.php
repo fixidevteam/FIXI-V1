@@ -130,7 +130,11 @@
             </button>
           </div>
         </div>
-
+        {{-- gallery --}}
+        <div class="my-4">
+          <a href="{{ route('admin.gestionGarageImage.index', $garage->id) }}">Gérer les images du garage ({{ $garage->photos->count() }}/10)</a>
+        </div>
+        {{-- gallery close--}}
         <div class="flex flex-col md:flex-row gap-10 items-center">
           <div class="md:w-[160px] md:h-[160px] overflow-hidden md:rounded-full border flex-shrink-0">
             <img
