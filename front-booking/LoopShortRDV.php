@@ -27,9 +27,9 @@ if (!empty($garage_ref)) {
 
 <body class="bg-gray-50">
   <?php
-  if (!empty($garage_ref)) {
-    $unique_id = 'garage_' . esc_attr($garage_ref);
-  ?>
+    if (!empty($garage_ref)) {
+      $unique_id = 'garage_' . esc_attr($garage_ref);
+    ?>
   <!-- Main Container -->
   <div class="booking-wrapper my-8" id="<?php echo $unique_id; ?>">
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -157,7 +157,7 @@ if (!empty($garage_ref)) {
         </div>
 
         <div class="flex justify-between items-center mb-6">
-          <button type="button" id="resendCode_<?php echo $unique_id; ?>"
+          <button type="button" id="resendCode_<?php echo $unique_id; ?>" disabled
             class="!text-primary text-sm !hover:underline !bg-transparent">
             Renvoyer le code
           </button>
@@ -281,6 +281,14 @@ if (!empty($garage_ref)) {
     cancelVerification.addEventListener("click", () => {
       verificationModal.classList.add("hidden");
       stopCountdown();
+      // Enable the resend button when modal is closed
+      resendCode.disabled = false;
+      resendCode.classList.remove("!text-gray-400", "cursor-not-allowed");
+      resendCode.classList.add(
+        "!text-primary",
+        "hover:underline",
+        "!bg-transparent"
+      );
     });
 
     bookingForm.addEventListener("submit", handleBookingSubmit);
@@ -715,6 +723,14 @@ if (!empty($garage_ref)) {
     }
 
     async function handleResendCode() {
+      // Disable the button immediately when clicked
+      resendCode.disabled = true;
+      resendCode.classList.add("!text-gray-400", "!cursor-not-allowed");
+      resendCode.classList.remove(
+        "!text-primary",
+        "hover:underline",
+        "!bg-transparent"
+      );
       try {
         const phone = document.getElementById("phone_" + uniqueId).value;
         const fullName = document.getElementById("fullName_" + uniqueId).value;
@@ -747,10 +763,26 @@ if (!empty($garage_ref)) {
       } catch (error) {
         console.error("Error resending verification code:", error);
         showErrorVerification("Une erreur est survenue lors de l'envoi du code. Veuillez réessayer.");
+        // If there's an error, re-enable the button
+        resendCode.disabled = false;
+        resendCode.classList.remove("!text-gray-400", "!cursor-not-allowed");
+        resendCode.classList.add(
+          "!text-primary",
+          "hover:underline",
+          "!bg-transparent"
+        );
       }
     }
 
     function startCountdown() {
+      // Disable the resend button when countdown starts
+      resendCode.disabled = true;
+      resendCode.classList.add("!text-gray-400", "!cursor-not-allowed");
+      resendCode.classList.remove(
+        "!text-primary",
+        "hover:underline",
+        "!bg-transparent"
+      );
       updateCountdownDisplay();
       verificationTimer = setInterval(() => {
         countdownSeconds--;
@@ -758,6 +790,17 @@ if (!empty($garage_ref)) {
 
         if (countdownSeconds <= 0) {
           stopCountdown();
+          // Enable the resend button when countdown ends
+          resendCode.disabled = false;
+          resendCode.classList.remove(
+            "!text-gray-400",
+            "!cursor-not-allowed"
+          );
+          resendCode.classList.add(
+            "!text-primary",
+            "hover:underline",
+            "!bg-transparent"
+          );
         }
       }, 1000);
     }
@@ -795,4 +838,5 @@ if (!empty($garage_ref)) {
 </body>
 
 </html>
-<?php }} 
+<?php }
+  }
