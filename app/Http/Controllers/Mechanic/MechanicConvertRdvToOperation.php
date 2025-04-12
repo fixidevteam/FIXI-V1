@@ -54,7 +54,7 @@ class MechanicConvertRdvToOperation extends Controller
         if (!$client) {
             $client = User::create(
                 [
-                    'email' => $request->client_email,
+                    // 'email' => $request->client_email,
                     'name' => $request->client_name,
                     'telephone' => $request->client_tel,
                 ]
