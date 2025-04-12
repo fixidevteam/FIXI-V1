@@ -156,7 +156,7 @@ if (!empty($acf_link)) {
         </div>
 
         <div class="flex justify-between items-center mb-6">
-          <button type="button" id="resendCode" class="!text-primary text-sm !hover:underline !bg-transparent">
+          <button type="button" id="resendCode" disabled class="!text-primary text-sm !hover:underline !bg-transparent">
             Renvoyer le code
           </button>
           <span id="countdown" class="text-sm text-gray-500">1:00</span>
@@ -283,6 +283,14 @@ if (!empty($acf_link)) {
     cancelVerification.addEventListener("click", () => {
       verificationModal.classList.add("hidden");
       stopCountdown();
+      // Enable the resend button when modal is closed
+      resendCode.disabled = false;
+      resendCode.classList.remove("!text-gray-400", "!cursor-not-allowed");
+      resendCode.classList.add(
+        "!text-primary",
+        "hover:underline",
+        "!bg-transparent"
+      );
     });
 
     bookingForm.addEventListener("submit", handleBookingSubmit);
@@ -777,6 +785,15 @@ if (!empty($acf_link)) {
     }
 
     async function handleResendCode() {
+      // Disable the button immediately when clicked
+      resendCode.disabled = true;
+      resendCode.classList.add("!text-gray-400", "!cursor-not-allowed");
+      resendCode.classList.remove(
+        "!text-primary",
+        "hover:underline",
+        "!bg-transparent"
+      );
+
       try {
         const phone = document.getElementById("phone").value;
         const fullName = document.getElementById("fullName").value;
@@ -811,10 +828,26 @@ if (!empty($acf_link)) {
         showError(
           "Une erreur est survenue lors de l'envoi du code. Veuillez réessayer."
         );
+        // If there's an error, re-enable the button
+        resendCode.disabled = false;
+        resendCode.classList.remove("!text-gray-400", "!cursor-not-allowed");
+        resendCode.classList.add(
+          "!text-primary",
+          "hover:underline",
+          "!bg-transparent"
+        );
       }
     }
 
     function startCountdown() {
+      // Disable the resend button when countdown starts
+      resendCode.disabled = true;
+      resendCode.classList.add("!text-gray-400", "!cursor-not-allowed");
+      resendCode.classList.remove(
+        "!text-primary",
+        "hover:underline",
+        "!bg-transparent"
+      );
       updateCountdownDisplay();
       verificationTimer = setInterval(() => {
         countdownSeconds--;
@@ -822,6 +855,17 @@ if (!empty($acf_link)) {
 
         if (countdownSeconds <= 0) {
           stopCountdown();
+          // Enable the resend button when countdown ends
+          resendCode.disabled = false;
+          resendCode.classList.remove(
+            "!text-gray-400",
+            "!cursor-not-allowed"
+          );
+          resendCode.classList.add(
+            "!text-primary",
+            "hover:underline",
+            "!bg-transparent"
+          );
         }
       }, 1000);
     }
