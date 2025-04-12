@@ -212,7 +212,7 @@
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                     <a href="{{route('mechanic.operations.show',$operation->id)}}">
 
-                      {{ $nom_categories->where('id', $operation->categorie)->first() ? $nom_categories->where('id', $operation->categorie)->first()->nom_categorie : 'ssss'}}
+                      {{ $nom_categories->where('id', $operation->categorie)->first() ? $nom_categories->where('id', $operation->categorie)->first()->nom_categorie :  $operation->categorie}}
 
                     </a>
                   </th>

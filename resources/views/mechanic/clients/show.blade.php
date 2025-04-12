@@ -139,7 +139,7 @@
               <div>
                 <p class="capitalize text-sm font-medium text-gray-900">email</p>
                 <p class="text-sm text-gray-500">
-                  {{ $client->email }}
+                  {{ $client->email ?? 'N/A'}}
                 </p>
               </div>
             </div>
