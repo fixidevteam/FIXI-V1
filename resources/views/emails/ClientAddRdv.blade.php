@@ -81,7 +81,7 @@
             <p>📧 <strong>Email du client :</strong> {{ $reservation->user_email ?? 'N/A' }}</p>
             <p>🔧 <strong>Catégorie de service :</strong> {{ $reservation->categorie_de_service }}</p>
             <p>🚗 <strong>Modèle du véhicule :</strong> {{ $reservation->modele ?? 'N/A' }}</p>
-            <p>🚙 <strong>Numéro d'immatriculation :</strong> {{ $reservation->numero_immatriculation ?? 'N/A' }}</p>
+            <p>🚙 <strong>N° de châssis (VIN) :</strong> {{ $reservation->vin ?? 'N/A' }}</p>
             <p>📝 <strong>Objet du RDV :</strong> {{ $reservation->objet_du_RDV  ?? 'N/A' }}</p>
             <p>📅 <strong>Date de la réservation :</strong> {{ $reservation->appointment_day }}</p>
             <p>⏰ <strong>Heure :</strong> {{ $reservation->appointment_time }}</p>
