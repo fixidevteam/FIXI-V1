@@ -196,7 +196,7 @@ class AppointmentController2 extends Controller
         // Generate available dates for the next 7 days
         $dates = [];
         $today = Carbon::today();
-        for ($i = 0; $i < 7; $i++) {
+        for ($i = 1; $i <= 7; $i++) {
             $date = $today->copy()->addDays($i);
             $dayOfWeek = $date->dayOfWeek;
             $dateString = $date->format('Y-m-d');
@@ -229,7 +229,7 @@ class AppointmentController2 extends Controller
             'marques' => $marques,
         ]);
     }
-    
+
     public function getTimeSlotsShort2(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
