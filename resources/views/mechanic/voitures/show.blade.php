@@ -54,7 +54,7 @@
               <a
                 href=""
                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                Détails du voiture
+                Détails du véhicule
               </a>
             </div>
           </li>
