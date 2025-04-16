@@ -233,7 +233,7 @@
                     {{-- close table --}}
                     <!-- Pagination -->
                     <div class="my-4" id="paginationLinks">
-                        {{ $appointments->links() }}
+                        {{ $appointments->appends(['filter' => $filter])->links() }}
                     </div>
                 </div>
             </div>

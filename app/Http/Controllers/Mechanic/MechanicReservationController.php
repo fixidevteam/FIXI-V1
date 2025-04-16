@@ -75,27 +75,46 @@ class MechanicReservationController extends Controller
     /**
      * index as list of appointments.
      */
-    // public function list()
-    // {
-    //     // Get the authenticated user
-    //     $user = Auth::user();
 
-    //     // Fetch the garage associated with the mechanic
+    // public function list(Request $request)
+    // {
+    //     $user = Auth::user();
     //     $garage = garage::where('id', $user->garage_id)->first();
 
-    //     // Check if the garage exists
     //     if (!$garage) {
     //         return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
     //     }
 
-    //     // Fetch paginated appointments for the garage, ordered by the latest
-    //     $appointments = Appointment::where('garage_ref', $garage->ref)
-    //         ->latest() // Orders by `created_at` descending
-    //         ->paginate(10); // Adjust per page as needed
+    //     $query = Appointment::where('garage_ref', $garage->ref);
+
+    //     // Filter for past appointments to close
+    //     if ($request->has('filter') && $request->filter == 'to_close') {
+    //         $now = Carbon::now();
+    //         $query->where(function ($q) use ($now) {
+    //             $q->where('appointment_day', '<', $now->format('Y-m-d'))
+    //                 ->orWhere(function ($q2) use ($now) {
+    //                     $q2->where('appointment_day', $now->format('Y-m-d'))
+    //                         ->where('appointment_time', '<', $now->format('H:i:s'));
+    //                 });
+    //         })
+    //             ->whereIn('status', ['en cours']);
+    //     } else {
+    //         // Default: show active appointments
+    //         $now = Carbon::now();
+    //         $query->where(function ($q) use ($now) {
+    //             $q->where('appointment_day', '>', $now->format('Y-m-d'))
+    //                 ->orWhere(function ($q2) use ($now) {
+    //                     $q2->where('appointment_day', $now->format('Y-m-d'))
+    //                         ->where('appointment_time', '>=', $now->format('H:i:s'));
+    //                 });
+    //         })
+    //             ->whereIn('status', ['en cours', 'confirmé', 'annulé']);
+    //     }
+
+    //     $appointments = $query->latest()->paginate(10);
 
     //     return view('mechanic.reservation.list', compact('appointments'));
     // }
-
     public function list(Request $request)
     {
         $user = Auth::user();
@@ -107,8 +126,10 @@ class MechanicReservationController extends Controller
 
         $query = Appointment::where('garage_ref', $garage->ref);
 
+        $filter = $request->filter ?? 'active'; // Get the filter or default to 'active'
+
         // Filter for past appointments to close
-        if ($request->has('filter') && $request->filter == 'to_close') {
+        if ($filter == 'to_close') {
             $now = Carbon::now();
             $query->where(function ($q) use ($now) {
                 $q->where('appointment_day', '<', $now->format('Y-m-d'))
@@ -133,7 +154,8 @@ class MechanicReservationController extends Controller
 
         $appointments = $query->latest()->paginate(10);
 
-        return view('mechanic.reservation.list', compact('appointments'));
+        // Pass the filter to the view
+        return view('mechanic.reservation.list', compact('appointments', 'filter'));
     }
 
 
@@ -217,13 +239,13 @@ class MechanicReservationController extends Controller
         if ($appointment) {
             $data['status'] = 'en cours';
             $appointment->update($data);
-            Notification::route('mail',$appointment->user_email)->notify(
+            Notification::route('mail', $appointment->user_email)->notify(
                 new GarageUpdateRdv($appointment, 'Une réservation a été modifée par le garage.')
             );
             // end sending email
             session()->flash('success', 'Rendez-vous');
             session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
-            return redirect()->route('mechanic.reservation.show',$appointment);
+            return redirect()->route('mechanic.reservation.show', $appointment);
         }
     }
     /**
