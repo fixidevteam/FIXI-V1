@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\garage;
 use App\Models\jour_indisponible;
+use App\Models\User;
+use App\Models\Voiture;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
@@ -71,58 +73,79 @@ class MechanicDashboardController extends Controller
         $Rdvcount = Appointment::where('garage_ref', Auth::user()->garage->ref)->count();
         // ---
         // add calendrie 
-            $user = Auth::user();
-            // Fetch the garage associated with the mechanic
-            $garage = garage::where('id', $user->garage_id)->first();
-            
-            // Check if the garage exists
-            if (!$garage) {
-                return redirect()->back()->with('error', 'Garage not found.');
-            }
+        $user = Auth::user();
+        // Fetch the garage associated with the mechanic
+        $garage = garage::where('id', $user->garage_id)->first();
 
-            // Fetch appointments for the garage
-            $appointments = Appointment::where('garage_ref', $garage->ref)
-                ->get(['id', 'user_full_name', 'appointment_day', 'appointment_time', 'status'])
-                ->map(function ($appointment) {
-                    $color = match ($appointment->status) {
-                        'en cours' => 'orange',
-                        'confirmé' => 'green',
-                        'annulé' => 'red',
-                        default => 'blue'
-                    };
+        // Check if the garage exists
+        if (!$garage) {
+            return redirect()->back()->with('error', 'Garage not found.');
+        }
 
-                    return [
-                        'title' => 'Reservation: ' . $appointment->user_full_name,
-                        'start' => $appointment->appointment_day . 'T' . $appointment->appointment_time,
-                        'url' => route('mechanic.reservation.show', $appointment->id),
-                        'time' => $appointment->appointment_time,
-                        'color' => $color
-                    ];
-                })
-                ->toArray();
+        // Fetch appointments for the garage
+        $appointments = Appointment::where('garage_ref', $garage->ref)
+            ->get(['id', 'user_full_name', 'appointment_day', 'appointment_time', 'status'])
+            ->map(function ($appointment) {
+                $color = match ($appointment->status) {
+                    'en cours' => 'orange',
+                    'confirmé' => 'green',
+                    'annulé' => 'red',
+                    default => 'blue'
+                };
 
-            // Fetch unavailable days from jour_indisponibles table
-            $unavailableDays = jour_indisponible::where('garage_ref', $garage->ref)
-                ->pluck('date'); // Assuming 'day' is stored in 'YYYY-MM-DD' format
-
-            // Add unavailable days as gray events
-            foreach ($unavailableDays as $day) {
-                $appointments[] = [
-                    'title' => 'Indisponible',
-                    'start' => $day,
-                    'color' => 'gray',
-                    'display' => 'background' // Make it appear as a background event
+                return [
+                    'title' => 'Reservation: ' . $appointment->user_full_name,
+                    'start' => $appointment->appointment_day . 'T' . $appointment->appointment_time,
+                    'url' => route('mechanic.reservation.show', $appointment->id),
+                    'time' => $appointment->appointment_time,
+                    'color' => $color
                 ];
-            }
+            })
+            ->toArray();
 
+        // Fetch unavailable days from jour_indisponibles table
+        $unavailableDays = jour_indisponible::where('garage_ref', $garage->ref)
+            ->pluck('date'); // Assuming 'day' is stored in 'YYYY-MM-DD' format
+
+        // Add unavailable days as gray events
+        foreach ($unavailableDays as $day) {
+            $appointments[] = [
+                'title' => 'Indisponible',
+                'start' => $day,
+                'color' => 'gray',
+                'display' => 'background' // Make it appear as a background event
+            ];
+        }
+
+        // count : 
+        $mechanic = Auth::guard('mechanic')->user();
+        $clientsCount = User::whereHas('voitures', function ($query) use ($mechanic) {
+            $query->whereHas('operations', function ($operationQuery) use ($mechanic) {
+                $operationQuery->where('garage_id', $mechanic->garage_id);
+            })->orWhere('mechanic_id', $mechanic->garage_id);
+        })->distinct('id')->count('id');
         // 
+
+        $voituresCount = Voiture::where(function ($query) use ($mechanic) {
+            // Voitures with operations in the mechanic's garage
+            $query->whereHas('operations', function ($q) use ($mechanic) {
+                $q->where('garage_id', $mechanic->garage_id);
+            })
+                // OR voitures belonging to users created by this mechanic
+                ->orWhereHas('user', function ($q) use ($mechanic) {
+                    $q->where('mechanic_id', $mechanic->garage->id);
+                });
+        })->distinct()->count();
+
         return view('mechanic.dashboard', [
             // 'labels' => $operationsByMonth->keys()->toArray(), // French month names
             // 'values' => $operationsByMonth->values()->toArray(), // Operation counts
             // 'years' => $years, // Available years
             // 'selectedYear' => $selectedYear,
             'Rdvcount' => $Rdvcount,
-            'appointments'=>$appointments // Current selected year
+            'appointments' => $appointments, // Current selected year
+            'voituresCount' => $voituresCount,
+            'clientsCount' => $clientsCount
         ]);
     }
 }
