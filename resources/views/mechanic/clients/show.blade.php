@@ -114,7 +114,7 @@
 
           @if($client->created_by_mechanic && $client->mechanic_id == Auth::user()->id)
           <a href="{{ route('mechanic.voitures.create') }}">
-            <x-primary-button>ajouter une voiture</x-primary-button>
+            <x-primary-button>ajouter une véhicule</x-primary-button>
           </a>
           @endif
 
@@ -234,7 +234,7 @@
             <div class="my-6 ">
               {{-- Détails du voiture --}}
               <a href="{{ route('mechanic.voitures.show',$voiture->id) }}">
-                <x-primary-button>Détails du voiture</x-primary-button>
+                <x-primary-button>Détails du véhicule</x-primary-button>
               </a>
             </div>
           </div>

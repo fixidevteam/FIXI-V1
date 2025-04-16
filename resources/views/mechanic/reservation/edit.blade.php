@@ -32,6 +32,28 @@
                             <a
                                 href="{{ route('mechanic.reservation.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
+                                Gestion des RDV's
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg
+                                class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 6 10">
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="m1 9 4-4-4-4" />
+                            </svg>
+                            <a
+                                href="{{ route('mechanic.reservation.index') }}"
+                                class="inline-flex items-center text-sm font-medium text-gray-700">
                                 Mes rendez-vous
                             </a>
                         </div>
@@ -129,8 +151,8 @@
                                     class="block mt-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     placeholder="Choose a date"
                                     name="appointment_day"
-                                    readonly 
-                                    value="{{old('appointment_day') ?? $appointment->appointment_day}}"/>
+                                    readonly
+                                    value="{{old('appointment_day') ?? $appointment->appointment_day}}" />
                             </div>
                             <div id="step2" class="step">
                                 <div id="times" class="mt-6 grid grid-cols-2 gap-4">

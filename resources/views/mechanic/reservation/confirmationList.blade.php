@@ -30,12 +30,13 @@
                                     d="m1 9 4-4-4-4" />
                             </svg>
                             <a
-                                href="{{ route('mechanic.reservation.list') }}"
+                                href="{{ route('mechanic.reservation.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Mes rendez-vous
+                                Gestion des RDV's
                             </a>
                         </div>
                     </li>
+
                     <li>
                         <div class="flex items-center">
                             <svg
@@ -118,7 +119,7 @@
                     {{-- table --}}
 
                     <form action="{{ route('mechanic.confirmation') }}" method="GET" class="space-y-2 mx-auto my-5">
-                        <label for="search" >Choisissez la date du rendez-vous :</label>
+                        <label for="search">Choisissez la date du rendez-vous :</label>
                         <div class="flex items-center w-full">
                             <input
                                 type="date"
