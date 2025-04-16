@@ -193,7 +193,7 @@
           {{-- Détails du voiture --}}
           <div class="mb-4">
             <a href="{{ route('mechanic.voitures.show',$operation->voiture->id) }}">
-                <x-primary-button>Détails du voiture</x-primary-button>
+                <x-primary-button>Détails du véhicule</x-primary-button>
             </a>
           </div>
         </div>

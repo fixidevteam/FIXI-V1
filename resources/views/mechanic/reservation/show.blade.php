@@ -32,7 +32,7 @@
               <a
                 href="{{ route('mechanic.reservation.index') }}"
                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                Mes rendez-vous
+                Gestion des RDV's
               </a>
             </div>
           </li>
@@ -151,14 +151,25 @@
             </div>
           </div>
           {{-- box 3 --}}
-          <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
+          <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
             <div>
               <h3 class="mb-1 text-gray-500 md:text-lg">Domaine</h3>
               <p class="text-lg font-semibold">{{ $appointment->categorie_de_service ?? 'N/A'}}</p>
             </div>
             <div>
-              <h3 class="mb-1 text-gray-500 md:text-lg">Marque de la voiture</h3>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Prestation</h3>
+              <p class="text-lg font-semibold">{{ $appointment->prestation ?? 'N/A'}}</p>
+            </div>
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">Marque du véhicule</h3>
               <p class="text-lg font-semibold">{{ $appointment->modele ?? 'N/A'}}</p>
+            </div>
+          </div>
+          {{-- box 3 --}}
+          <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
+            <div>
+              <h3 class="mb-1 text-gray-500 md:text-lg">N° de châssis (VIN)</h3>
+              <p class="text-lg font-semibold">{{ $appointment->vin ?? 'N/A'}}</p>
             </div>
           </div>
           {{-- box 4 --}}

@@ -99,7 +99,7 @@
                         <x-input-error :messages="$errors->get('ville')" class="mt-2" />
                     </div>
 
-                    <h2 class="mt-10  text-xl font-bold leading-9 tracking-tight text-gray-900">Informations du voiture:</h2>
+                    <h2 class="mt-10  text-xl font-bold leading-9 tracking-tight text-gray-900">Informations du véhicule:</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                         <div>
