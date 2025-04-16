@@ -45,7 +45,7 @@ class MechanicClientController extends Controller
 
         // Fetch clients explicitly created by the authenticated mechanic
         $createdClientsQuery = User::where('created_by_mechanic', 1)
-            ->where('mechanic_id', $user->id);
+            ->where('mechanic_id', $user->garage->id);
 
         // Apply search filter to created clients
         if ($search) {
@@ -142,7 +142,7 @@ class MechanicClientController extends Controller
             'telephone' => $request->telephone,
             'status' => 0,
             'created_by_mechanic' => 1,
-            'mechanic_id' => Auth::user()->id,
+            'mechanic_id' => Auth::user()->garage->id,
         ]);
         $data['user_id'] = $created_user->id;
         $data['numero_immatriculation'] = $numeroImmatriculation;
@@ -179,7 +179,7 @@ class MechanicClientController extends Controller
                 // Clients explicitly created by the mechanic
                 ->orWhere(function ($query) use ($user) {
                     $query->where('created_by_mechanic', 1)
-                        ->where('mechanic_id', $user->id);
+                        ->where('mechanic_id', $user->garage->id);
                 });
         })
             ->with('voitures.operations')

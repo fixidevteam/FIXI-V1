@@ -37,7 +37,7 @@ class MechanicVoitureController extends Controller
 
         // Fetch voitures of users created by the mechanic
         $createdVoitures = User::where('created_by_mechanic', 1)
-            ->where('mechanic_id', $user->id)
+            ->where('mechanic_id', $user->garage->id)
             ->with('voitures')
             ->get()
             ->pluck('voitures')
@@ -160,7 +160,7 @@ class MechanicVoitureController extends Controller
                 // Case 2: Voitures of users created by the mechanic
                 ->orWhere(function ($query) use ($user, $id) {
                     $query->where('created_by_mechanic', 1)
-                        ->where('mechanic_id', $user->id)
+                        ->where('mechanic_id', $user->garage->id)
                         ->whereHas('voitures', function ($voitureQuery) use ($id) {
                             $voitureQuery->where('id', $id);
                         });

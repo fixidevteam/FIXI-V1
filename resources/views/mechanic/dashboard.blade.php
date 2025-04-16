@@ -92,15 +92,6 @@
             <a href="{{route('mechanic.clients.index')}}" class="flex items-center bg-white p-8 rounded-lg shadow hover:bg-gray-100">
               <div class="flex-shrink-0">
                 <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
-                  @php
-                  $mechanic = Auth::guard('mechanic')->user();
-
-                  $clientsCount = \App\Models\User::whereHas('voitures', function ($query) use ($mechanic) {
-                  $query->whereHas('operations', function ($operationQuery) use ($mechanic) {
-                  $operationQuery->where('garage_id', $mechanic->garage_id);
-                  });
-                  })->distinct('id')->count('id');
-                  @endphp
                   {{$clientsCount}} </span>
                 <h3 class="text-base font-normal text-gray-500 first-letter:capitalize">nombre des clients</h3>
               </div>
@@ -117,12 +108,7 @@
             <a href="{{route('mechanic.voitures.index')}}" class="flex items-center bg-white p-8 rounded-lg shadow hover:bg-gray-100">
               <div class="flex-shrink-0">
                 <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
-                  {{
-                                    $voituresCount = Auth::user()->garage->operations()
-                                    ->whereHas('voiture')
-                                    ->distinct('voiture_id')
-                                    ->count('voiture_id')
-                                }}
+                  {{$voituresCount}}
                 </span>
                 <h3 class="text-base font-normal text-gray-500 first-letter:capitalize">nombre des véhicules</h3>
               </div>
