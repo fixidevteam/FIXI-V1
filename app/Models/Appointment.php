@@ -21,6 +21,7 @@ class Appointment extends Model
         'appointment_time',
         'status',
         'presence_status',
-        'closed_at'
+        'closed_at',
+        'vin'
     ];
 }

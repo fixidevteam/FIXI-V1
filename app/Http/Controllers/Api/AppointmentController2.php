@@ -54,7 +54,7 @@ class AppointmentController2 extends Controller
 
         // Fetch services from the garages table (stored as JSON)
         $garage = Garage::where('ref', $garage_ref)->first();
-        $services =  $garage ? $garage->services : [];
+        $services =  $garage ? $garage->domaines : [];
 
         // Fetch marques from the marque_voitures table
         $marques = MarqueVoiture::pluck('marque')->toArray();
@@ -217,7 +217,7 @@ class AppointmentController2 extends Controller
 
         // Fetch services from the garages table
         $garage = Garage::where('ref', $garage_ref)->first();
-        $services = $garage ? $garage->services : [];
+        $services = $garage ? $garage->domaines : [];
 
         // Fetch marques from the marque_voitures table
         $marques = MarqueVoiture::pluck('marque')->toArray();
@@ -301,6 +301,7 @@ class AppointmentController2 extends Controller
             'appointment_time' => 'required|date_format:H:i:s',
             'modele' => 'nullable|string|max:255',
             'objet_du_RDV' => 'nullable|string|max:255',
+            'vin' => 'nullable|string|max:255',
         ]);
 
         // Check if the selected slot is still available
@@ -346,6 +347,7 @@ class AppointmentController2 extends Controller
             'categorie_de_service' => 'required|string|max:255',
             'modele' => 'nullable|string|max:255',
             'objet_du_RDV' => 'nullable|string|max:255',
+            'vin' => 'nullable|string|max:255',
         ]);
 
         $email = $request->email;
@@ -373,6 +375,7 @@ class AppointmentController2 extends Controller
                 'categorie_de_service' => $request->categorie_de_service,
                 'modele' => $request->modele,
                 'objet_du_RDV' => $request->objet_du_RDV,
+                'vin' => $request->vin,
             ]);
 
             // Clear the verification code from cache

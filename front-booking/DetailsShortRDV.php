@@ -115,6 +115,11 @@ if (!empty($acf_link)) {
         </div>
 
         <div class="mb-4">
+          <input type="text" id="vin" name="vin" placeholder="N° de châssis (VIN)"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+        </div>
+
+        <div class="mb-4">
           <input type="text" id="objet_du_RDV" name="objet_du_RDV" placeholder="Message (optionnel)"
             class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
@@ -581,6 +586,9 @@ if (!empty($acf_link)) {
       let objet_du_RDV = document
         .getElementById("objet_du_RDV")
         .value.trim();
+      let vin = document
+        .getElementById("vin")
+        .value.trim();
 
       // Validate form fields one by one
       if (!fullName) {
@@ -643,6 +651,8 @@ if (!empty($acf_link)) {
               categorie_de_service: categorie_de_service,
               modele: modele,
               objet_du_RDV: objet_du_RDV,
+              vin: vin,
+
               garage_ref: garageRef,
               appointment_day: selectedDate,
               appointment_time: selectedTime + ":00",
@@ -710,6 +720,8 @@ if (!empty($acf_link)) {
               ).value,
               modele: document.getElementById("modele").value,
               objet_du_RDV: document.getElementById("objet_du_RDV").value,
+              vin: document.getElementById("vin").value,
+
               garage_ref: garageRef,
               appointment_day: selectedDate,
               appointment_time: selectedTime + ":00",

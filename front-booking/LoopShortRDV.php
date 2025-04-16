@@ -31,12 +31,12 @@ if (!empty($garage_ref)) {
       $unique_id = 'garage_' . esc_attr($garage_ref);
     ?>
   <!-- Main Container -->
-  <div class="booking-wrapper my-8" id="<?php echo $unique_id; ?>">
+  <div class="booking-wrapper my-2" id="<?php echo $unique_id; ?>">
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
       <!-- Date Selection Section -->
-      <div class="p-6">
+      <div class="p-4">
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Choisir une date</h2>
-        <div class="flex justify-between space-x-2 mb-6 overflow-x-auto pb-2"
+        <div class="flex justify-between space-x-2 mb-2 overflow-x-auto pb-2"
           id="dateSelector_<?php echo $unique_id; ?>">
           <!-- Loading state -->
           <div class="animate-pulse flex space-x-2">
@@ -51,7 +51,7 @@ if (!empty($garage_ref)) {
       <div class="border-t border-gray-200"></div>
 
       <!-- Time Slots Section -->
-      <div class="p-6">
+      <div class="p-4">
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Choisir un créneau</h2>
         <div class="grid grid-cols-3 gap-3" id="timeSlots_<?php echo $unique_id; ?>">
           <!-- Loading state -->
@@ -110,6 +110,11 @@ if (!empty($garage_ref)) {
         <div class="mb-4">
           <select id="modele_<?php echo $unique_id; ?>" name="modele"
             class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></select>
+        </div>
+
+        <div class="mb-4">
+          <input type="text" id="vin" name="vin" placeholder="N° de châssis (VIN)"
+            class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
 
         <div class="mb-4">
@@ -534,6 +539,9 @@ if (!empty($garage_ref)) {
       let categorie_de_service = document.getElementById("categorie_de_service_" + uniqueId).value;
       let modele = document.getElementById("modele_" + uniqueId).value;
       let objet_du_RDV = document.getElementById("objet_du_RDV_" + uniqueId).value.trim();
+      let vin = document
+        .getElementById("vin")
+        .value.trim();
 
       // Validate form fields one by one
       if (!fullName) {
@@ -589,6 +597,7 @@ if (!empty($garage_ref)) {
               categorie_de_service: categorie_de_service,
               modele: modele,
               objet_du_RDV: objet_du_RDV,
+              vin: vin,
               garage_ref: garageRef,
               appointment_day: selectedDate,
               appointment_time: selectedTime + ":00",
@@ -650,6 +659,7 @@ if (!empty($garage_ref)) {
               categorie_de_service: document.getElementById("categorie_de_service_" + uniqueId).value,
               modele: document.getElementById("modele_" + uniqueId).value,
               objet_du_RDV: document.getElementById("objet_du_RDV_" + uniqueId).value,
+              vin: document.getElementById("vin").value,
               garage_ref: garageRef,
               appointment_day: selectedDate,
               appointment_time: selectedTime + ":00",
