@@ -26,7 +26,7 @@ class MechanicConvertRdvToOperation extends Controller
 
         $marques = MarqueVoiture::all();
 
-        return view('Mechanic.convertRdvToOperation.convert', compact('Appointment', 'client', 'marques'));
+        return view('mechanic.convertRdvToOperation.convert', compact('Appointment', 'client', 'marques'));
         // echo($client->voitures );
 
     }
