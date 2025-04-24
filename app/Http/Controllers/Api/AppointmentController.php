@@ -177,7 +177,7 @@ class AppointmentController extends Controller
     //     ]);
     // }
 
-    public function getAvailableDatesShort2(Request $request)
+    public function getAvailableDatesShort(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
 
