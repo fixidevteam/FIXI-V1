@@ -595,6 +595,21 @@ if (!empty($garage_ref)) {
         document.getElementById("phone_" + uniqueId).classList.remove("!border-red-500");
       }
 
+      if (email !== "") {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showError("Format d'adresse e-mail invalide.");
+          document
+            .getElementById("email_" + uniqueId)
+            .classList.add("!border-red-500");
+          return;
+        } else {
+          document
+            .getElementById("email_" + uniqueId)
+            .classList.remove("!border-red-500");
+        }
+      }
+
       if (categorie_de_service === "") {
         showError("Le domaine est obligatoire.");
         document.getElementById("categorie_de_service_" + uniqueId).classList.add("border-red-500");

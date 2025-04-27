@@ -643,6 +643,21 @@ if (!empty($acf_link)) {
           .classList.remove("!border-red-500");
       }
 
+      if (email !== "") {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showError("Format d'adresse e-mail invalide.");
+          document
+            .getElementById("email")
+            .classList.add("!border-red-500");
+          return;
+        } else {
+          document
+            .getElementById("email")
+            .classList.remove("!border-red-500");
+        }
+      }
+
       if (categorie_de_service === "") {
         showError("Le domaine est obligatoire.");
         document
