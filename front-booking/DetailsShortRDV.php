@@ -100,7 +100,7 @@ if (!empty($acf_link)) {
         </div>
 
         <div class="mb-4">
-          <input type="email" id="email" name="email" placeholder="Adresse E-mail"
+          <input type="email" id="email" name="email" placeholder="Votre Adresse E-mail (optionnelle)"
             class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
 
@@ -115,12 +115,12 @@ if (!empty($acf_link)) {
         </div>
 
         <div class="mb-4">
-          <input type="text" id="vin" name="vin" placeholder="N° de châssis (VIN)"
+          <input type="text" id="vin" name="vin" placeholder="N° de chassis - VIN (optionnelle)"
             class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
 
         <div class="mb-4">
-          <input type="text" id="objet_du_RDV" name="objet_du_RDV" placeholder="Message (optionnel)"
+          <input type="text" id="objet_du_RDV" name="objet_du_RDV" placeholder="Message pour le garage (optionnel)"
             class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
 
