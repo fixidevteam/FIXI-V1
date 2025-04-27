@@ -125,59 +125,8 @@ class AppointmentController extends Controller
             'time_slots' => $slots,
         ]);
     }
-    // new method :
-    // public function getAvailableDatesShort2(Request $request)
-    // {
-    //     $garage_ref = $request->query('garage_ref');
 
-    //     // Fetch all schedules for this garage
-    //     $schedules = GarageSchedule::where('garage_ref', $garage_ref)->get();
-
-    //     $availability = [];
-    //     foreach ($schedules as $schedule) {
-    //         $dayOfWeek = $schedule->available_day;
-    //         $availability[$dayOfWeek] = true;
-    //     }
-
-    //     // Generate available dates for the next 7 days (like in the screenshot)
-    //     $dates = [];
-    //     $today = Carbon::today();
-    //     for ($i = 0; $i < 7; $i++) {
-    //         $date = $today->copy()->addDays($i);
-    //         $dayOfWeek = $date->dayOfWeek;
-
-    //         if (isset($availability[$dayOfWeek])) {
-    //             $dates[] = [
-    //                 'date' => $date->format('Y-m-d'),
-    //                 'day_name' => $date->shortDayName, // "dim", "lun", etc.
-    //                 'day_number' => $date->day,
-    //                 'month_short' => $date->shortMonthName, // "avr", "mai", etc.
-    //             ];
-    //         }
-    //     }
-
-    //     // Fetch unavailable days
-    //     $disabledDates = jour_indisponible::where('garage_ref', $garage_ref)
-    //         ->pluck('date')
-    //         ->toArray();
-
-    //     // Fetch services from the garages table (stored as JSON)
-    //     $garage = Garage::where('ref', $garage_ref)->first();
-    //     $services =  $garage ? $garage->services : [];
-
-    //     // Fetch marques from the marque_voitures table
-    //     $marques = MarqueVoiture::pluck('marque')->toArray();
-
-
-    //     return response()->json([
-    //         'available_dates' => $dates,
-    //         'unavailable_dates' => $disabledDates,
-    //         'services' => $services,
-    //         'marques' => $marques,
-    //     ]);
-    // }
-
-    public function getAvailableDatesShort2(Request $request)
+    public function getAvailableDatesShort(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
 
@@ -339,7 +288,7 @@ class AppointmentController extends Controller
                             "verificationCode" => (string)$verificationCode
                         ]
                     ],
-                    "content" => "Bonjour " . $fullName . ", votre code de vérification est {{verificationCode}}. Veuillez l'utiliser pour confirmer votre rendez-vous.",
+                    "content" => "Bonjour " . $fullName . ", votre code de vérification est {{verificationCode}}. Veuillez l'utiliser pour confirmer votre rendez-vous.\n FIXI.MA",
                     "transliterateMessage" => false,
                     "messageEncoding" => 0
                 ]
@@ -491,7 +440,7 @@ class AppointmentController extends Controller
                             "verificationCode" => (string)$verificationCode
                         ]
                     ],
-                    "content" => "Bonjour " . $fullName . ", votre code de vérification est {{verificationCode}}. Veuillez l'utiliser pour confirmer votre rendez-vous.",
+                    "content" => "Bonjour " . $fullName . ", votre code de vérification est {{verificationCode}}. Veuillez l'utiliser pour confirmer votre rendez-vous.\n FIXI.MA",
                     "transliterateMessage" => false,
                     "messageEncoding" => 0
                 ]

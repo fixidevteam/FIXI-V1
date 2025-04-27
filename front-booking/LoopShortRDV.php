@@ -848,5 +848,7 @@ if (!empty($garage_ref)) {
 </body>
 
 </html>
-<?php }
-  }
+<?php }} else { ?>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic dolorem impedit tempore asperiores dolores quasi fuga!
+  Aut voluptatem tempora amet deserunt temporibus voluptate nobis minima, magnam quia consequuntur, earum ipsa?</p>
+<?php}?>
