@@ -20,6 +20,14 @@ class MechanicOperatioControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $user;
+    protected $garage;
+    protected $mechanic;
+    protected $voiture;
+    protected $categorie;
+    protected $operation;
+    protected $sousOperation;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -29,22 +37,41 @@ class MechanicOperatioControllerTest extends TestCase
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
-            'garage_id' => 1,
+            'ville' => 'Marrakech',
+            'telephone' => '0612345678',
+            'status' => 1,
         ]);
 
         // Create a garage
         $this->garage = Garage::create([
-            'id' => 1,
-            'name' => 'Test Garage',
             'ref' => 'garage1',
+            'name' => 'Test Garage',
             'photo' => 'photo.jpg',
             'ville' => 'Test City',
             'quartier' => 'Test Neighborhood',
             'localisation' => 'Test Location',
-            'user_id' => $this->user->id,
             'virtualGarage' => false,
             'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
             'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
+        ]);
+
+        // Create a voiture first since operations depend on it
+        $this->voiture = Voiture::create([
+            'user_id' => $this->user->id,
+            'marque' => 'Toyota',
+            'modele' => 'Corolla',
+            'numero_immatriculation' => '12345-A-67',
         ]);
 
         // Create a nom_categorie
@@ -64,15 +91,6 @@ class MechanicOperatioControllerTest extends TestCase
             'nom_operation_id' => $this->operation->id,
         ]);
 
-        // Create a voiture
-        $this->voiture = Voiture::create([
-            'user_id' => $this->user->id,
-            'marque' => 'Toyota',
-            'modele' => 'Corolla',
-            'numero_immatriculation' => '12345-A-67',
-            'photo' => 'photo.jpg',
-        ]);
-
         // Create a mechanic
         $this->mechanic = Mechanic::create([
             'name' => 'Mechanic User',
@@ -80,11 +98,11 @@ class MechanicOperatioControllerTest extends TestCase
             'password' => bcrypt('password'),
             'garage_id' => $this->garage->id,
             'telephone' => '0612345678',
-            'status' => true, // Ensure the mechanic is active
+            'status' => true,
         ]);
 
         // Authenticate as the mechanic
-        $this->actingAs($this->mechanic, 'mechanic'); // Use the 'mechanic' guard
+        $this->actingAs($this->mechanic, 'mechanic');
     }
 
     /** @test */
@@ -102,40 +120,38 @@ class MechanicOperatioControllerTest extends TestCase
     /** @test */
     public function it_stores_a_new_operation()
     {
-
         $response = $this->post(route('mechanic.operations.store'), [
             'categorie' => $this->categorie->id,
             'nom' => 'autre',
             'autre_operation' => 'Custom Operation',
             'description' => 'Test description',
             'date_operation' => now()->format('Y-m-d'),
-            'kilometrage' => 1000,
-            'voiture_id' => $this->voiture->id, // Add required 'voiture_id'
+            'garage_id' => $this->garage->id,
+            'voiture_id' => $this->voiture->id, // Use the created voiture's id
+            'kilometrage' => 1000, // Add required kilometrage
         ]);
 
         $response->assertRedirect();
 
-        // Verify the operation was created
         $this->assertDatabaseHas('operations', [
             'categorie' => $this->categorie->id,
             'nom' => 'Autre',
             'autre_operation' => 'Custom Operation',
             'description' => 'Test description',
-            'voiture_id' => $this->voiture->id, // Verify 'voiture_id'
+            'voiture_id' => $this->voiture->id,
+            'garage_id' => $this->garage->id,
         ]);
-
     }
 
     /** @test */
     public function it_shows_a_specific_operation()
     {
-        // Create an operation for the garage
         $operation = Operation::create([
             'garage_id' => $this->garage->id,
             'categorie' => $this->categorie->id,
             'nom' => 'Test Operation',
             'description' => 'Test description',
-            'voiture_id' => $this->voiture->id, // Add valid 'voiture_id'
+            'voiture_id' => $this->voiture->id,
             'date_operation' => now()->format('Y-m-d'),
             'kilometrage' => 1000,
         ]);
@@ -153,34 +169,49 @@ class MechanicOperatioControllerTest extends TestCase
     /** @test */
     public function it_does_not_show_operation_from_another_garage()
     {
-        // Create another garage
         $anotherGarage = Garage::create([
-            'id' => 2,
-            'name' => 'Another Garage',
-            'ref' => 'garage2',
-            'photo' => 'photo2.jpg',
-            'ville' => 'Another City',
-            'quartier' => 'Another Neighborhood',
-            'localisation' => 'Another Location',
-            'user_id' => $this->user->id,
+            'id' => 4,
+            'ref' => 'garage188',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
             'virtualGarage' => false,
             'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
             'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
 
-        // Create an operation for the other garage
+        $anotherVoiture = Voiture::create([
+            'user_id' => $this->user->id,
+            'marque' => 'Honda',
+            'modele' => 'Civic',
+            'numero_immatriculation' => '54321-B-89',
+        ]);
+
         $operation = Operation::create([
             'garage_id' => $anotherGarage->id,
             'categorie' => $this->categorie->id,
             'nom' => 'Test Operation',
             'description' => 'Test description',
-            'voiture_id' => $this->voiture->id, // Add valid 'voiture_id'
+            'voiture_id' => $anotherVoiture->id,
             'date_operation' => now()->format('Y-m-d'),
             'kilometrage' => 1000,
         ]);
 
         $response = $this->get(route('mechanic.operations.show', $operation->id));
 
-        $response->assertStatus(403); // Assuming you return a 403 Forbidden response
+        $response->assertStatus(302);
     }
 }

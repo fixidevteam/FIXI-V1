@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 use App\Models\Garage;
+use App\Models\Mechanic;
 use App\Models\Voiture;
 use App\Models\Operation;
 use Carbon\Carbon;
@@ -28,23 +29,42 @@ class GetAnalyticsDataControllerTest extends TestCase
             'status' => true
         ]);
 
-        // Create a garage for the user
+        // Create a garage
         $this->garage = Garage::create([
-            'name' => 'Test Garage',
             'ref' => 'garage1',
+            'name' => 'Test Garage',
             'photo' => 'photo.jpg',
             'ville' => 'Test City',
             'quartier' => 'Test Neighborhood',
             'localisation' => 'Test Location',
-            'user_id' => $this->user->id,
             'virtualGarage' => false,
             'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
             'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
 
+        // Create a mechanic
+        $this->mechanic = Mechanic::create([
+            'name' => 'Mechanic User',
+            'email' => 'mechanic@example.com',
+            'password' => bcrypt('password'),
+            'garage_id' => $this->garage->id,
+            'teleuser_phone' => '0612345678',
+            'status' => true, // Ensure the mechanic is active
+        ]);
 
-        // Authenticate as the user
-        $this->actingAs($this->user);
+        // Authenticate as the mechanic
+        $this->actingAs($this->mechanic, 'mechanic');
     }
 
     /** @test */
@@ -77,7 +97,7 @@ class GetAnalyticsDataControllerTest extends TestCase
         ]);
 
         // Call the API endpoint
-        $response = $this->getJson(route('analytics.data'));
+        $response = $this->getJson(route('mechanic.analytics.data'));
 
         // Assert the response status and structure
         $response->assertStatus(200)
@@ -100,7 +120,7 @@ class GetAnalyticsDataControllerTest extends TestCase
     {
 
         // Call the API endpoint
-        $response = $this->getJson(route('analytics.data'));
+        $response = $this->getJson(route('mechanic.analytics.data'));
 
         // Assert the response status and structure
         $response->assertStatus(200)

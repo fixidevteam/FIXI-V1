@@ -23,9 +23,26 @@ class AdminGestionGarageControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
         $garage = Garage::create([
+           'ref' => 'garage1',
             'name' => 'Test Garage',
-            'ref' => 'G-001',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
             'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
 
         $response = $this->actingAs($admin,'admin')->get(route('admin.gestionGarages.index'));
@@ -45,18 +62,52 @@ class AdminGestionGarageControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
         $data = [
-            'name' => 'New Garage',
-            'ref' => 'G-002',
-            'localisation' => 'New Location',
-            'photo' => null,
+           'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ];
 
         $response = $this->actingAs($admin,'admin')->post(route('admin.gestionGarages.store'), $data);
 
         $response->assertRedirect(route('admin.gestionGarages.index'));
         $this->assertDatabaseHas('garages', [
-            'name' => 'New Garage',
-            'ref' => 'G-002',
+            'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
     }
 

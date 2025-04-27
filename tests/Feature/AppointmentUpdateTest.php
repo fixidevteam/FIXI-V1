@@ -28,11 +28,26 @@ class AppointmentUpdateTest extends TestCase
         $user = User::factory()->create(['status' => 1, 'ville' => 'marrakech']);
         // Create garage
         $garage = garage::create([
-            'id' => 1,
-            'name' => 'Auto Atlas',
-            'ref' => 'GAR-00001',
-            'localisation' => 'marrakech, cherifia',
-            'ville' => 'Marrakech',
+            'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
         // Selected date
         $selectedDate = now()->addDays(3)->toDateString();
@@ -65,7 +80,7 @@ class AppointmentUpdateTest extends TestCase
             'objet_du_RDV' => 'Routine check-up',
             'appointment_day' => now()->addDays(3)->toDateString(),
             'appointment_time' => '10:00',
-            'status' => 'en_cour',
+            'status' => 'en cours',
         ]);
         // Data to update the appointment.
         $data = [
@@ -84,7 +99,7 @@ class AppointmentUpdateTest extends TestCase
         $appointment->refresh();
 
         // Assert the appointment was updated with the new data and the status.
-        $this->assertEquals('en_cour', $appointment->status);
+        $this->assertEquals('en cours', $appointment->status);
         $this->assertEquals($data['appointment_day'], $appointment->appointment_day);
         $this->assertEquals($data['appointment_time'], $appointment->appointment_time);
         $this->assertEquals($data['categorie_de_service'], $appointment->categorie_de_service);

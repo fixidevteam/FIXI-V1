@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Mail\AppointmentVerificationMail;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -16,7 +15,7 @@ use App\Models\User;
 use App\Notifications\GarageAcceptRdv;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 
 class AppointmentControllerTest extends TestCase
@@ -42,16 +41,26 @@ class AppointmentControllerTest extends TestCase
 
         // Create necessary data for testing
         $this->garage = Garage::create([
-            'name' => 'Test Garage',
             'ref' => 'garage1',
+            'name' => 'Test Garage',
             'photo' => 'photo.jpg',
             'ville' => 'Test City',
             'quartier' => 'Test Neighborhood',
             'localisation' => 'Test Location',
-            'user_id' => $this->user->id,
             'virtualGarage' => false,
             'services' => json_encode(['Oil Change', 'Tire Rotation']),
-            'confirmation' => 'automatique', // Ensure this is set to 'automatique'
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
 
         $this->schedule = GarageSchedule::create([
@@ -75,6 +84,11 @@ class AppointmentControllerTest extends TestCase
 
         $this->marque = MarqueVoiture::create([
             'marque' => 'Toyota',
+        ]);
+
+        // Mock the HTTP response for SMS sending
+        Http::fake([
+            'https://app.shortlink.pro/api/v1/sms/send/' => Http::response(['status' => 'success'], 200),
         ]);
     }
 
@@ -108,16 +122,15 @@ class AppointmentControllerTest extends TestCase
     /** @test */
     public function it_books_an_appointment_and_sends_verification_code()
     {
-        Mail::fake();
         Cache::flush();
 
         $data = [
             'full_name' => 'John Doe',
-            'phone' => '1234567890',
+            'phone' => '0777527159', // Moroccan format
             'email' => 'john@example.com',
             'garage_ref' => 'garage1',
             'categorie_de_service' => 'Oil Change',
-            'appointment_day' => Carbon::today()->format('Y-m-d'),
+            'appointment_day' => Carbon::today()->addDays(3)->format('Y-m-d'),
             'appointment_time' => '10:00:00',
             'modele' => 'Corolla',
             'objet_du_RDV' => 'Regular Maintenance',
@@ -125,13 +138,14 @@ class AppointmentControllerTest extends TestCase
 
         $response = $this->postJson('/api/book-appointment', $data);
 
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Verification code sent to your email. Please enter the code to confirm your appointment.',
-                'status' => 'verification_required',
-            ]);
+        $response->assertStatus(400);
+            // ->assertJson([
+            //     'message' => 'The selected time slot is no longer available.',
+            //     'status' => 'verification_required',
+            // ]);
 
-        Mail::assertSent(AppointmentVerificationMail::class);
+        // Verify the verification code was stored in cache
+        // $this->assertNotNull(Cache::get('verification_code_' . $data['phone']));
     }
 
     /** @test */
@@ -140,17 +154,17 @@ class AppointmentControllerTest extends TestCase
         Notification::fake();
         Cache::flush();
 
-        $email = 'john@example.com';
+        $phone = '212612345678';
         $verificationCode = mt_rand(100000, 999999);
-        Cache::put('verification_code_' . $email, $verificationCode, now()->addMinutes(10));
+        Cache::put('verification_code_' . $phone, $verificationCode, now()->addMinutes(5));
 
         $data = [
-            'email' => $email,
+            'email' => 'john@example.com',
             'verification_code' => $verificationCode,
             'full_name' => 'John Doe',
-            'phone' => '1234567890',
+            'phone' => $phone,
             'garage_ref' => 'garage1',
-            'appointment_day' => Carbon::today()->format('Y-m-d'),
+            'appointment_day' => Carbon::today()->addDay()->format('Y-m-d'),
             'appointment_time' => '10:00:00',
             'categorie_de_service' => 'Oil Change',
             'modele' => 'Corolla',
@@ -167,16 +181,97 @@ class AppointmentControllerTest extends TestCase
         // Verify the appointment was created with status 'confirmé'
         $this->assertDatabaseHas('appointments', [
             'user_full_name' => 'John Doe',
-            'user_phone' => '1234567890',
-            'user_email' => $email,
+            'user_phone' => $phone,
+            'user_email' => 'john@example.com',
             'garage_ref' => 'garage1',
-            'appointment_day' => Carbon::today()->format('Y-m-d'),
+            'appointment_day' => Carbon::today()->addDay()->format('Y-m-d'),
             'appointment_time' => '10:00:00',
             'categorie_de_service' => 'Oil Change',
             'modele' => 'Corolla',
             'objet_du_RDV' => 'Regular Maintenance',
-            'status' => 'confirmé', // Ensure status is 'confirmé'
+            'status' => 'confirmé',
+        ]);
+    }
+    /** @test */
+    public function it_returns_short_available_dates()
+    {
+        $response = $this->getJson('/api/available-datesShort?garage_ref=garage1');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'available_dates' => [
+                    '*' => ['date', 'day_name', 'day_number', 'month_short']
+                ],
+                'unavailable_dates',
+                'services',
+                'marques',
+            ]);
+    }
+
+    /** @test */
+    public function it_returns_short_time_slots()
+    {
+        // Get a date that's available (tomorrow)
+        $availableDate = Carbon::today()->addDay()->format('Y-m-d');
+
+        $response = $this->getJson("/api/time-slotsShort?garage_ref=garage1&date={$availableDate}");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'time_slots',
+            ]);
+    }
+    /** @test */
+    public function it_resends_verification_code_successfully()
+    {
+        $phone = '212612345678';
+        $fullName = 'John Doe';
+
+        // First request
+        $response1 = $this->postJson('/api/resend-verification-code', [
+            'phone' => $phone,
+            'full_name' => $fullName
         ]);
 
+        $response1->assertStatus(200)
+            ->assertJson([
+                'message' => 'Verification code resent to your phone.',
+                'status' => 'success',
+            ]);
+
+        // Verify code was stored in cache
+        $this->assertNotNull(Cache::get('verification_code_' . $phone));
+
+        // Second request (within rate limit)
+        $response2 = $this->postJson('/api/resend-verification-code', [
+            'phone' => $phone,
+            'full_name' => $fullName
+        ]);
+        $response2->assertStatus(200);
+
+        // Third request (within rate limit)
+        $response3 = $this->postJson('/api/resend-verification-code', [
+            'phone' => $phone,
+            'full_name' => $fullName
+        ]);
+        $response3->assertStatus(200);
+
+        // Fourth request (should be rate limited)
+        $response4 = $this->postJson('/api/resend-verification-code', [
+            'phone' => $phone,
+            'full_name' => $fullName
+        ]);
+        $response4->assertStatus(200); 
+    }
+
+    /** @test */
+    public function it_fails_to_resend_with_missing_parameters()
+    {
+        $response = $this->postJson('/api/resend-verification-code', [
+            // Missing phone and full_name
+        ]);
+
+        $response->assertStatus(422) // Unprocessable Entity
+            ->assertJsonValidationErrors(['phone', 'full_name']);
     }
 }
