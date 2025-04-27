@@ -31,10 +31,12 @@ if (!empty($garage_ref)) {
       $unique_id = 'garage_' . esc_attr($garage_ref);
     ?>
   <!-- Main Container -->
-  <div class="booking-wrapper my-2" id="<?php echo $unique_id; ?>">
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="booking-wrapper my-2 w-full" id="<?php echo $unique_id; ?>">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden w-full">
+      <!-- 		<h1 class="text-2xl font-semibold text-gray-800 mb-4 mx-4">Choisissez un rendez-vous</h1> -->
+
       <!-- Date Selection Section -->
-      <div class="p-4">
+      <div class="p-4 w-full">
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Choisir une date</h2>
         <div class="flex justify-between space-x-2 mb-2 overflow-x-auto pb-2"
           id="dateSelector_<?php echo $unique_id; ?>">
@@ -113,7 +115,7 @@ if (!empty($garage_ref)) {
         </div>
 
         <div class="mb-4">
-          <input type="text" id="vin" name="vin" placeholder="N° de châssis (VIN)"
+          <input type="text" id="vin_<?php echo $unique_id; ?>" name="vin" placeholder="N° de châssis (VIN)"
             class="w-full p-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
 
@@ -276,6 +278,11 @@ if (!empty($garage_ref)) {
       errorMessageDiv.classList.add("hidden");
     }
 
+    function validateVIN(vin) {
+      const vinRegex = /^[A-HJ-NPR-Z0-9]{17}$/;
+      return vinRegex.test(vin);
+    }
+
     // Initialize the app
     fetchAvailableDates();
 
@@ -310,7 +317,7 @@ if (!empty($garage_ref)) {
           `;
 
         const response = await fetch(
-          `https://fixidev.com/fixiapp/api/available-datesShort2?garage_ref=${garageRef}`
+          `https://fixidev.com/fixiapp/api/available-datesShort?garage_ref=${garageRef}`
         );
         if (!response.ok) throw new Error("Network response was not ok");
 
@@ -342,15 +349,36 @@ if (!empty($garage_ref)) {
       }
     }
 
+    // // Function to populate the services dropdown
+    // function populateServicesDropdown(services) {
+    //   const serviceMapping = {
+    //     Mécanique: "Services d'un garage mécanique",
+    //     Lavage: "Services d'un garage de lavage",
+    //     Carrosserie: "Services d'un garage de carrosserie",
+    //     Pneumatique: "Services d'un garage pneumatique",
+    //     Dépannage: "Services d'un garage dépannage",
+    //   };
+    //   const servicesSelect = document.getElementById("categorie_de_service_" + uniqueId);
+    //   servicesSelect.innerHTML = ""; // Clear existing options
+
+    //   // Add a default option
+    //   const defaultOption = document.createElement("option");
+    //   defaultOption.value = "";
+    //   defaultOption.textContent = "Choisir le domaine";
+    //   defaultOption.disabled = true;
+    //   defaultOption.selected = true;
+    //   servicesSelect.appendChild(defaultOption);
+
+    //   services.forEach((service) => {
+    //     const fullServiceName = serviceMapping[service] || service;
+    //     const option = document.createElement("option");
+    //     option.value = fullServiceName;
+    //     option.textContent = fullServiceName;
+    //     servicesSelect.appendChild(option);
+    //   });
+    // }
     // Function to populate the services dropdown
     function populateServicesDropdown(services) {
-      const serviceMapping = {
-        Mécanique: "Services d'un garage mécanique",
-        Lavage: "Services d'un garage de lavage",
-        Carrosserie: "Services d'un garage de carrosserie",
-        Pneumatique: "Services d'un garage pneumatique",
-        Dépannage: "Services d'un garage dépannage",
-      };
       const servicesSelect = document.getElementById("categorie_de_service_" + uniqueId);
       servicesSelect.innerHTML = ""; // Clear existing options
 
@@ -363,10 +391,9 @@ if (!empty($garage_ref)) {
       servicesSelect.appendChild(defaultOption);
 
       services.forEach((service) => {
-        const fullServiceName = serviceMapping[service] || service;
         const option = document.createElement("option");
-        option.value = fullServiceName;
-        option.textContent = fullServiceName;
+        option.value = service;
+        option.textContent = service;
         servicesSelect.appendChild(option);
       });
     }
@@ -402,7 +429,7 @@ if (!empty($garage_ref)) {
           `;
 
         const response = await fetch(
-          `https://fixidev.com/fixiapp/api/time-slotsShort2?garage_ref=${garageRef}&date=${date}`
+          `https://fixidev.com/fixiapp/api/time-slotsShort?garage_ref=${garageRef}&date=${date}`
         );
         if (!response.ok) throw new Error("Network response was not ok");
 
@@ -539,10 +566,7 @@ if (!empty($garage_ref)) {
       let categorie_de_service = document.getElementById("categorie_de_service_" + uniqueId).value;
       let modele = document.getElementById("modele_" + uniqueId).value;
       let objet_du_RDV = document.getElementById("objet_du_RDV_" + uniqueId).value.trim();
-      let vin = document
-        .getElementById("vin")
-        .value.trim();
-
+      let vin = document.getElementById("vin_" + uniqueId).value.trim().toUpperCase();
       // Validate form fields one by one
       if (!fullName) {
         showError("Le nom est obligatoire.");
@@ -577,6 +601,17 @@ if (!empty($garage_ref)) {
         document.getElementById("categorie_de_service_" + uniqueId).classList.remove("border-red-500");
       }
 
+      // VIN validation
+      if (vin && !validateVIN(vin)) {
+        showError(
+          "Le numéro de châssis doit comporter exactement 17 caractères alphanumériques (excluant les lettres I, O et Q)."
+        );
+        document.getElementById("vin_" + uniqueId).classList.add("border-red-500");
+        return;
+      } else {
+        document.getElementById("vin_" + uniqueId).classList.remove("border-red-500");
+      }
+
       // Show loading state
       confirmText.classList.add("hidden");
       confirmSpinner.classList.remove("hidden");
@@ -584,7 +619,7 @@ if (!empty($garage_ref)) {
 
       try {
         const response = await fetch(
-          "https://fixidev.com/fixiapp/api/book-appointment2", {
+          "https://fixidev.com/fixiapp/api/book-appointment", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -645,7 +680,7 @@ if (!empty($garage_ref)) {
 
       try {
         const response = await fetch(
-          "https://fixidev.com/fixiapp/api/appointments/verify2", {
+          "https://fixidev.com/fixiapp/api/appointments/verify", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -848,7 +883,13 @@ if (!empty($garage_ref)) {
 </body>
 
 </html>
-<?php }} else { ?>
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic dolorem impedit tempore asperiores dolores quasi fuga!
-  Aut voluptatem tempora amet deserunt temporibus voluptate nobis minima, magnam quia consequuntur, earum ipsa?</p>
-<?php}?>
+<?php }
+  } else {
+?>
+<div
+  class="flex flex-col items-center justify-center text-red-600 text-2xl font-semibold text-center px-4 my-20  h-full">
+  <div class="text-3xl font-bold">Oups !</div>
+  <div>Ce garage ne prend pas encore <br> les rendez-vous en ligne.</div>
+</div>
+<?php
+  }

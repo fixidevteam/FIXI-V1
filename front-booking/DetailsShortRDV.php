@@ -272,6 +272,11 @@ if (!empty($acf_link)) {
       errorMessageDiv.classList.add("hidden");
     }
 
+    function validateVIN(vin) {
+      const vinRegex = /^[A-HJ-NPR-Z0-9]{17}$/;
+      return vinRegex.test(vin);
+    }
+
     // Initialize the app
     fetchAvailableDates();
 
@@ -318,7 +323,7 @@ if (!empty($acf_link)) {
                     `;
 
         const response = await fetch(
-          `https://fixidev.com/fixiapp/api/available-datesShort2?garage_ref=${garageRef}`
+          `https://fixidev.com/fixiapp/api/available-datesShort?garage_ref=${garageRef}`
         );
         if (!response.ok) throw new Error("Network response was not ok");
 
@@ -352,17 +357,38 @@ if (!empty($acf_link)) {
     }
 
     // Function to populate the services dropdown
+    // function populateServicesDropdown(services) {
+    //   const serviceMapping = {
+    //     Mécanique: "Services d'un garage mécanique",
+    //     Lavage: "Services d'un garage de lavage",
+    //     Carrosserie: "Services d'un garage de carrosserie",
+    //     Pneumatique: "Services d'un garage pneumatique",
+    //     Dépannage: "Services d'un garage dépannage",
+    //   };
+    //   const servicesSelect = document.getElementById(
+    //     "categorie_de_service"
+    //   );
+    //   servicesSelect.innerHTML = ""; // Clear existing options
+
+    //   // Add a default option
+    //   const defaultOption = document.createElement("option");
+    //   defaultOption.value = "";
+    //   defaultOption.textContent = "Choisir le domaine";
+    //   defaultOption.disabled = true;
+    //   defaultOption.selected = true;
+    //   servicesSelect.appendChild(defaultOption);
+
+    //   services.forEach((service) => {
+    //     const fullServiceName = serviceMapping[service] || service;
+    //     const option = document.createElement("option");
+    //     option.value = fullServiceName;
+    //     option.textContent = fullServiceName;
+    //     servicesSelect.appendChild(option);
+    //   });
+    // }
+    // Function to populate the services dropdown
     function populateServicesDropdown(services) {
-      const serviceMapping = {
-        Mécanique: "Services d'un garage mécanique",
-        Lavage: "Services d'un garage de lavage",
-        Carrosserie: "Services d'un garage de carrosserie",
-        Pneumatique: "Services d'un garage pneumatique",
-        Dépannage: "Services d'un garage dépannage",
-      };
-      const servicesSelect = document.getElementById(
-        "categorie_de_service"
-      );
+      const servicesSelect = document.getElementById("categorie_de_service");
       servicesSelect.innerHTML = ""; // Clear existing options
 
       // Add a default option
@@ -374,10 +400,9 @@ if (!empty($acf_link)) {
       servicesSelect.appendChild(defaultOption);
 
       services.forEach((service) => {
-        const fullServiceName = serviceMapping[service] || service;
         const option = document.createElement("option");
-        option.value = fullServiceName;
-        option.textContent = fullServiceName;
+        option.value = service;
+        option.textContent = service;
         servicesSelect.appendChild(option);
       });
     }
@@ -419,7 +444,7 @@ if (!empty($acf_link)) {
                     `;
 
         const response = await fetch(
-          `https://fixidev.com/fixiapp/api/time-slotsShort2?garage_ref=${garageRef}&date=${date}`
+          `https://fixidev.com/fixiapp/api/time-slotsShort?garage_ref=${garageRef}&date=${date}`
         );
         if (!response.ok) throw new Error("Network response was not ok");
 
@@ -586,9 +611,8 @@ if (!empty($acf_link)) {
       let objet_du_RDV = document
         .getElementById("objet_du_RDV")
         .value.trim();
-      let vin = document
-        .getElementById("vin")
-        .value.trim();
+      let vin = document.getElementById("vin").value.trim().toUpperCase();
+
 
       // Validate form fields one by one
       if (!fullName) {
@@ -630,6 +654,16 @@ if (!empty($acf_link)) {
           .getElementById("categorie_de_service")
           .classList.remove("border-red-500");
       }
+      // VIN validation
+      if (vin && !validateVIN(vin)) {
+        showError(
+          "Le numéro de châssis doit comporter exactement 17 caractères alphanumériques (excluant les lettres I, O et Q)."
+        );
+        document.getElementById("vin").classList.add("border-red-500");
+        return;
+      } else {
+        document.getElementById("vin").classList.remove("border-red-500");
+      }
 
       // Show loading state
       confirmText.classList.add("hidden");
@@ -638,7 +672,7 @@ if (!empty($acf_link)) {
 
       try {
         const response = await fetch(
-          "https://fixidev.com/fixiapp/api/book-appointment2", {
+          "https://fixidev.com/fixiapp/api/book-appointment", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -704,7 +738,7 @@ if (!empty($acf_link)) {
 
       try {
         const response = await fetch(
-          "https://fixidev.com/fixiapp/api/appointments/verify2", {
+          "https://fixidev.com/fixiapp/api/appointments/verify", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

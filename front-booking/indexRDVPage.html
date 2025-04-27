@@ -438,6 +438,11 @@
                 errorMessageDiv.classList.add("hidden");
             }
 
+            function validateVIN(vin) {
+                const vinRegex = /^[A-HJ-NPR-Z0-9]{17}$/;
+                return vinRegex.test(vin);
+            }
+
             // Function to show the loading spinner
             function showLoading() {
                 document
@@ -797,19 +802,11 @@
 
             // Function to populate the services dropdown
             function populateServicesDropdown(services) {
-                const serviceMapping = {
-                    Mécanique: "Services d'un garage mécanique",
-                    Lavage: "Services d'un garage de lavage",
-                    Carrosserie: "Services d'un garage de carrosserie",
-                    Pneumatique: "Services d'un garage pneumatique",
-                    Dépannage: "Services d'un garage dépannage",
-                };
                 const servicesSelect = document.getElementById(
                     "categorie_de_service"
                 );
                 servicesSelect.innerHTML = ""; // Clear existing options
 
-                // Add services as options
                 // Add a default option
                 const defaultOption = document.createElement("option");
                 defaultOption.value = "";
@@ -819,10 +816,9 @@
                 servicesSelect.appendChild(defaultOption);
 
                 services.forEach((service) => {
-                    const fullServiceName = serviceMapping[service] || service; // Use mapping or fallback to the original name
                     const option = document.createElement("option");
-                    option.value = fullServiceName; // Use the full name as the value
-                    option.textContent = fullServiceName; // Display the full name
+                    option.value = service;
+                    option.textContent = service;
                     servicesSelect.appendChild(option);
                 });
             }
@@ -1022,7 +1018,10 @@
                 let modele = document.getElementById("modele").value;
                 let objet_du_RDV =
                     document.getElementById("objet_du_RDV").value;
-                let vin = document.getElementById("vin").value;
+                let vin = document
+                    .getElementById("vin")
+                    .value.trim()
+                    .toUpperCase();
 
                 // Validate form fields one by one
                 if (!fullName) {
@@ -1078,6 +1077,20 @@
                     document
                         .getElementById("categorie_de_service")
                         .classList.remove("!border-red-500");
+                }
+                // VIN validation
+                if (vin && !validateVIN(vin)) {
+                    showError(
+                        "Le numéro de châssis doit comporter exactement 17 caractères alphanumériques (excluant les lettres I, O et Q)."
+                    );
+                    document
+                        .getElementById("vin")
+                        .classList.add("border-red-500");
+                    return;
+                } else {
+                    document
+                        .getElementById("vin")
+                        .classList.remove("border-red-500");
                 }
 
                 // If all fields are valid, proceed with form submission
