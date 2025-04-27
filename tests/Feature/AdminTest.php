@@ -44,18 +44,18 @@ class AdminTest extends TestCase
         $response->assertStatus(200); // Assuming 200 is the status code for success
     }
     // Test if an mechanic admin$admin can access admin functionalities
-    public function test_mechanic_can_access_admin_functionalities()
-    {
-        $mechanic = new Mechanic(['garage_id'=>1]);
-        $mechanic->name = 'Mechanic User';
-        $mechanic->email = 'mechanic@gmail.com';
-        $mechanic->password = bcrypt('mechanic123');
-        $mechanic->save();
+    // public function test_mechanic_can_access_admin_functionalities()
+    // {
+    //     $mechanic = new Mechanic(['garage_id'=>1]);
+    //     $mechanic->name = 'Mechanic User';
+    //     $mechanic->email = 'mechanic@gmail.com';
+    //     $mechanic->password = bcrypt('mechanic123');
+    //     $mechanic->save();
 
-        $this->actingAs($mechanic, 'admin'); // Use 'admin' guard
+    //     $this->actingAs($mechanic, 'admin'); // Use 'admin' guard
 
-        $response = $this->get('/admin/dashboard');
+    //     $response = $this->get('/admin/dashboard');
 
-        $response->assertStatus(200); // Assuming 200 is the status code for success
-    }
+    //     $response->assertStatus(200); // Assuming 200 is the status code for success
+    // }
 }

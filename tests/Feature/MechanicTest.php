@@ -25,10 +25,26 @@ class MechanicTest extends TestCase
     public function test_it_hides_correct_attributes()
     {
         $garage = Garage::create([
-            'name' => 'Garage1',
-            'ville' => 'Marrakech',
-            'ref' => 'GAR-12345',
-            'user_id' => null,
+            'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false, // or true based on logic
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']), // example
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
 
         ]);
 
@@ -50,10 +66,26 @@ class MechanicTest extends TestCase
     public function test_it_belongs_to_a_garage()
     {
         $garage = Garage::create([
-            'name' => 'Garage1',
-            'ville' => 'Marrakech',
-            'ref' => 'GAR-12345',
-            'user_id' => null,
+            'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false, // or true based on logic
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']), // example
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
 
         ]);
 
@@ -70,5 +102,4 @@ class MechanicTest extends TestCase
     }
 
     /** @test */
-
 }

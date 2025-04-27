@@ -331,7 +331,7 @@ class AppointmentController extends Controller
             "defaultRegionCode" => "MA",
             "messages" => [
                 [
-                    "from" => "SHORTLINK",
+                    // "from" => "SHORTLINK",
                     "to" => [
                         [
                             "messageId" => "appt-verif-" . time(),

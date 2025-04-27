@@ -13,7 +13,7 @@ class RoutesTest extends TestCase
     public function test_dashboard_requires_auth_and_verified_middleware()
     {
         $response = $this->get('/fixi-plus/dashboard');
-        $response->assertRedirect('/login'); // Redirect to login because the user is not authenticated
+        $response->assertRedirect('fixi-plus/login'); // Redirect to login because the user is not authenticated
     }
 
     /** @test */

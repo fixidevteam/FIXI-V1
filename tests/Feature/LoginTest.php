@@ -20,7 +20,7 @@ class LoginTest extends TestCase
 
     public function test_user_can_login()
     {
-        $user = \App\Models\User::factory()->create();
+        $user = \App\Models\User::factory()->create(['status'=>2,'ville'=>'marrakech']);
 
         $response = $this->post('/login', [
             'email' => $user->email,

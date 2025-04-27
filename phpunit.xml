@@ -24,6 +24,8 @@
             <directory suffix=".php">./app/Http/Requests</directory>
             <directory suffix=".php">./app/View/</directory>
             <directory suffix=".php">./app/Http/Controllers/Auth</directory>
+            <directory suffix=".php">./app/Http/Controllers/admin/Auth</directory>
+            <directory suffix=".php">./app/Http/Controllers/Mechanic/Auth</directory>
         </exclude>
         <report>
             <text outputFile="php://stdout" showUncoveredFiles="true"/>

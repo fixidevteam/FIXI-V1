@@ -24,12 +24,26 @@ class AppointmentDestroyTest extends TestCase
         $user = User::factory()->create(['status' => 1, 'ville' => 'marrakech']);
         // Create garage
         $garage = garage::create([
-
-            'id' => 1,
-            'name' => 'Auto Atlas',
-            'ref' => 'GAR-00001',
-            'localisation' => 'marrakech, cherifia',
-            'ville' => 'Marrakech',
+            'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
         // Selected date
         $selectedDate = now()->addDays(3)->toDateString();
@@ -62,7 +76,7 @@ class AppointmentDestroyTest extends TestCase
             'objet_du_RDV' => 'Routine check-up',
             'appointment_day' => now()->addDays(3)->toDateString(),
             'appointment_time' => '10:00',
-            'status' => 'en_cour',
+            'status' => 'en cours',
         ]);
         $response = $this->actingAs($user)
             ->delete(route('RDV.destroy', $appointment->id));
@@ -71,7 +85,7 @@ class AppointmentDestroyTest extends TestCase
         $appointment->refresh();
 
         // Assert that the appointment's status was updated to 'cancelled'.
-        $this->assertEquals('cancelled', $appointment->status);
+        $this->assertEquals('annulé', $appointment->status);
 
         // Assert that flash messages indicate a successful cancellation.
         $response->assertSessionHas('success', 'Rendez-vous');
@@ -90,11 +104,26 @@ class AppointmentDestroyTest extends TestCase
         $user = User::factory()->create(['status' => 1, 'ville' => 'marrakech']);
         // Create garage
         $garage = garage::create([
-            'id' => 1,
-            'name' => 'Auto Atlas',
-            'ref' => 'GAR-00001',
-            'localisation' => 'marrakech, cherifia',
-            'ville' => 'Marrakech',
+            'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
         // Selected date
         $selectedDate = now()->addDays(3)->toDateString();
@@ -127,7 +156,7 @@ class AppointmentDestroyTest extends TestCase
             'objet_du_RDV' => 'Routine check-up',
             'appointment_day'  => Carbon::now()->addHours(23)->toDateTimeString(),
             'appointment_time' => '10:00',
-            'status' => 'en_cour',
+            'status' => 'en cours',
         ]);
 
 
@@ -158,10 +187,26 @@ class AppointmentDestroyTest extends TestCase
         // Create garage
         $garage = garage::create([
             'id' => 1,
-            'name' => 'Auto Atlas',
-            'ref' => 'GAR-00001',
-            'localisation' => 'marrakech, cherifia',
-            'ville' => 'Marrakech',
+            'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
         $nonExistingId = 999;
 

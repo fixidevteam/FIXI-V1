@@ -14,7 +14,7 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_link_screen_can_be_rendered(): void
     {
-        $response = $this->get('/forgot-password');
+        $response = $this->get('fixi-plus/forgot-password');
 
         $response->assertStatus(200);
     }
@@ -23,9 +23,9 @@ class PasswordResetTest extends TestCase
     {
         Notification::fake();
 
-        $user = User::factory()->create();
+        $user = User::factory()->create(['status'=>1,'ville'=>'marrakch']);
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->post('fixi-plus/forgot-password', ['email' => $user->email]);
 
         Notification::assertSentTo($user, ResetPassword::class);
     }
@@ -34,12 +34,12 @@ class PasswordResetTest extends TestCase
     {
         Notification::fake();
 
-        $user = User::factory()->create();
+        $user = User::factory()->create(['status'=>1,'ville'=>'marrakch']);
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->post('fixi-plus/forgot-password', ['email' => $user->email]);
 
         Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-            $response = $this->get('/reset-password/'.$notification->token);
+            $response = $this->get('fixi-plus/reset-password/'.$notification->token);
 
             $response->assertStatus(200);
 
@@ -51,12 +51,12 @@ class PasswordResetTest extends TestCase
     {
         Notification::fake();
 
-        $user = User::factory()->create();
+        $user = User::factory()->create(['status'=>1,'ville'=>'marrakch']);
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->post('fixi-plus/forgot-password', ['email' => $user->email]);
 
         Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
-            $response = $this->post('/reset-password', [
+            $response = $this->post('fixi-plus/reset-password', [
                 'token' => $notification->token,
                 'email' => $user->email,
                 'password' => 'password',

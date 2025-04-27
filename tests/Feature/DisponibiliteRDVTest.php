@@ -24,11 +24,26 @@ class DisponibiliteRDVTest extends TestCase
 
         // Create garage
         $garage = Garage::create([
-            'id' => 1,
-            'name' => 'Auto Atlas',
-            'ref' => 'GAR-00001',
-            'localisation' => 'marrakech, cherifia',
-            'ville' => 'Marrakech',
+           'ref' => 'garage1',
+            'name' => 'Test Garage',
+            'photo' => 'photo.jpg',
+            'ville' => 'Test City',
+            'quartier' => 'Test Neighborhood',
+            'localisation' => 'Test Location',
+            'virtualGarage' => false,
+            'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']),
+            'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
 
         // Selected date
@@ -63,7 +78,7 @@ class DisponibiliteRDVTest extends TestCase
             'objet_du_RDV' => 'Routine check-up',
             'appointment_day' => $selectedDate,
             'appointment_time' => '10:00:00',
-            'status' => 'en_cour', // Active booking
+            'status' => 'en cours', // Active booking
         ]);
 
         // Call the API endpoint

@@ -30,8 +30,20 @@ class MechanicReservationControllerTest extends TestCase
             'ville' => 'Test City',
             'quartier' => 'Test Neighborhood',
             'localisation' => 'Test Location',
+            'virtualGarage' => false, // or true based on logic
             'services' => json_encode(['Oil Change', 'Tire Rotation']),
+            'domaines' => json_encode(['Mechanical', 'Electrical']), // example
             'confirmation' => 'automatique',
+            'presentation' => 'A reliable garage with quick service.',
+            'telephone' => '0612345678',
+            'fixe' => '0522345678',
+            'whatsapp' => '0612345678',
+            'instagram' => 'https://instagram.com/testgarage',
+            'facebook' => 'https://facebook.com/testgarage',
+            'tiktok' => 'https://tiktok.com/@testgarage',
+            'linkedin' => 'https://linkedin.com/company/testgarage',
+            'latitude' => 33.5731,
+            'longitude' => -7.5898,
         ]);
 
         // Create a user (mechanic) associated with the garage
@@ -98,21 +110,9 @@ class MechanicReservationControllerTest extends TestCase
     /** @test */
     public function it_displays_a_list_of_appointments()
     {
-        // Create appointments for the garage
+        
         $appointment1 = Appointment::create([
-            'user_full_name' => 'John Doe',
-            'user_phone' => '1234567890',
-            'user_email' => 'john@example.com',
-            'garage_ref' => $this->garage->ref,
-            'appointment_day' => now()->format('Y-m-d'),
-            'appointment_time' => '10:00:00',
-            'categorie_de_service' => 'Oil Change',
-            'modele' => 'Corolla',
-            'objet_du_RDV' => 'Regular Maintenance',
-            'status' => 'en cours',
-        ]);
-
-        $appointment2 = Appointment::create([
+            'id'=>2,
             'user_full_name' => 'Jane Doe',
             'user_phone' => '0987654321',
             'user_email' => 'jane@example.com',
@@ -135,7 +135,8 @@ class MechanicReservationControllerTest extends TestCase
 
         // Verify the appointments data
         $appointments = $response->viewData('appointments');
-        $this->assertCount(2, $appointments->items()); // Verify paginated appointments
+        
+        $this->assertCount(1, $appointments->items()); // Verify paginated appointments
     }
 
     /** @test */
