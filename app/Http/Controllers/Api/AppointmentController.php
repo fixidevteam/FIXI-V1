@@ -25,6 +25,32 @@ use Illuminate\Support\Str;
 
 class AppointmentController extends Controller
 {
+    public function SMS($phone, $message)
+    {
+        $smsPayload = [
+            "defaultRegionCode" => "MA",
+            "messages" => [
+                [
+                    // "from" => "SHORTLINK",
+                    "to" => [
+                        [
+                            "messageId" => "appt-verif-" . time(),
+                            "phone" => $phone
+                        ]
+                    ],
+                    "content" => $message,
+                    "transliterateMessage" => false,
+                    "messageEncoding" => 0
+                ]
+            ]
+        ];
+        // Send SMS via Shortlink API
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'x-shortlink-apikey' => config('services.shortlink.api_key'),
+            'x-shortlink-apitoken' => config('services.shortlink.api_token'),
+        ])->post('https://app.shortlink.pro/api/v1/sms/send/', $smsPayload);
+    }
     public function getAvailableDates(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
@@ -359,14 +385,20 @@ class AppointmentController extends Controller
 
             $existEmail = User::where('email', $email)->first();
 
+            // Prepare SMS payload SEND SMS TO GARAGE TEL :
+            $url = route('mechanic.reservation.show', $appointment);
+            $message_gar = "Bonjour " . $garage->name . "\nVous venez de recevoir une demande de RDV :\n" . $url . "\n\nFIXI.MA";
+            $garage_phone = $garage->telephone;
+            // SEND SMS TO GARAGE TEL :
+            $this->SMS($garage_phone, $message_gar);
             if ($existEmail) {
                 // sending email:
                 if ($appointment->status === "confirmé") {
                     // send email to garage :
                     if ($garage) {
                         // Get mechanics related to the garage
-                        $mechanics = $garage->mechanics;
 
+                        $mechanics = $garage->mechanics;
                         if ($mechanics->count() > 0) {
                             // Notify all mechanics associated with the garage
                             foreach ($mechanics as $mechanic) {
@@ -379,8 +411,16 @@ class AppointmentController extends Controller
                     // send email to user
                     Notification::route('mail', $appointment->user_email)
                         ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
-                    // 
+                    // send SMS TO USER  :
+                    $message_user  = "Bonjour " . $appointment->user_full_name . "\nVotre RDV a été confirmé.\nRDV à " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "\nFIXI.MA";
+                    $this->SMS($appointment->user_phone, $message_user);
                 } elseif ($appointment->status === "en cours") {
+                    // Prepare SMS payload SEND SMS TO GARAGE TEL :
+                    $url = route('mechanic.reservation.show', $appointment);
+                    $message_gar = "Bonjour " . $garage->name . "\nVous venez de recevoir une demande de RDV :\n" . $url . "\n\nFIXI.MA";
+                    $garage_phone = $garage->telephone;
+                    // SEND SMS TO GARAGE TEL :
+                    $this->SMS($garage_phone, $message_gar);
                     // send email to garage
                     if ($garage) {
                         // Get mechanics related to the garage
@@ -397,7 +437,9 @@ class AppointmentController extends Controller
                     // send email to client 
                     Notification::route('mail', $appointment->user_email)
                         ->notify(new ClientAddRdvManuelle($appointment));
-                    // end
+                    //SEND SMS TO USER TEL : 
+                    $message_user  = "Bonjour " . $appointment->user_full_name . "\nVotre RDV est en cours de confirmation par le garage.\nRDV à " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "\nFIXI.MA";
+                    $this->SMS($appointment->user_phone, $message_user);
                 }
                 return response()->json(['message' => 'Appointment booked successfully!', 'account' => true, 'ref' => $garage->ref, 'appointment' => $appointment, 'garage' => $garage]);
             } else {
