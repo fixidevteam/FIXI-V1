@@ -272,7 +272,7 @@
                     const mysqlDate = `${year}-${month}-${day}`;
 
                     fetch(
-                        "http://localhost:8000/api/resend-verification-code2",
+                        "http://localhost:8000/api/resend-verification-code",
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -436,7 +436,7 @@
                                     .innerText + ":00",
                         };
 
-                        fetch("http://localhost:8000/api/book-appointment2", {
+                        fetch("http://localhost:8000/api/book-appointment", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(payload),
@@ -504,7 +504,7 @@
                         };
 
                         fetch(
-                            "http://localhost:8000/api/appointments/verify2",
+                            "http://localhost:8000/api/appointments/verify",
                             {
                                 method: "POST",
                                 headers: {

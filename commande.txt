@@ -309,3 +309,11 @@ function similar_garages_shortcode($atts) {
 
 // Register the shortcode
 add_shortcode('similar_garages', 'similar_garages_shortcode');
+
+
+
+//// cron job ////
+
+0 6 * * *	/usr/bin/php /home/u363560180/domains/fixidev.com/public_html/fixiapp/artisan schedule:run >> /home/u363560180/domains/fixidev.com/public_html/fixiapp/schedule.log 2>&1	
+
+0 6 * * *	/usr/bin/php /home/u363560180/domains/fixi.ma/public_html/fixiapp/artisan schedule:run >> /home/u363560180/domains/fixi.ma/public_html/fixiapp/schedule.log 2>&1
