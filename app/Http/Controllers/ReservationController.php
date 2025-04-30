@@ -214,6 +214,7 @@ class ReservationController extends Controller
                         "Le client " . $appointment->user_full_name . " a annulé son RDV prévu le " .
                         Carbon::parse($appointment->appointment_day)->format('d/m/Y') . " à " .
                         Carbon::parse($appointment->appointment_time)->format('H:i') . ".\n" .
+                        "Contact client: " . $appointment->user_phone . "\n" .
                         "FIXI.MA",
                     "transliterateMessage" => false,
                     "messageEncoding" => 0
