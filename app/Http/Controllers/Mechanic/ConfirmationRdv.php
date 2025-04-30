@@ -10,6 +10,7 @@ use App\Notifications\GarageAcceptRdv;
 use App\Notifications\GarageCancelledRdv;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 
 class ConfirmationRdv extends Controller
@@ -55,6 +56,32 @@ class ConfirmationRdv extends Controller
         Notification::route('mail', $appointment->user_email)
             ->notify(new GarageAcceptRdv($appointment, 'Une réservation a été confirmée par le garage.'));
 
+        // Prepare SMS payload
+        $smsPayload = [
+            "defaultRegionCode" => "MA",
+            "messages" => [
+                [
+                    // "from" => "SHORTLINK",
+                    "to" => [
+                        [
+                            "messageId" => "appt-verif-" . time(),
+                            "phone" => $appointment->user_phone
+                        ]
+                    ],
+                    "content" => "Bonjour " . $appointment->user_full_name . "\nVotre RDV a été confirmé.\nRDV à " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "\nFIXI.MA",
+                    "transliterateMessage" => false,
+                    "messageEncoding" => 0
+                ]
+            ]
+        ];
+
+        // Send SMS via Shortlink API
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'x-shortlink-apikey' => config('services.shortlink.api_key'),
+            'x-shortlink-apitoken' => config('services.shortlink.api_token'),
+        ])->post('https://app.shortlink.pro/api/v1/sms/send/', $smsPayload);
+
         session()->flash('success', 'Rendez-vous');
         session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès.');
         return back();
@@ -71,6 +98,32 @@ class ConfirmationRdv extends Controller
         $appointment->update(['status' => 'annulé']);
         Notification::route('mail', $appointment->user_email)
             ->notify(new GarageCancelledRdv($appointment, 'Une réservation a été annulée par le garage.'));
+
+        // Prepare SMS payload
+        $smsPayload = [
+            "defaultRegionCode" => "MA",
+            "messages" => [
+                [
+                    // "from" => "SHORTLINK",
+                    "to" => [
+                        [
+                            "messageId" => "appt-verif-" . time(),
+                            "phone" => $appointment->user_phone
+                        ]
+                    ],
+                    "content" => "Bonjour " . $appointment->user_full_name . "\nVotre RDV du " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "a été annulé.\nPour plus d’information contacter le garage ".$garage->telephone."\nFIXI.MA",
+                    "transliterateMessage" => false,
+                    "messageEncoding" => 0
+                ]
+            ]
+        ];
+
+        // Send SMS via Shortlink API
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'x-shortlink-apikey' => config('services.shortlink.api_key'),
+            'x-shortlink-apitoken' => config('services.shortlink.api_token'),
+        ])->post('https://app.shortlink.pro/api/v1/sms/send/', $smsPayload);
 
         session()->flash('success', 'Rendez-vous');
         session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès.');

@@ -12,6 +12,7 @@ use App\Notifications\GarageUpdateRdv;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 
 class MechanicReservationController extends Controller
@@ -256,6 +257,7 @@ class MechanicReservationController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
+        $garage = Auth::user()->garage;
         if ($appointment->status === 'annulé') {
             Notification::route('mail', $appointment->user_email)
                 ->notify(new GarageCancelledRdv($appointment, 'la réservation a été annulée par le garage'));
