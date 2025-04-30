@@ -12,6 +12,7 @@ use App\Notifications\UpdatedRdv;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 
 class ReservationController extends Controller
@@ -111,25 +112,8 @@ class ReservationController extends Controller
         if ($appointment) {
             $data['status'] = 'en cours';
             $appointment->update($data);
-            // send email to garage 
-            $admins = Admin::all();
-            foreach ($admins as $admin) {
-                Notification::route('mail', $admin->email)
-                    ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', true, $admin));
-            }
-            // Fetch garage by ref
-            $garage = Garage::where('ref', $appointment->garage_ref)->first();
-            if ($garage) {
-                // Get mechanics related to the garage
-                $mechanics = $garage->mechanics;
-                if ($mechanics->count() > 0) {
-                    // Notify all mechanics associated with the garage
-                    foreach ($mechanics as $mechanic) {
-                        Notification::route('mail', $mechanic->email)
-                            ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', false, null));
-                    }
-                }
-            }
+            // Send email notifications
+            $this->sendUpdateNotifications($appointment);
             // end sending email
             session()->flash('success', 'Rendez-vous');
             session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
@@ -153,29 +137,13 @@ class ReservationController extends Controller
                 return redirect()->route('RDV.show', $appointment);
             }
             $appointment->update(['status' => 'annulé']);
-            // send email to garage 
-            // send to admin : 
-            $admins = Admin::all();
-            foreach ($admins as $admin) {
-                Notification::route('mail', $admin->email)
-                    ->notify(new CancelledRdv($appointment, 'Une réservation a été annulée par le client.', true, $admin));
-            }
-            // Fetch garage by ref
-            $garage = Garage::where('ref', $appointment->garage_ref)->first();
-            if ($garage) {
-                // Get mechanics related to the garage
-                $mechanics = $garage->mechanics;
-                if ($mechanics->count() > 0) {
-                    // Notify all mechanics associated with the garage
-                    foreach ($mechanics as $mechanic) {
-                        Notification::route('mail', $mechanic->email)
-                            ->notify(new CancelledRdv($appointment, 'Une réservation a été annulée par le client.', false, null));
-                    }
-                }
-            } else {
-                session()->flash('error', 'Garage introuvable.');
-                return redirect()->route('RDV.show', $appointment);
-            }
+
+
+            // Send email notifications
+            $this->sendCancellationNotifications($appointment);
+
+            // Send SMS to customer
+            $this->sendAppointmentCancellationSms($appointment);
 
 
             // end sending email
@@ -185,6 +153,91 @@ class ReservationController extends Controller
             return redirect()->route('RDV.show', $appointment);
         } else {
             return back()->with('error', self::APPOINTMENT_NOT_FOUND);
+        }
+    }
+    protected function sendUpdateNotifications(Appointment $appointment)
+    {
+        // Send to admins
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            Notification::route('mail', $admin->email)
+                ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', true, $admin));
+        }
+
+        // Send to mechanics
+        $garage = Garage::where('ref', $appointment->garage_ref)->first();
+        if ($garage) {
+            $mechanics = $garage->mechanics;
+            foreach ($mechanics as $mechanic) {
+                Notification::route('mail', $mechanic->email)
+                    ->notify(new UpdatedRdv($appointment, 'Une réservation a été modifée par le client.', false, null));
+            }
+        }
+    }
+
+    protected function sendCancellationNotifications(Appointment $appointment)
+    {
+        // Send to admins
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            Notification::route('mail', $admin->email)
+                ->notify(new CancelledRdv($appointment, 'Une réservation a été annulée par le client.', true, $admin));
+        }
+
+        // Send to mechanics
+        $garage = Garage::where('ref', $appointment->garage_ref)->first();
+        if ($garage) {
+            $mechanics = $garage->mechanics;
+            foreach ($mechanics as $mechanic) {
+                Notification::route('mail', $mechanic->email)
+                    ->notify(new CancelledRdv($appointment, 'Une réservation a été annulée par le client.', false, null));
+            }
+        }
+    }
+
+
+    protected function sendAppointmentCancellationSms(Appointment $appointment)
+    {
+        $garage = Garage::where('ref', $appointment->garage_ref)->first();
+
+        $smsPayload = [
+            "defaultRegionCode" => "MA",
+            "messages" => [
+                [
+                    "to" => [
+                        [
+                            "messageId" => "appt-cancel-" . time(),
+                            "phone" => $garage->telephone
+                        ]
+                    ],
+                    "content" => "Bonjour " . $garage->name . ",\n" .
+                        "Le client " . $appointment->user_full_name . " a annulé son RDV prévu le " .
+                        Carbon::parse($appointment->appointment_day)->format('d/m/Y') . " à " .
+                        Carbon::parse($appointment->appointment_time)->format('H:i') . ".\n" .
+                        "Contact client: " . $appointment->user_phone . "\n" .
+                        "FIXI.MA",
+                    "transliterateMessage" => false,
+                    "messageEncoding" => 0
+                ]
+            ]
+        ];
+
+        $this->sendSms($smsPayload);
+    }
+
+    protected function sendSms(array $payload)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'x-shortlink-apikey' => config('services.shortlink.api_key'),
+                'x-shortlink-apitoken' => config('services.shortlink.api_token'),
+            ])->post('https://app.shortlink.pro/api/v1/sms/send/', $payload);
+
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            return false;
         }
     }
 }
