@@ -686,7 +686,7 @@ if (!empty($garage_ref)) {
       let verificationCode = document.getElementById("verificationCode_" + uniqueId).value.trim();
 
       if (!verificationCode) {
-        showError("Veuillez entrer le code de vérification.");
+        showErrorVerification("Veuillez entrer le code de vérification.");
         return;
       }
 
@@ -704,14 +704,14 @@ if (!empty($garage_ref)) {
               Accept: "application/json",
             },
             body: JSON.stringify({
-              email: document.getElementById("email_" + uniqueId).value,
+              phone: document.getElementById("phone_" + uniqueId).value,
               verification_code: verificationCode.toString(),
               full_name: document.getElementById("fullName_" + uniqueId).value,
-              phone: document.getElementById("phone_" + uniqueId).value,
+              email: document.getElementById("email_" + uniqueId).value,
               categorie_de_service: document.getElementById("categorie_de_service_" + uniqueId).value,
               modele: document.getElementById("modele_" + uniqueId).value,
               objet_du_RDV: document.getElementById("objet_du_RDV_" + uniqueId).value,
-              vin: document.getElementById("vin").value,
+              vin: document.getElementById("vin_" + uniqueId).value,
               garage_ref: garageRef,
               appointment_day: selectedDate,
               appointment_time: selectedTime + ":00",
