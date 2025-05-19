@@ -18,11 +18,41 @@ use App\Notifications\GarageAcceptRdv;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class AppointmentController2 extends Controller
 {
+    public function SMS($phone, $message)
+    {
+        // Format phone number (remove leading 0, add 212 country code)
+        $phone = preg_replace('/^0/', '212', $phone);
+
+        // Prepare MoroccoSMS API parameters
+        $params = [
+            'sub_account' => '136_212',
+            'sub_account_pass' => 'blconsulting876',
+            'action' => 'send_sms',
+            'sender_id' => 'FIXI',
+            'message' => $message,
+            'recipients' => $phone
+        ];
+
+        // Build the query string
+        $queryString = http_build_query($params);
+
+        // Send SMS via MoroccoSMS API
+        $response = Http::get('https://www.moroccosms.com/sms/api_v1?' . $queryString);
+
+        // Log the response for debugging
+        Log::info('MoroccoSMS API Response:', [
+            'phone' => $phone,
+            'message' => $message,
+            'response' => $response->body()
+        ]);
+    }
     public function getAvailableDates(Request $request)
     {
         $garage_ref = $request->query('garage_ref');
@@ -317,18 +347,18 @@ class AppointmentController2 extends Controller
 
         // Generate a verification code
         $verificationCode = mt_rand(100000, 999999);
-        $email = $request->email;
+        $fullName = $request->full_name;
+        $phone = $request->phone;
 
-        // Store the verification code in cache with an expiration time (e.g., 10 minutes)
-        Cache::put('verification_code_' . $email, $verificationCode, now()->addMinutes(10));
+        // Store the verification code in cache with an expiration time (e.g., 5 minutes)
+        Cache::put('verification_code_' . $phone, $verificationCode, now()->addMinutes(5));
 
-        // Send the verification code via email
-        if ($email) {
-            Mail::to($email)->send(new AppointmentVerificationMail($verificationCode, $request->full_name));
-        }
+        // Send verification SMS via MoroccoSMS
+        $message = "Bonjour " . $fullName . ", votre code de vérification est " . $verificationCode . ". Veuillez l'utiliser pour confirmer votre rendez-vous.\nFIXI.MA";
+        $this->SMS($phone, $message);
 
         return response()->json([
-            'message' => 'Verification code sent to your email. Please enter the code to confirm your appointment.',
+            'message' => 'Verification code sent to your phone. Please enter the code to confirm your appointment.',
             'status' => 'verification_required',
         ]);
     }
@@ -351,11 +381,12 @@ class AppointmentController2 extends Controller
         ]);
 
         $email = $request->email;
+        $phone = $request->phone;
         $verificationCode = trim($request->verification_code);
         $garage = garage::where("ref", $request->garage_ref)->first();
 
-        // Retrieve the stored verification code from cache
-        $storedCode = Cache::get('verification_code_' . $email);
+        // Retrieve the stored verification code from cache using phone number
+        $storedCode = Cache::get('verification_code_' . $phone);
 
         if ($storedCode && strval($storedCode) === strval($verificationCode)) {
             // Verification successful, create the appointment
@@ -379,54 +410,58 @@ class AppointmentController2 extends Controller
             ]);
 
             // Clear the verification code from cache
-            Cache::forget('verification_code_' . $email);
+            Cache::forget('verification_code_' . $phone);
 
             $existEmail = User::where('email', $email)->first();
 
+            // Send SMS to garage
+            $url = route('mechanic.reservation.show', $appointment);
+            $message_gar = "Bonjour " . $garage->name . "\nVous venez de recevoir une demande de RDV :\n" . $url . "\n\nFIXI.MA";
+            $garage_phone = $garage->telephone;
+            $this->SMS($garage_phone, $message_gar);
 
             if ($existEmail) {
-                // sending email:
                 if ($appointment->status === "confirmé") {
                     // send email to garage :
                     if ($garage) {
-                        // Get mechanics related to the garage
                         $mechanics = $garage->mechanics;
-
                         if ($mechanics->count() > 0) {
-                            // Notify all mechanics associated with the garage
                             foreach ($mechanics as $mechanic) {
                                 Notification::route('mail', $mechanic->email)
                                     ->notify(new ClientAddRdv($appointment));
                             }
                         }
                     }
-                    // 
+
                     // send email to user
                     Notification::route('mail', $appointment->user_email)
                         ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
-                    // 
+
+                    // send SMS TO USER
+                    $message_user  = "Bonjour " . $appointment->user_full_name . "\nVotre RDV a été confirmé.\nRDV à " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "\nFIXI.MA";
+                    $this->SMS($appointment->user_phone, $message_user);
                 } elseif ($appointment->status === "en cours") {
                     // send email to garage
                     if ($garage) {
-                        // Get mechanics related to the garage
                         $mechanics = $garage->mechanics;
                         if ($mechanics->count() > 0) {
-                            // Notify all mechanics associated with the garage
                             foreach ($mechanics as $mechanic) {
                                 Notification::route('mail', $mechanic->email)
                                     ->notify(new ClientAddRdv($appointment));
                             }
                         }
                     }
-                    // end
+
                     // send email to client 
                     Notification::route('mail', $appointment->user_email)
                         ->notify(new ClientAddRdvManuelle($appointment));
-                    // end
+
+                    //SEND SMS TO USER
+                    $message_user  = "Bonjour " . $appointment->user_full_name . "\nVotre RDV est en cours de confirmation par le garage.\nRDV à " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "\nFIXI.MA";
+                    $this->SMS($appointment->user_phone, $message_user);
                 }
                 return response()->json(['message' => 'Appointment booked successfully!', 'account' => true, 'ref' => $garage->ref, 'appointment' => $appointment, 'garage' => $garage]);
             } else {
-                // sendin email 
                 return response()->json(['message' => 'Appointment booked successfully!', 'account' => false, 'ref' => $garage->ref, 'appointment' => $appointment, 'garage' => $garage]);
             }
         } else {

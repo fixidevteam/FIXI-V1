@@ -14,11 +14,45 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
 
 class MechanicReservationController extends Controller
 {
     // Define the constant for repeated messages
     const GARAGE_NOT_FOUND = 'Garage introuvable';
+
+    /**
+     * Send SMS using MoroccoSMS API
+     */
+    protected function sendSMS($phone, $message)
+    {
+        // Format phone number (remove leading 0, add 212 country code)
+        $phone = preg_replace('/^0/', '212', $phone);
+
+        // Prepare MoroccoSMS API parameters
+        $params = [
+            'sub_account' => '136_212',
+            'sub_account_pass' => 'blconsulting876',
+            'action' => 'send_sms',
+            'sender_id' => 'FIXI',
+            'message' => $message,
+            'recipients' => $phone
+        ];
+
+        // Build the query string
+        $queryString = http_build_query($params);
+
+        // Send SMS via MoroccoSMS API
+        $response = Http::get('https://www.moroccosms.com/sms/api_v1?' . $queryString);
+
+        // Log the response for debugging
+        Log::info('MoroccoSMS API Response:', [
+            'phone' => $phone,
+            'message' => $message,
+            'response' => $response->body()
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -73,49 +107,6 @@ class MechanicReservationController extends Controller
         return view('mechanic.reservation.index', compact('appointments'));
     }
 
-    /**
-     * index as list of appointments.
-     */
-
-    // public function list(Request $request)
-    // {
-    //     $user = Auth::user();
-    //     $garage = garage::where('id', $user->garage_id)->first();
-
-    //     if (!$garage) {
-    //         return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
-    //     }
-
-    //     $query = Appointment::where('garage_ref', $garage->ref);
-
-    //     // Filter for past appointments to close
-    //     if ($request->has('filter') && $request->filter == 'to_close') {
-    //         $now = Carbon::now();
-    //         $query->where(function ($q) use ($now) {
-    //             $q->where('appointment_day', '<', $now->format('Y-m-d'))
-    //                 ->orWhere(function ($q2) use ($now) {
-    //                     $q2->where('appointment_day', $now->format('Y-m-d'))
-    //                         ->where('appointment_time', '<', $now->format('H:i:s'));
-    //                 });
-    //         })
-    //             ->whereIn('status', ['en cours']);
-    //     } else {
-    //         // Default: show active appointments
-    //         $now = Carbon::now();
-    //         $query->where(function ($q) use ($now) {
-    //             $q->where('appointment_day', '>', $now->format('Y-m-d'))
-    //                 ->orWhere(function ($q2) use ($now) {
-    //                     $q2->where('appointment_day', $now->format('Y-m-d'))
-    //                         ->where('appointment_time', '>=', $now->format('H:i:s'));
-    //                 });
-    //         })
-    //             ->whereIn('status', ['en cours', 'confirmé', 'annulé']);
-    //     }
-
-    //     $appointments = $query->latest()->paginate(10);
-
-    //     return view('mechanic.reservation.list', compact('appointments'));
-    // }
     public function list(Request $request)
     {
         $user = Auth::user();
@@ -159,23 +150,6 @@ class MechanicReservationController extends Controller
         return view('mechanic.reservation.list', compact('appointments', 'filter'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
     /**
      * Display the specified resource.
      */
@@ -211,7 +185,6 @@ class MechanicReservationController extends Controller
      */
     public function edit(string $id)
     {
-
         $user = Auth::user();
         // Fetch the garage associated with the mechanic
         $garage = Garage::where('id', $user->garage_id)->first();
@@ -240,41 +213,25 @@ class MechanicReservationController extends Controller
         if ($appointment) {
             $data['status'] = 'en cours';
             $appointment->update($data);
+
+            // Send notification email
             Notification::route('mail', $appointment->user_email)->notify(
                 new GarageUpdateRdv($appointment, 'Une réservation a été modifée par le garage.')
             );
-            // Prepare SMS payload
-            $smsPayload = [
-                "defaultRegionCode" => "MA",
-                "messages" => [
-                    [
-                        // "from" => "SHORTLINK",
-                        "to" => [
-                            [
-                                "messageId" => "appt-verif-" . time(),
-                                "phone" => $appointment->user_phone
-                            ]
-                        ],
-                        "content" => "Bonjour " . $appointment->user_full_name . "\nVotre RDV a été modifié par le garage.\nRDV à " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "\nFIXI.MA",
-                        "transliterateMessage" => false,
-                        "messageEncoding" => 0
-                    ]
-                ]
-            ];
 
-            // Send SMS via Shortlink API
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'x-shortlink-apikey' => config('services.shortlink.api_key'),
-                'x-shortlink-apitoken' => config('services.shortlink.api_token'),
-            ])->post('https://app.shortlink.pro/api/v1/sms/send/', $smsPayload);
+            // Send SMS using MoroccoSMS
+            $message = "Bonjour " . $appointment->user_full_name . "\nVotre RDV a été modifié par le garage.\nRDV à " .
+                \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " .
+                \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " .
+                $garage->name . "\nFIXI.MA";
+            $this->sendSMS($appointment->user_phone, $message);
 
-            // end sending email
             session()->flash('success', 'Rendez-vous');
             session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
             return redirect()->route('mechanic.reservation.show', $appointment);
         }
     }
+
     /**
      * Update the status of appointment.
      */
@@ -284,61 +241,30 @@ class MechanicReservationController extends Controller
         $appointment->status = $request->status;
         $appointment->save();
         $garage = Auth::user()->garage;
+
         if ($appointment->status === 'annulé') {
+            // Send cancellation email
             Notification::route('mail', $appointment->user_email)
                 ->notify(new GarageCancelledRdv($appointment, 'la réservation a été annulée par le garage'));
-            // Prepare SMS payload
-            $smsPayload = [
-                "defaultRegionCode" => "MA",
-                "messages" => [
-                    [
-                        // "from" => "SHORTLINK",
-                        "to" => [
-                            [
-                                "messageId" => "appt-verif-" . time(),
-                                "phone" => $appointment->user_phone
-                            ]
-                        ],
-                        "content" => "Bonjour " . $appointment->user_full_name . "\nVotre RDV du " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "a été annulé.\nPour plus d’information contacter le garage " . $garage->telephone . "\nFIXI.MA",
-                        "transliterateMessage" => false,
-                        "messageEncoding" => 0
-                    ]
-                ]
-            ];
-            // Send SMS via Shortlink API
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'x-shortlink-apikey' => config('services.shortlink.api_key'),
-                'x-shortlink-apitoken' => config('services.shortlink.api_token'),
-            ])->post('https://app.shortlink.pro/api/v1/sms/send/', $smsPayload);
+
+            // Send cancellation SMS
+            $message = "Bonjour " . $appointment->user_full_name . "\nVotre RDV du " .
+                \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " .
+                \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') .
+                "\nChez " . $garage->name . " a été annulé.\nPour plus d'information contacter le garage " .
+                $garage->telephone . "\nFIXI.MA";
+            $this->sendSMS($appointment->user_phone, $message);
         } elseif ($appointment->status === 'confirmé') {
+            // Send confirmation email
             Notification::route('mail', $appointment->user_email)
                 ->notify(new GarageAcceptRdv($appointment, 'la réservation a été confirmée par le garage'));
 
-            // Prepare SMS payload
-            $smsPayload = [
-                "defaultRegionCode" => "MA",
-                "messages" => [
-                    [
-                        // "from" => "SHORTLINK",
-                        "to" => [
-                            [
-                                "messageId" => "appt-verif-" . time(),
-                                "phone" => $appointment->user_phone
-                            ]
-                        ],
-                        "content" => "Bonjour " . $appointment->user_full_name . "\nVotre RDV a été confirmé.\nRDV à " . \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " . \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " . $garage->name . "\nFIXI.MA",
-                        "transliterateMessage" => false,
-                        "messageEncoding" => 0
-                    ]
-                ]
-            ];
-            // Send SMS via Shortlink API
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'x-shortlink-apikey' => config('services.shortlink.api_key'),
-                'x-shortlink-apitoken' => config('services.shortlink.api_token'),
-            ])->post('https://app.shortlink.pro/api/v1/sms/send/', $smsPayload);
+            // Send confirmation SMS
+            $message = "Bonjour " . $appointment->user_full_name . "\nVotre RDV a été confirmé.\nRDV à " .
+                \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " .
+                \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') .
+                "\nChez " . $garage->name . "\nFIXI.MA";
+            $this->sendSMS($appointment->user_phone, $message);
 
             session()->flash('success', 'Rendez-vous');
             session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès.');
@@ -353,13 +279,7 @@ class MechanicReservationController extends Controller
             return redirect()->route('mechanic.reservation.list')->with('success', 'Le statut a été mis à jour avec succès.');
         }
     }
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+
     /**
      * Close a past appointment
      */
@@ -389,6 +309,7 @@ class MechanicReservationController extends Controller
             ->with('success', 'Le rendez-vous a été clôturé avec le statut: ' .
                 ($request->presence == 'present' ? '✅ Présent' : '❌ Absent'));
     }
+
     public function cloturer(Request $request)
     {
         $user = Auth::user();
