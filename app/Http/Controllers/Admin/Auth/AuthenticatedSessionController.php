@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard',absolute:false));
+        return redirect()->intended(route('admin.dashboard', absolute: false));
     }
 
     /**
@@ -43,6 +43,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/fp-admin/login');
+        return redirect('/fixi-core/login');
     }
 }
