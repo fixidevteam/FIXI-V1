@@ -1,66 +1,83 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+🛠️ README.md – Plateforme Fixi
+📌 Présentation Générale
+Fixi est une plateforme complète de gestion et de réservation de services automobiles, organisée autour de trois interfaces principales selon le type d’utilisateur :
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Module	Rôle utilisateur	Description
+FixiCore	Administrateur	Interface pour gérer les utilisateurs, garages, opérations, calendriers...
+FixiPro	Garage / Mécanicien	Tableau de bord pour gérer les rendez-vous, clients, véhicules et promotions
+FixiPlus	Client Particulier	Espace personnel pour gérer ses véhicules, rendez-vous et documents
 
-## About Laravel
+🧩 Détail des Modules :
+🔴 FixiCore (anciennement FixiAdmin)
+Interface réservée aux administrateurs de la plateforme.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Fonctionnalités principales :
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Gestion des utilisateurs (clients, garages, mécaniciens)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Validation des documents et promotions
 
-## Learning Laravel
+Gestion des marques, modèles, domaines et opérations
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Gestion des calendriers globaux
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Suivi global des réservations et statistiques
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+🔵 FixiPro
+Tableau de bord destiné aux garages et mécaniciens partenaires.
 
-## Laravel Sponsors
+Fonctionnalités principales :
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Confirmation et historique des RDV
 
-### Premium Partners
+Suivi des opérations effectuées
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Gestion des clients et véhicules
 
-## Contributing
+Synchronisation avec les données FIXI.MA
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Gestion des promotions et disponibilités
 
-## Code of Conduct
+🟢 FixiPlus
+Espace utilisateur pour les clients particuliers.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Fonctionnalités principales :
 
-## Security Vulnerabilities
+Gestion de ses véhicules et documents personnels (carte grise, vignette, permis…)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Prise de rendez-vous en ligne avec les garages partenaires
 
-## License
+Suivi des opérations réalisées
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Accès aux promotions disponibles
+
+Notifications en temps réel
+
+🌐 Intégration Web
+Le site Fixi.ma est la vitrine publique (WordPress).
+
+Il est connecté via API avec FixiPro et FixiPlus pour permettre :
+
+Réservation directe d’un garage depuis le site
+
+Synchronisation des données entre les plateformes
+
+📎 Technologies Utilisées
+Frontend : Vue.js / Blade / Bootstrap (selon module)
+
+
+Backend : Laravel (API RESTful, Auth, Jobs, Events, WebSockets…)
+
+Base de données : MySQL
+
+Notifications : Pusher ou Laravel WebSockets
+
+Infrastructure : Nginx / Apache, Certbot SSL
+
+
+
+📬 Contact
+Pour toute suggestion ou contribution :
+
+📧 contact@fixi.ma
+💻 Développé par l’équipe BLC & FIXI
