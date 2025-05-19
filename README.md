@@ -7,7 +7,7 @@ FixiCore	Administrateur	Interface pour gérer les utilisateurs, garages, opérat
 FixiPro	Garage / Mécanicien	Tableau de bord pour gérer les rendez-vous, clients, véhicules et promotions
 FixiPlus	Client Particulier	Espace personnel pour gérer ses véhicules, rendez-vous et documents
 
-🧩 Détail des Modules
+🧩 Détail des Modules :
 🔴 FixiCore (anciennement FixiAdmin)
 Interface réservée aux administrateurs de la plateforme.
 
