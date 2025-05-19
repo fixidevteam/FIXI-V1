@@ -31,10 +31,10 @@ class MechanicReservationController extends Controller
 
         // Prepare MoroccoSMS API parameters
         $params = [
-            'sub_account' => '136_212',
-            'sub_account_pass' => 'blconsulting876',
+            'sub_account' => config('services.moroccosms.api_key'),
+            'sub_account_pass' => config('services.moroccosms.api_token'),
             'action' => 'send_sms',
-            'sender_id' => 'FIXI',
+            'sender_id' => config('services.moroccosms.api_name'),
             'message' => $message,
             'recipients' => $phone
         ];

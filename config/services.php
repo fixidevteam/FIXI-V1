@@ -36,10 +36,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => '/auth/google/callback',
     ],
-    // SMS shortLink 
-    'shortlink' => [
-        'api_key' => env('SHORTLINK_API_KEY'),
-        'api_token' => env('SHORTLINK_API_TOKEN'),
+    // SMS moroccosms 
+    'moroccosms' => [
+        'api_key' => env('MOROCCOSMS_API_KEY'),
+        'api_token' => env('MOROCCOSMS_API_TOKEN'),
+        'api_name' => env('MOROCCOSMS_API_NAME'),
     ],
 
 ];
