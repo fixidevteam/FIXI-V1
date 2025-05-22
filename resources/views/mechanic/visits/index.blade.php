@@ -61,7 +61,7 @@
                                             {{ $visit->voiture->user->name }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $visit->voiture->user->telephone ? "N/A"}}
+                                            {{ $visit->voiture->user->telephone ?? "N/A"}}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $visit->date }}
