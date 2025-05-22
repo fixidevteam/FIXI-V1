@@ -1,4 +1,4 @@
-<x-mechanic-app-layout :subtitle="'Ajouter une operation'">
+<x-mechanic-app-layout :subtitle="'Ajouter une visite'">
     <div class="p-4 sm:ml-64">
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             {{-- content (slot on layouts/app.blade.php)--}}
@@ -32,7 +32,7 @@
                             <a
                                 href="{{ route('mechanic.operations.index') }}"
                                 class="inline-flex items-center text-sm font-medium text-gray-700   ">
-                                Mes opération
+                                Mes visite
                             </a>
                         </div>
                     </li>
@@ -54,7 +54,7 @@
                             <a
                                 href=""
                                 class="inline-flex items-center text-sm font-medium text-gray-700   ">
-                                Ajouter une operation
+                                Ajouter une visite
                             </a>
                         </div>
                     </li>
@@ -66,11 +66,11 @@
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Ajouter une operation</h2>
+                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Ajouter une visite</h2>
                 <form method="POST" action="{{ route('mechanic.operations.store') }}" class="space-y-6" enctype="multipart/form-data">
                     @csrf
                     <div>
-                        <x-input-label for="categorie" :value="__('Categorie de l\'opération')" />
+                        <x-input-label for="categorie" :value="__('Service de la visite')" />
                         <!-- <x-text-input id="categorie" class="block mt-1 w-full" type="text" name="categorie" :value="old('categorie')" autofocus autocomplete="categorie" /> -->
                         <select id="categorie" name="categorie" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                             @foreach ($categories as $categorie)
@@ -80,18 +80,18 @@
                         <x-input-error :messages="$errors->get('categorie')" class="mt-2" />
                     </div>
                     <div>
-                        <x-input-label for="nom" :value="__('Nom de l\'opération (Optionnel)')" />
+                        <x-input-label for="nom" :value="__('Nom de catégorie (Optionnel)')" />
                         <input type="hidden" id="existingOperationId" value="{{old('nom')}}">
                         <select id="operation" name="nom" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            <option value="">Select operation</option>
+                            <option value="">Select catégorie</option>
 
                         </select>
                         <div id="newOperationWrapper" class="hidden mt-4">
-                            <x-input-label for="new_operation" :value="__('Nom de la nouvelle opération')" />
+                            <x-input-label for="new_operation" :value="__('Nom de la nouvelle catégorie')" />
                             <x-text-input id="new_operation" name="autre_operation" type="text" class="block mt-1 w-full" value="{{ old('autre_operation') }}" />
                             <x-input-error :messages="$errors->get('autre_operation')" class="mt-2" />
                         </div>
-                        <p class="mt-1 text-sm text-gray-500" id="operation_input_help">Si nous avons trouvé votre opération ici, veuillez l'ajouter dans le champ <label class="font-bold underline" for="description">'Description'</label>. </p>
+                        <p class="mt-1 text-sm text-gray-500" id="operation_input_help">Si nous avons trouvé votre catégorie ici, veuillez l'ajouter dans le champ <label class="font-bold underline" for="description">'Description'</label>. </p>
                         <x-input-error :messages="$errors->get('nom')" class="mt-2" />
                     </div>
                     <div>
@@ -107,7 +107,7 @@
                         <x-input-error :messages="$errors->get('modele')" class="mt-2" />
                     </div>
                     <div>
-                        <x-input-label for="date_operation" :value="__('Date de l\'operation')" />
+                        <x-input-label for="date_operation" :value="__('Date de visite')" />
                         <x-text-input id="date_operation" class="block mt-1 w-full" type="date" name="date_operation" :value="old('date_operation')" autofocus autocomplete="date_operation" />
                         <x-input-error :messages="$errors->get('date_operation')" class="mt-2" />
                     </div>
