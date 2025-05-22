@@ -63,6 +63,10 @@
                         </table>
                     @endif
                 </div>
+                <!-- Pagination -->
+                <div class="my-4" id="paginationLinks">
+                    {{ $visits->links() }}
+                </div>
             </div>
         </div>
     </div>
