@@ -127,11 +127,11 @@
                                     @endif
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="{{ route('mechanic.reservation.cloturer') }}" class="block p-2 text-gray-700 rounded-lg hover:bg-gray-100 {{ Route::is('mechanic.reservation.cloturer') ? 'bg-gray-100 text-gray-900' : '' }}">
                                     RDV’s clôturé
                                 </a>
-                            </li>
+                            </li> -->
                             <li>
                                 <a href="{{ route('mechanic.reservation.list') }}" class="block p-2 text-gray-700 rounded-lg hover:bg-gray-100 {{ Route::is('mechanic.reservation.list') ? 'bg-gray-100 text-gray-900' : '' }}">
                                     Historique des RDV’s

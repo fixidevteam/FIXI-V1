@@ -74,7 +74,8 @@
 
                         <div class="w-full">
                             <x-input-label for="date" :value="__('Date de RDV')" />
-                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" :value="old('date')" autofocus autocomplete="date" />
+                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
+                                :value="old('date', $date ?? '')" autofocus autocomplete="date" />
                             <x-input-error :messages="$errors->get('date')" class="mt-2" />
                         </div>
                         <div class="w-full">
@@ -82,10 +83,10 @@
                             <!-- <x-text-input id="status" class="block mt-1 w-full" type="text" name="status" :value="old('status')" autofocus autocomplete="status" /> -->
                             <select id="status" name="status" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 <option value="">Tous les statuts</option>
-                                <option value="en cours" {{ old('status') == 'en cours' ? 'selected' : '' }}>En cours</option>
-                                <option value="confirmé" {{ old('status') == 'confirmé' ? 'selected' : '' }}>Confirmé</option>
-                                <option value="annulé" {{ old('status') == 'annulé' ? 'selected' : '' }}>Annulé</option>
-                                <option value="clôturé" {{ old('status') == 'clôturé' ? 'selected' : '' }}>Clôturé</option>
+                                <option value="en cours" {{ old('status', $status ?? '') == 'en cours' ? 'selected' : '' }}>En cours</option>
+                                <option value="confirmé" {{ old('status', $status ?? '') == 'confirmé' ? 'selected' : '' }}>Confirmé</option>
+                                <option value="annulé" {{ old('status' ,$status ?? '') == 'annulé' ? 'selected' : '' }}>Annulé</option>
+                                <option value="clôturé" {{ old('status' ,$status ?? '') == 'clôturé' ? 'selected' : '' }}>Clôturé</option>
                             </select>
 
                             <x-input-error :messages="$errors->get('status')" class="mt-2" />
@@ -244,7 +245,8 @@
                     {{-- close table --}}
                     <!-- Pagination -->
                     <div class="my-4" id="paginationLinks">
-                        {{ $appointments->appends(['filter' => $filter])->links() }}
+                        {{ $appointments->appends(request()->query())->links() }}
+
                     </div>
                 </div>
             </div>

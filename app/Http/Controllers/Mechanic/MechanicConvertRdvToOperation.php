@@ -100,6 +100,6 @@ class MechanicConvertRdvToOperation extends Controller
                 'visit_id' => $visit->id,
             ]);
         }
-        return redirect()->route('mechanic.operations.show', $operation);
+        return redirect()->route('mechanic.visits.show', $visit);
     }
 }
