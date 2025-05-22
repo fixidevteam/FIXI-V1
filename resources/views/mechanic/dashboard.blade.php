@@ -41,7 +41,7 @@
           <p class="text-sm text-gray-600 md:w-[300px] sm:w-full mx-0 text-left">Ajoutez vos informations en quelques clics,et accédez à une vue d’ensemble claire et sécurisée de toutes vos données importantes.</p>
           <div class="mt-4">
             <a href="{{ route('mechanic.operations.index') }}">
-              <x-primary-button>mes visite</x-primary-button>
+              <x-primary-button>mes opération</x-primary-button>
             </a>
           </div>
         </div>
@@ -74,7 +74,7 @@
             <a href="{{route('mechanic.operations.index')}}" class="flex items-center bg-white p-8 rounded-lg shadow hover:bg-gray-100">
               <div class="flex-shrink-0">
                 <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{ Auth::user()->garage->operations()->count() }}</span>
-                <h3 class="text-base font-normal text-gray-500 first-letter:capitalize">nombre des visites</h3>
+                <h3 class="text-base font-normal text-gray-500 first-letter:capitalize">nombre des opérations</h3>
               </div>
               <div class="ml-5 w-0 flex items-center justify-end flex-1 text-gray-600 text-base font-bold">
                 <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

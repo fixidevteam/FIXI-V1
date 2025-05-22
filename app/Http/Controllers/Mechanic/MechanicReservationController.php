@@ -164,20 +164,11 @@ class MechanicReservationController extends Controller
         $date = $request->date;
         $status = $request->status;
 
-        // Apply date filter if provided
+        // Apply date filter if provided (only when user specifically requests a date)
         if ($date) {
             $query->where('appointment_day', $date);
-        } else {
-            // Default date filtering (active appointments) when no date is specified
-            $now = Carbon::now();
-            $query->where(function ($q) use ($now) {
-                $q->where('appointment_day', '>', $now->format('Y-m-d'))
-                    ->orWhere(function ($q2) use ($now) {
-                        $q2->where('appointment_day', $now->format('Y-m-d'))
-                            ->where('appointment_time', '>=', $now->format('H:i:s'));
-                    });
-            });
         }
+        // Removed the else block to show all dates by default
 
         // Apply status filter if provided
         if ($status) {
