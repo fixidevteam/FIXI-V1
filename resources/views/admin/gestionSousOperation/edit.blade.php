@@ -54,7 +54,7 @@
                             <a
                                 href=""
                                 class="inline-flex items-center text-sm font-medium text-gray-700   ">
-                                Modifier une sous operation
+                                Modifier une prestation
                             </a>
                         </div>
                     </li>
@@ -67,12 +67,12 @@
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Modifier une sous operation </h2>
+                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Modifier une prestation </h2>
                 <form method="POST" action="{{ route('admin.gestionSousOperation.update',$sous->id) }}" class="space-y-6">
                     @csrf
                     @method('PUT')
                     <div>
-                        <x-input-label for="operation" :value="__('Categorie')" />
+                        <x-input-label for="operation" :value="__('Catégorie')" />
                         <select id="operation" name="nom_operation_id" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                             @foreach ($operations as $operation)
                             <option value="{{ $operation->id }}" @if(old('nom_operation_id')==$operation->id || $sous->nom_operation_id == $operation->id ) selected @endif >{{ $operation->nom_operation }}</option>
@@ -81,14 +81,14 @@
                         <x-input-error :messages="$errors->get('operation')" class="mt-2" />
                     </div>
                     <div>
-                        <x-input-label for="nom_sous_operation" :value="__('Sous Operation')" />
+                        <x-input-label for="nom_sous_operation" :value="__('Prestation')" />
                         <x-text-input id="nom_sous_operation" class="block mt-1 w-full" type="text" name="nom_sous_operation" :value="old('nom_sous_operation') ?? $sous->nom_sous_operation" autofocus autocomplete="nom_sous_operation" />
                         <x-input-error :messages="$errors->get('nom_sous_operation')" class="mt-2" />
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
                         <x-primary-button class="flex justify-center rounded-[20px] bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
-                            {{ __('Modifier sous operation') }}
+                            {{ __('Modifier prestation') }}
                         </x-primary-button>
                     </div>
                 </form>

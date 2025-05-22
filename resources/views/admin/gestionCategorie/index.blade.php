@@ -249,7 +249,7 @@
         <div id="confirmationModalC-{{ $categorie->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
             <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
                 <h2 class="text-lg font-bold text-gray-800">Confirmation de suppression</h2>
-                <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action ne peut pas être annulée.</p>
+                <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer cette service ? Cette action ne peut pas être annulée.</p>
                 <div class="flex justify-end mt-4">
                     <button onclick="toggleModal(false, 'confirmationModalC-{{ $categorie->id }}')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">
                         Annuler
@@ -269,7 +269,7 @@
         <div id="confirmationModalO-{{ $operation->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
             <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
                 <h2 class="text-lg font-bold text-gray-800">Confirmation de suppression</h2>
-                <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer cette operation ? Cette action ne peut pas être annulée.</p>
+                <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action ne peut pas être annulée.</p>
                 <div class="flex justify-end mt-4">
                     <button onclick="toggleModal(false, 'confirmationModalO-{{ $operation->id }}')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">
                         Annuler
@@ -289,7 +289,7 @@
         <div id="confirmationModalS-{{ $sous->id }}" class="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-[2px] flex items-center justify-center hidden">
             <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
                 <h2 class="text-lg font-bold text-gray-800">Confirmation de suppression</h2>
-                <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer cette sous operation ? Cette action ne peut pas être annulée.</p>
+                <p class="text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer cette prestation ? Cette action ne peut pas être annulée.</p>
                 <div class="flex justify-end mt-4">
                     <button onclick="toggleModal(false, 'confirmationModalS-{{ $sous->id }}')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2">
                         Annuler
