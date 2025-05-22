@@ -26,7 +26,7 @@ class MechanicConvertRdvToOperation extends Controller
         }
 
         $marques = MarqueVoiture::all();
-        
+
         return view('mechanic.convertRdvToOperation.convert', compact('Appointment', 'client', 'marques'));
         // echo($client->voitures );
 
@@ -48,7 +48,16 @@ class MechanicConvertRdvToOperation extends Controller
         }
 
         if ($request->client_email !== NULL) {
-            $client = User::where('email', $request->client_email)->first();
+            $tel = $request->client_tel;
+
+            // Replace +212 at the beginning with 0
+            if (strpos($tel, '+212') === 0) {
+                $tel = preg_replace('/^\+212/', '0', $tel);
+            }
+            // Now query the client
+            $client = User::where('telephone', $tel)->first();
+
+            // $client = User::where('telephone', $request->client_tel)->first();
         } else {
             $client = NULL;
         }
