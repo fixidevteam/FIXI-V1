@@ -107,6 +107,48 @@ class MechanicReservationController extends Controller
         return view('mechanic.reservation.index', compact('appointments'));
     }
 
+    // public function list(Request $request)
+    // {
+    //     $user = Auth::user();
+    //     $garage = garage::where('id', $user->garage_id)->first();
+
+    //     if (!$garage) {
+    //         return redirect()->back()->with('error', self::GARAGE_NOT_FOUND);
+    //     }
+
+    //     $query = Appointment::where('garage_ref', $garage->ref);
+
+    //     $filter = $request->filter ?? 'active'; // Get the filter or default to 'active'
+
+    //     // Filter for past appointments to close
+    //     if ($filter == 'to_close') {
+    //         $now = Carbon::now();
+    //         $query->where(function ($q) use ($now) {
+    //             $q->where('appointment_day', '<', $now->format('Y-m-d'))
+    //                 ->orWhere(function ($q2) use ($now) {
+    //                     $q2->where('appointment_day', $now->format('Y-m-d'))
+    //                         ->where('appointment_time', '<', $now->format('H:i:s'));
+    //                 });
+    //         })
+    //             ->whereIn('status', ['en cours']);
+    //     } else {
+    //         // Default: show active appointments
+    //         $now = Carbon::now();
+    //         $query->where(function ($q) use ($now) {
+    //             $q->where('appointment_day', '>', $now->format('Y-m-d'))
+    //                 ->orWhere(function ($q2) use ($now) {
+    //                     $q2->where('appointment_day', $now->format('Y-m-d'))
+    //                         ->where('appointment_time', '>=', $now->format('H:i:s'));
+    //                 });
+    //         })
+    //             ->whereIn('status', ['en cours', 'confirmé', 'annulé']);
+    //     }
+
+    //     $appointments = $query->latest()->paginate(10);
+
+    //     // Pass the filter to the view
+    //     return view('mechanic.reservation.list', compact('appointments', 'filter'));
+    // }
     public function list(Request $request)
     {
         $user = Auth::user();
@@ -118,21 +160,15 @@ class MechanicReservationController extends Controller
 
         $query = Appointment::where('garage_ref', $garage->ref);
 
-        $filter = $request->filter ?? 'active'; // Get the filter or default to 'active'
+        // Get filter values from request
+        $date = $request->date;
+        $status = $request->status;
 
-        // Filter for past appointments to close
-        if ($filter == 'to_close') {
-            $now = Carbon::now();
-            $query->where(function ($q) use ($now) {
-                $q->where('appointment_day', '<', $now->format('Y-m-d'))
-                    ->orWhere(function ($q2) use ($now) {
-                        $q2->where('appointment_day', $now->format('Y-m-d'))
-                            ->where('appointment_time', '<', $now->format('H:i:s'));
-                    });
-            })
-                ->whereIn('status', ['en cours']);
+        // Apply date filter if provided
+        if ($date) {
+            $query->where('appointment_day', $date);
         } else {
-            // Default: show active appointments
+            // Default date filtering (active appointments) when no date is specified
             $now = Carbon::now();
             $query->where(function ($q) use ($now) {
                 $q->where('appointment_day', '>', $now->format('Y-m-d'))
@@ -140,14 +176,28 @@ class MechanicReservationController extends Controller
                         $q2->where('appointment_day', $now->format('Y-m-d'))
                             ->where('appointment_time', '>=', $now->format('H:i:s'));
                     });
-            })
-                ->whereIn('status', ['en cours', 'confirmé', 'annulé']);
+            });
+        }
+
+        // Apply status filter if provided
+        if ($status) {
+            $query->where('status', $status);
+        } else {
+            // Default status filtering when no status is specified
+            $query->whereIn('status', ['en cours', 'confirmé', 'annulé']);
         }
 
         $appointments = $query->latest()->paginate(10);
 
-        // Pass the filter to the view
-        return view('mechanic.reservation.list', compact('appointments', 'filter'));
+        // Append all query parameters to pagination links
+        $appointments->appends($request->query());
+
+        // Pass the filters to the view
+        return view('mechanic.reservation.list', [
+            'appointments' => $appointments,
+            'date' => $date,
+            'status' => $status
+        ]);
     }
 
     /**

@@ -71,28 +71,23 @@
                 </div>
                 <form method="GET" action="{{ route('mechanic.reservation.list') }}" class="mb-4">
                     <div class="flex items-center space-x-2">
-
                         <div class="w-full">
-                            <x-input-label for="date" :value="__('Date de RDV')" />
-                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
-                                :value="old('date', $date ?? '')" autofocus autocomplete="date" />
+                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" 
+                                value="{{ request('date') }}" autofocus autocomplete="date" />
                             <x-input-error :messages="$errors->get('date')" class="mt-2" />
                         </div>
                         <div class="w-full">
-                            <x-input-label for="status" :value="__('Status')" />
-                            <!-- <x-text-input id="status" class="block mt-1 w-full" type="text" name="status" :value="old('status')" autofocus autocomplete="status" /> -->
                             <select id="status" name="status" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 <option value="">Tous les statuts</option>
-                                <option value="en cours" {{ old('status', $status ?? '') == 'en cours' ? 'selected' : '' }}>En cours</option>
-                                <option value="confirmé" {{ old('status', $status ?? '') == 'confirmé' ? 'selected' : '' }}>Confirmé</option>
-                                <option value="annulé" {{ old('status' ,$status ?? '') == 'annulé' ? 'selected' : '' }}>Annulé</option>
-                                <option value="clôturé" {{ old('status' ,$status ?? '') == 'clôturé' ? 'selected' : '' }}>Clôturé</option>
+                                <option value="en cours" {{ request('status') == 'en cours' ? 'selected' : '' }}>En cours</option>
+                                <option value="confirmé" {{ request('status') == 'confirmé' ? 'selected' : '' }}>Confirmé</option>
+                                <option value="annulé" {{ request('status') == 'annulé' ? 'selected' : '' }}>Annulé</option>
+                                <option value="clôturé" {{ request('status') == 'clôturé' ? 'selected' : '' }}>Clôturé</option>
                             </select>
-
                             <x-input-error :messages="$errors->get('status')" class="mt-2" />
                         </div>
 
-                        <!-- Search Button (optional) -->
+                        <!-- Search Button -->
                         <button type="submit" class="p-2.5 ms-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800">
                             <svg class="w-4 h-4" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 2.75C6.66751 2.75 2.75 6.66751 2.75 11.5C2.75 16.3325 6.66751 20.25 11.5 20.25C16.3325 20.25 20.25 16.3325 20.25 11.5C20.25 6.66751 16.3325 2.75 11.5 2.75ZM1.25 11.5C1.25 5.83908 5.83908 1.25 11.5 1.25C17.1609 1.25 21.75 5.83908 21.75 11.5C21.75 14.0605 20.8111 16.4017 19.2589 18.1982L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L18.1982 19.2589C16.4017 20.8111 14.0605 21.75 11.5 21.75C5.83908 21.75 1.25 17.1609 1.25 11.5Z" fill="currentColor" />
@@ -231,6 +226,10 @@
                                         <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
                                             Annulé
                                         </span>
+                                        @else
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
+                                            Clôturé
+                                        </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
@@ -245,8 +244,7 @@
                     {{-- close table --}}
                     <!-- Pagination -->
                     <div class="my-4" id="paginationLinks">
-                        {{ $appointments->appends(request()->query())->links() }}
-
+                        {{ $appointments->links() }}
                     </div>
                 </div>
             </div>
