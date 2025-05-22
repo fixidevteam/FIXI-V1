@@ -17,6 +17,7 @@ use App\Http\Controllers\Mechanic\ProfileController;
 use App\Http\Controllers\Mechanic\mechanicDashboardController;
 use App\Http\Controllers\Mechanic\MechanicPromotionController;
 use App\Http\Controllers\Mechanic\MechanicReservationController;
+use App\Http\Controllers\Mechanic\MechanicVisitController;
 use App\Http\Controllers\TEST\RendezVousController;
 use App\Models\Appointment;
 use App\Models\Mechanic;
@@ -47,6 +48,7 @@ Route::middleware(['auth:mechanic', 'checkMechanicStatus'])->prefix('fixi-pro')-
     Route::resource('/promotions', MechanicPromotionController::class);
     Route::resource('/calendrier', MechanicCalendrierController::class);
     Route::resource('/reservation', MechanicReservationController::class);
+    Route::resource('/visits', MechanicVisitController::class);
     Route::get('/list', [MechanicReservationController::class, 'list'])
         ->name('reservation.list');
     Route::patch('/reservation/{id}/update-status', [MechanicReservationController::class, 'updateStatus'])

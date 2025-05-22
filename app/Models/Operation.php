@@ -25,7 +25,7 @@ class Operation extends Model
         'visit_id',
         'create_by',
     ];
-    public function visit()
+    public function visit(): BelongsTo
     {
         return $this->belongsTo(Visit::class);
     }
