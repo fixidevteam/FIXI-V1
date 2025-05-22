@@ -1,4 +1,4 @@
-<x-admin-app-layout>
+ <x-admin-app-layout>
     <div class="p-4 sm:ml-64">
         <!-- Breadcrumb Section -->
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-14">
@@ -27,9 +27,9 @@
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             <div class="px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des catégories</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des services </h2>
                     <a href="{{ route('admin.gestionCategorie.create') }}">
-                        <x-primary-button class="hidden md:block">Ajouter une catégorie</x-primary-button>
+                        <x-primary-button class="hidden md:block">Ajouter un service </x-primary-button>
                         <x-primary-button class="sm:hidden">
                             <svg class="w-5 h-5 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z" fill="currentColor" />
@@ -41,13 +41,13 @@
                 <div class="my-5">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($categories->isEmpty())
-                        <p class="p-4 text-gray-500 text-center">Aucun catégorie disponible.</p>
+                        <p class="p-4 text-gray-500 text-center">Aucun service disponible.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Liste des catégories</caption>
+                            <caption class="sr-only">Liste des services</caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">Catégorie</th>
+                                    <th scope="col" class="px-6 py-3">Service</th>
                                     <th scope="col" class="px-6 py-3">Action</th>
                                 </tr>
                             </thead>
@@ -84,9 +84,9 @@
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             <div class="px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des operations</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des catégories de service</h2>
                     <a href="{{ route('admin.gestionOperation.create') }}">
-                        <x-primary-button class="hidden md:block">Ajouter une operation</x-primary-button>
+                        <x-primary-button class="hidden md:block">Ajouter une catégorie de service</x-primary-button>
                         <x-primary-button class="sm:hidden">
                             <svg class="w-5 h-5 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z" fill="currentColor" />
@@ -132,14 +132,14 @@
                     {{-- alert close --}}
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($allOperations->isEmpty())
-                        <p class="p-4 text-gray-500 text-center">Aucun operation disponible.</p>
+                        <p class="p-4 text-gray-500 text-center">Aucune catégorie de service.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Liste des operations</caption>
+                            <caption class="sr-only">Liste des catégories de service</caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">Catégorie</th>
-                                    <th scope="col" class="px-6 py-3">Operation</th>
+                                    <th scope="col" class="px-6 py-3">Service</th>
+                                    <th scope="col" class="px-6 py-3">Categorie de servic</th>
                                     <th scope="col" class="px-6 py-3">Action</th>
                                 </tr>
                             </thead>
@@ -188,9 +188,9 @@
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             <div class="px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="flex justify-between items-center my-6">
-                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des sous operations</h2>
+                    <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900">Liste des prestations </h2>
                     <a href="{{ route('admin.gestionSousOperation.create') }}">
-                        <x-primary-button class="hidden md:block">Ajouter une sous operation</x-primary-button>
+                        <x-primary-button class="hidden md:block">Ajouter une prestation </x-primary-button>
                         <x-primary-button class="sm:hidden">
                             <svg class="w-5 h-5 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z" fill="currentColor" />
@@ -202,14 +202,14 @@
                 <div class="my-5">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         @if($sousOperations->isEmpty())
-                        <p class="p-4 text-gray-500 text-center">Aucun sous operation disponible.</p>
+                        <p class="p-4 text-gray-500 text-center">Aucune prestation  disponible.</p>
                         @else
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="sr-only">Liste des sous operations</caption>
+                            <caption class="sr-only">Liste des prestationa </caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">Operation</th>
-                                    <th scope="col" class="px-6 py-3">Sous Operation</th>
+                                    <th scope="col" class="px-6 py-3">catégorie de service</th>
+                                    <th scope="col" class="px-6 py-3">Prestation</th>
                                     <th scope="col" class="px-6 py-3">Action</th>
                                 </tr>
                             </thead>
