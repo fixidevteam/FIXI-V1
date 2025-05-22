@@ -39,6 +39,9 @@
                             <thead class="text-xs uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">visit</th>
+                                    <th scope="col" class="px-6 py-3">numero d'immatriculation</th>
+                                    <th scope="col" class="px-6 py-3">nom</th>
+                                    <th scope="col" class="px-6 py-3">tel</th>
                                     <th scope="col" class="px-6 py-3">Date du visit</th>
                                     <th scope="col" class="px-6 py-3">Action</th>
                                 </tr>
@@ -50,6 +53,15 @@
                                             <a href="{{ route('mechanic.visits.show',$visit->id) }}">
                                             <span>visit {{$visit->id}}</span>
                                             </a>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span>{{ explode('-', $visit->voiture->numero_immatriculation)[0] }}</span>-<span dir="rtl">{{ explode('-', $visit->voiture->numero_immatriculation)[1] }}</span>-<span>{{ explode('-', $visit->voiture->numero_immatriculation)[2] }}</span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ $visit->voiture->user->name }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ $visit->voiture->user->telephone ? "N/A"}}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $visit->date }}
