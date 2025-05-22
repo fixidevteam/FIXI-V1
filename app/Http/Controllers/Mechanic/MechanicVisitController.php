@@ -56,7 +56,6 @@ class MechanicVisitController extends Controller
             ->first();
         $nom_categories = nom_categorie::all();
         $nom_operations = nom_operation::all();
-        // dd($visit->operations);
         // If visit not found or unauthorized, redirect back with error
         if (!$visit) {
             return back()->with('error', 'Visite introuvable ou accès non autorisé.')
