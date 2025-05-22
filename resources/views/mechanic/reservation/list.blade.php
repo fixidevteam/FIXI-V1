@@ -71,14 +71,25 @@
                 </div>
                 <form method="GET" action="{{ route('mechanic.reservation.list') }}" class="mb-4">
                     <div class="flex items-center space-x-2">
-                        <!-- Select Dropdown for Appointment Filter -->
-                        <select
-                            name="filter"
-                            class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            onchange="this.form.submit()">
-                            <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>RDV actifs</option>
-                            <option value="to_close" {{ request('filter') == 'to_close' ? 'selected' : '' }}>RDV à clôturer</option>
-                        </select>
+
+                        <div class="w-full">
+                            <x-input-label for="date" :value="__('Date de RDV')" />
+                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" :value="old('date')" autofocus autocomplete="date" />
+                            <x-input-error :messages="$errors->get('date')" class="mt-2" />
+                        </div>
+                        <div class="w-full">
+                            <x-input-label for="status" :value="__('Status')" />
+                            <!-- <x-text-input id="status" class="block mt-1 w-full" type="text" name="status" :value="old('status')" autofocus autocomplete="status" /> -->
+                            <select id="status" name="status" class="block mt-1 w-full rounded-md border-0 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <option value="">Tous les statuts</option>
+                                <option value="en cours" {{ old('status') == 'en cours' ? 'selected' : '' }}>En cours</option>
+                                <option value="confirmé" {{ old('status') == 'confirmé' ? 'selected' : '' }}>Confirmé</option>
+                                <option value="annulé" {{ old('status') == 'annulé' ? 'selected' : '' }}>Annulé</option>
+                                <option value="clôturé" {{ old('status') == 'clôturé' ? 'selected' : '' }}>Clôturé</option>
+                            </select>
+
+                            <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                        </div>
 
                         <!-- Search Button (optional) -->
                         <button type="submit" class="p-2.5 ms-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800">

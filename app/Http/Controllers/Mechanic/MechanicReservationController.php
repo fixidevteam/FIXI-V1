@@ -285,14 +285,15 @@ class MechanicReservationController extends Controller
      */
     public function close(Request $request, $id)
     {
+
         $appointment = Appointment::findOrFail($id);
         $now = Carbon::now();
         $appointmentDateTime = Carbon::parse($appointment->appointment_day . ' ' . $appointment->appointment_time);
 
-        // Verify the appointment is in the past
-        if ($appointmentDateTime->gt($now)) {
-            return redirect()->back()->with('error', 'Vous ne pouvez clôturer que les rendez-vous passés.');
-        }
+        // // Verify the appointment is in the past
+        // if ($appointmentDateTime->gt($now)) {
+        //     return redirect()->back()->with('error', 'Vous ne pouvez clôturer que les rendez-vous passés.');
+        // }
 
         // Validate the request
         $request->validate([
@@ -305,9 +306,14 @@ class MechanicReservationController extends Controller
         $appointment->closed_at = $now;
         $appointment->save();
 
-        return redirect()->route('mechanic.reservation.list', ['filter' => 'to_close'])
-            ->with('success', 'Le rendez-vous a été clôturé avec le statut: ' .
-                ($request->presence == 'present' ? '✅ Présent' : '❌ Absent'));
+
+        if ($request->convertir === 'oui') {
+            return redirect()->route("mechanic.reservation.convertForm", $appointment);
+        } else {
+            return redirect()->route('mechanic.reservation.list', ['filter' => 'to_close'])
+                ->with('success', 'Le rendez-vous a été clôturé avec le statut: ' .
+                    ($request->presence == 'present' ? '✅ Présent' : '❌ Absent'));
+        }
     }
 
     public function cloturer(Request $request)

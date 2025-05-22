@@ -78,7 +78,7 @@
                             <a
                                 href=""
                                 class="inline-flex items-center text-sm font-medium text-gray-700">
-                                Conversion en opération
+                                Conversion en visit
                             </a>
                         </div>
                     </li>
@@ -91,23 +91,23 @@
         <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
             {{-- content (slot on layouts/app.blade.php)--}}
             <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Conversion en opération</h2>
+                <h2 class="mt-10  text-2xl font-bold leading-9 tracking-tight text-gray-900">Conversion en visit</h2>
                 <form method="POST" action="{{ route('mechanic.reservation.convert') }}" class="space-y-6" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
                     <div class="">
                         <x-input-label for="client_name" :value="__('Nom du client')" />
-                        <x-text-input id="client_name" name="client_name" type="text" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " value="{{ $Appointment->user_full_name }}" readonly  />
+                        <x-text-input id="client_name" name="client_name" type="text" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " value="{{ $Appointment->user_full_name }}" readonly />
                         <x-input-error :messages="$errors->get('client_name')" class="mt-2" />
                     </div>
                     <div class="">
                         <x-input-label for="client_tel" :value="__('Telephone du client')" />
-                        <x-text-input id="client_tel" name="client_tel" type="text" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " value="{{ $Appointment->user_phone }}" readonly  />
+                        <x-text-input id="client_tel" name="client_tel" type="text" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " value="{{ $Appointment->user_phone }}" readonly />
                         <x-input-error :messages="$errors->get('client_tel')" class="mt-2" />
                     </div>
                     <div class="">
                         <x-input-label for="client_email" :value="__('Email du client')" />
-                        <x-text-input id="client_email" name="client_email" type="text" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " value="{{ $Appointment->user_email ?? NULL}}" placeholder="{{ $Appointment->user_email ?? 'N/A'}}" readonly  />
+                        <x-text-input id="client_email" name="client_email" type="text" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " value="{{ $Appointment->user_email ?? NULL}}" placeholder="{{ $Appointment->user_email ?? 'N/A'}}" readonly />
                         <x-input-error :messages="$errors->get('client_email')" class="mt-2" />
                     </div>
                     <div>
@@ -116,11 +116,11 @@
                         <x-input-error :messages="$errors->get('date_operation')" class="mt-2" />
                     </div>
                     <div>
-                        <x-input-label for="categorie" :value="__('Categorie')" />
-                        <x-text-input id="categorie" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " type="text" name="categorie" :value="$Appointment->categorie_de_service"  readonly autofocus autocomplete="categorie" /> <x-input-error :messages="$errors->get('categorie')" class="mt-2" />
+                        <x-input-label for="categorie" :value="__('Service')" />
+                        <x-text-input id="categorie" class="block mt-1 w-full bg-gray-200 cursor-not-allowed " type="text" name="categorie" :value="$Appointment->categorie_de_service" readonly autofocus autocomplete="categorie" /> <x-input-error :messages="$errors->get('categorie')" class="mt-2" />
                     </div>
                     @if($client == NULL || $client->voitures->isEmpty())
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                         <div>
                             <x-input-label for="part1" :value="__('Numero d\'immatriculation (6 chiffres)')" />
@@ -197,9 +197,15 @@
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
                     <div class="flex items-center justify-end mt-4">
-                        <x-primary-button class="flex justify-center rounded-[20px] bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
-                            {{ __('ajouter l\'operation') }}
+                        <a href="{{route('mechanic.reservation.show', $Appointment)}}" class="flex justify-center rounded-[20px] px-3 py-1.5 text-md font-semibold leading-6 text-gray hover:underline ">
+                            {{ __('Ignorer cette étape') }}
+                        </a>
+
+
+                        <x-primary-button class="flex justify-center mx-3 rounded-[20px] bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                            {{ __('ajouter la visit') }}
                         </x-primary-button>
+
                     </div>
                 </form>
 

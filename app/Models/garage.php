@@ -42,6 +42,10 @@ class garage extends Model
     {
         return $this->hasMany(Mechanic::class);
     }
+      public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class);
+    }
     public function operations(): HasMany
     {
         return $this->hasMany(Operation::class);

@@ -8,6 +8,7 @@ use App\Models\garage;
 use App\Models\MarqueVoiture;
 use App\Models\Operation;
 use App\Models\User;
+use App\Models\Visit;
 use App\Models\Voiture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,7 @@ class MechanicConvertRdvToOperation extends Controller
         }
 
         $marques = MarqueVoiture::all();
-
+        
         return view('mechanic.convertRdvToOperation.convert', compact('Appointment', 'client', 'marques'));
         // echo($client->voitures );
 
@@ -62,6 +63,11 @@ class MechanicConvertRdvToOperation extends Controller
         }
 
         if ($request->has('voiture_id')) {
+            $visit = Visit::create([
+                'date' => $request->date_operation,
+                'voiture_id' => $request->voiture_id,
+                'garage_id' => Auth::user()->garage->id,
+            ]);
             $operation = Operation::create([
                 'categorie' => $request->categorie,
                 'description' => $request->description,
@@ -69,6 +75,7 @@ class MechanicConvertRdvToOperation extends Controller
                 'voiture_id' => $request->voiture_id,
                 'garage_id' => Auth::user()->garage->id,
                 'create_by' => 'garage',
+                'visit_id' => $visit->id,
             ]);
         } else {
             $numeroImmatriculation = $request['part1'] . '-' . $request['part2'] . '-' . $request['part3'];
@@ -78,6 +85,11 @@ class MechanicConvertRdvToOperation extends Controller
                 'modele' => $request->modele,
                 'user_id' => $client->id
             ]);
+            $visit = Visit::create([
+                'date' => $request->date_operation,
+                'voiture_id' => $voiture->id,
+                'garage_id' => Auth::user()->garage->id,
+            ]);
             $operation = Operation::create([
                 'categorie' => $request->categorie,
                 'description' => $request->description,
@@ -85,6 +97,7 @@ class MechanicConvertRdvToOperation extends Controller
                 'voiture_id' => $voiture->id,
                 'garage_id' => Auth::user()->garage->id,
                 'create_by' => 'garage',
+                'visit_id' => $visit->id,
             ]);
         }
         return redirect()->route('mechanic.operations.show', $operation);
