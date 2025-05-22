@@ -32,7 +32,7 @@
               <a
                 href="{{ route('mechanic.operations.index') }}"
                 class="inline-flex items-center text-sm font-medium text-gray-700   ">
-                La liste des visites
+                La liste des opérations
               </a>
             </div>
           </li>
@@ -54,7 +54,7 @@
               <a
                 href=""
                 class="inline-flex items-center text-sm font-medium text-gray-700   ">
-                Détails du visite 
+                Détails d'opération 
               </a>
             </div>
           </li>
@@ -66,7 +66,7 @@
     <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-4">
       {{-- content (slot on layouts/app.blade.php)--}}
       <div class=" px-5 py-3 text-gray-700 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900 mb-4">Détails du visite</h2>
+        <h2 class="text-2xl font-bold leading-9 tracking-tight text-gray-900 mb-4">Détails d'opération</h2>
         {{-- test --}}
         <div class="flex flex-col md:flex-row gap-10 items-center my-6">
           <div class="md:w-[500px] md:h-[250px] overflow-hidden  border flex-shrink-0">
@@ -88,7 +88,7 @@
                 </p>
               </div>
               <div>
-                <p class="first-letter:uppercase text-sm font-medium text-gray-900">date du visite</p>
+                <p class="first-letter:uppercase text-sm font-medium text-gray-900">date d'opération</p>
                 <p class="text-sm text-gray-500">
                   {{ $operation->date_operation }}
                 </p>

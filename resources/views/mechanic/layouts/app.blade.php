@@ -110,7 +110,7 @@
                     .then(response => response.json())
                     .then(data => {
                         const operationSelect = document.getElementById('operation');
-                        operationSelect.innerHTML = '<option value="">Select operation</option>';
+                        operationSelect.innerHTML = '<option value="">Select catégorie</option>';
 
                         data.forEach(operation => {
                             const option = document.createElement('option');
