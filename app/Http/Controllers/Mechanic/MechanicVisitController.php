@@ -18,13 +18,14 @@ class MechanicVisitController extends Controller
     {
         $user = Auth::user();
 
-        // Get visits for the user's garage
+        // Get paginated visits for the user's garage
         $visits = Visit::where('garage_id', $user->garage->id)
-            ->latest() // Orders by created_at by default
-            ->get();
+            ->latest()
+            ->paginate(10); // 10 visits per page
 
         return view('mechanic.visits.index', compact('visits'));
     }
+
 
     /**
      * Show the form for creating a new resource.
