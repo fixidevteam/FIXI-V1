@@ -22,8 +22,13 @@ class Operation extends Model
         'garage_id',
         'autre_operation',
         'kilometrage',
+        'visit_id',
         'create_by',
     ];
+    public function visit()
+    {
+        return $this->belongsTo(Visit::class);
+    }
     public function voiture(): BelongsTo
     {
         return $this->belongsTo(Voiture::class);
