@@ -54,7 +54,7 @@ class MechanicConvertRdvToOperation extends Controller
             if (strpos($tel, '+212') === 0) {
                 $tel = preg_replace('/^\+212/', '0', $tel);
             }
-            // Now query the client
+            // Ngow query the client
             $client = User::where('telephone', $tel)->first();
 
             // $client = User::where('telephone', $request->client_tel)->first();

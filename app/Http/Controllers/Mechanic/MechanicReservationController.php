@@ -51,6 +51,8 @@ class MechanicReservationController extends Controller
             'message' => $message,
             'response' => $response->body()
         ]);
+
+        return $response;
     }
 
     /**
@@ -175,7 +177,7 @@ class MechanicReservationController extends Controller
             $query->where('status', $status);
         } else {
             // Default status filtering when no status is specified
-            $query->whereIn('status', ['en cours', 'confirmé', 'annulé']);
+            $query->whereIn('status', ['en cours', 'confirmé', 'annulé','clôturé']);
         }
 
         $appointments = $query->latest()->paginate(10);
@@ -252,6 +254,7 @@ class MechanicReservationController extends Controller
         $garage = Garage::where('id', $user->garage_id)->first();
         $appointment = Appointment::where('id', $id)->where('garage_ref', $garage->ref)->first();
         if ($appointment) {
+
             $data['status'] = 'en cours';
             $appointment->update($data);
 
@@ -265,10 +268,17 @@ class MechanicReservationController extends Controller
                 \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " .
                 \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') . "\nChez " .
                 $garage->name . "\nFIXI.MA";
-            $this->sendSMS($appointment->user_phone, $message);
 
-            session()->flash('success', 'Rendez-vous');
-            session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
+            $response = $this->sendSMS($appointment->user_phone, $message);
+            $body = $response->body();
+            $data = json_decode($body, true); // decode as associative array
+            if (isset($data['error'])) {
+                session()->flash('error', 'Échec de l’envoi du SMS.');
+                session()->flash('subtitle', 'Le rendez-vous a été modifié, mais le SMS n’a pas pu être envoyé.');
+            } else {
+                session()->flash('success', 'Rendez-vous');
+                session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
+            }
             return redirect()->route('mechanic.reservation.show', $appointment);
         }
     }
@@ -294,7 +304,17 @@ class MechanicReservationController extends Controller
                 \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') .
                 "\nChez " . $garage->name . " a été annulé.\nPour plus d'information contacter le garage " .
                 $garage->telephone . "\nFIXI.MA";
-            $this->sendSMS($appointment->user_phone, $message);
+
+            $response = $this->sendSMS($appointment->user_phone, $message);
+            $body = $response->body();
+            $data = json_decode($body, true); // decode as associative array
+            if (isset($data['error'])) {
+                session()->flash('error', 'Échec de l’envoi du SMS.');
+                session()->flash('subtitle', 'Le rendez-vous a été modifié, mais le SMS n’a pas pu être envoyé.');
+            } else {
+                session()->flash('success', 'Rendez-vous');
+                session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès et un SMS a été envoyé.');
+            }
         } elseif ($appointment->status === 'confirmé') {
             // Send confirmation email
             Notification::route('mail', $appointment->user_email)
@@ -305,10 +325,17 @@ class MechanicReservationController extends Controller
                 \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') . " le " .
                 \Carbon\Carbon::parse($appointment->appointment_day)->format('d/m/Y') .
                 "\nChez " . $garage->name . "\nFIXI.MA";
-            $this->sendSMS($appointment->user_phone, $message);
 
-            session()->flash('success', 'Rendez-vous');
-            session()->flash('subtitle', 'le status de rendez-vous a été modifié avec succès.');
+            $response = $this->sendSMS($appointment->user_phone, $message);
+            $body = $response->body();
+            $data = json_decode($body, true); // decode as associative array
+            if (isset($data['error'])) {
+                session()->flash('error', 'Échec de l’envoi du SMS.');
+                session()->flash('subtitle', 'Le rendez-vous a été modifié, mais le SMS n’a pas pu être envoyé.');
+            } else {
+                session()->flash('success', 'Rendez-vous');
+                session()->flash('subtitle', 'Votre rendez-vous a été modifié avec succès.');
+            }
         }
 
         // Retrieve the previous URL from the session
