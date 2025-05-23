@@ -47,3 +47,5 @@ Route::post('/appointments/verify2', [AppointmentController2::class, 'verifyAppo
 
 Route::get('/available-datesShort2', [AppointmentController2::class, 'getAvailableDatesShort2']);
 Route::get('/time-slotsShort2', [AppointmentController2::class, 'getTimeSlotsShort2']);
+
+require_once __DIR__ . '/fixiMarketApi.php';
